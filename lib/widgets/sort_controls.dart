@@ -1,6 +1,33 @@
+/// Widget for managing favorite movies in the Movie Star application.
+///
+// Time-stamp: <Thursday 2025-04-10 11:47:48 +1000 Graham Williams>
+///
+/// Copyright (C) 2025, Software Innovation Institute, ANU.
+///
+/// Licensed under the GNU General Public License, Version 3 (the "License").
+///
+/// License: https://www.gnu.org/licenses/gpl-3.0.en.html.
+//
+// This program is free software: you can redistribute it and/or modify it under
+// the terms of the GNU General Public License as published by the Free Software
+// Foundation, either version 3 of the License, or (at your option) any later
+// version.
+//
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+// details.
+//
+// You should have received a copy of the GNU General Public License along with
+// this program.  If not, see <https://www.gnu.org/licenses/>.
+///
+/// Authors: Kevin Wang
+library;
+
 import 'package:flutter/material.dart';
 
 /// Enum representing different sort criteria for movies.
+
 enum MovieSortCriteria {
   nameAsc,
   nameDesc,
@@ -13,12 +40,15 @@ enum MovieSortCriteria {
 /// A widget that displays sorting controls for movie lists.
 class SortControls extends StatelessWidget {
   /// The currently selected sort criteria.
+
   final MovieSortCriteria selectedCriteria;
 
   /// Callback when sort criteria changes.
+
   final ValueChanged<MovieSortCriteria> onSortChanged;
 
   /// Creates a new [SortControls] widget.
+
   const SortControls({
     super.key,
     required this.selectedCriteria,

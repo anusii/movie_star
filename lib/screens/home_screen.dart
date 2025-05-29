@@ -81,6 +81,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final Map<String, ScrollController> _scrollControllers = {};
 
+  /// Controller for the search text field.
+  final TextEditingController _searchController = TextEditingController();
+
+  /// Whether the search bar is expanded.
+  bool _isSearchExpanded = false;
+
+  /// Current search query.
+  String _searchQuery = '';
+
+  /// Search results.
+  List<Movie> _searchResults = [];
+
+  /// Whether search is in progress.
+  bool _isSearching = false;
+
   @override
   void initState() {
     super.initState();
@@ -103,6 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
+    _searchController.dispose();
     for (var controller in _scrollControllers.values) {
       controller.dispose();
     }
@@ -138,8 +154,79 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  /// Builds a horizontal scrollable row of movies.
+  /// Performs search based on the current query.
+  Future<void> _performSearch(String query) async {
+    if (query.isEmpty) {
+      setState(() {
+        _searchResults = [];
+        _isSearching = false;
+      });
+      return;
+    }
 
+    setState(() {
+      _isSearching = true;
+    });
+
+    try {
+      final results = await widget.movieService.searchMovies(query);
+      setState(() {
+        _searchResults = results;
+        _isSearching = false;
+      });
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _isSearching = false;
+      });
+    }
+  }
+
+  /// Builds a movie poster image with error handling.
+  Widget _buildMoviePoster(
+    String imageUrl, {
+    double width = 130,
+    double height = 200,
+  }) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(4),
+      child: CachedNetworkImage(
+        imageUrl: imageUrl,
+        width: width,
+        height: height,
+        fit: BoxFit.cover,
+        placeholder:
+            (context, url) => Container(
+              width: width,
+              height: height,
+              color: Colors.grey[900],
+              child: const Center(child: CircularProgressIndicator()),
+            ),
+        errorWidget:
+            (context, url, error) => Container(
+              width: width,
+              height: height,
+              color: Colors.grey[900],
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.movie, color: Colors.grey, size: 32),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Image not available',
+                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+        memCacheWidth: (width * 2).toInt(), // Optimize memory usage
+        memCacheHeight: (height * 2).toInt(),
+      ),
+    );
+  }
+
+  /// Builds a horizontal scrollable row of movies.
   Widget _buildMovieRow(String title, List<Movie> movies, String key) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,26 +263,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MovieDetailsScreen(
-                            movie: movie,
-                            favoritesService: widget.favoritesService,
-                          ),
+                          builder:
+                              (context) => MovieDetailsScreen(
+                                movie: movie,
+                                favoritesService: widget.favoritesService,
+                              ),
                         ),
                       );
                     },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: CachedNetworkImage(
-                        imageUrl: movie.posterUrl,
-                        width: 130,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                      ),
-                    ),
+                    child: _buildMoviePoster(movie.posterUrl),
                   ),
                 );
               },
@@ -206,78 +282,148 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  /// Builds the search results view.
+  Widget _buildSearchResults() {
+    if (_searchResults.isEmpty) {
+      return const Center(
+        child: Text('No movies found', style: TextStyle(color: Colors.grey)),
+      );
+    }
+
+    return ListView.builder(
+      itemCount: _searchResults.length,
+      itemBuilder: (context, index) {
+        final movie = _searchResults[index];
+        return ListTile(
+          leading: _buildMoviePoster(movie.posterUrl, width: 50, height: 75),
+          title: Text(movie.title, style: const TextStyle(color: Colors.white)),
+          subtitle: Text(
+            '⭐ ${movie.voteAverage.toStringAsFixed(1)}',
+            style: const TextStyle(color: Colors.grey),
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) => MovieDetailsScreen(
+                      movie: movie,
+                      favoritesService: widget.favoritesService,
+                    ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: const Text(
-          'MOVIE STAR',
-          style: TextStyle(
-            color: Colors.red,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SearchScreen(
-                    favoritesService: widget.favoritesService,
-                    movieService: widget.movieService,
+        title:
+            _isSearchExpanded
+                ? TextField(
+                  controller: _searchController,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: 'Search movies...',
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    border: InputBorder.none,
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.clear, color: Colors.white),
+                      onPressed: () {
+                        _searchController.clear();
+                        setState(() {
+                          _searchQuery = '';
+                          _searchResults = [];
+                        });
+                      },
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value;
+                    });
+                    _performSearch(value);
+                  },
+                )
+                : const Text(
+                  'MOVIE STAR',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              );
+        actions: [
+          IconButton(
+            icon: Icon(
+              _isSearchExpanded ? Icons.close : Icons.search,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              setState(() {
+                _isSearchExpanded = !_isSearchExpanded;
+                if (!_isSearchExpanded) {
+                  _searchController.clear();
+                  _searchQuery = '';
+                  _searchResults = [];
+                }
+              });
             },
           ),
         ],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _error != null
+      body:
+          _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : _error != null
               ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.error_outline,
-                        size: 48,
-                        color: Colors.red,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(_error!, style: const TextStyle(color: Colors.red)),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: _loadAllMovies,
-                        child: const Text('Retry'),
-                      ),
-                    ],
-                  ),
-                )
-              : SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildMovieRow(
-                        'Popular on Movie Star',
-                        _popularMovies,
-                        'popular',
-                      ),
-                      _buildMovieRow(
-                        'Now Playing',
-                        _nowPlayingMovies,
-                        'nowPlaying',
-                      ),
-                      _buildMovieRow('Top Rated', _topRatedMovies, 'topRated'),
-                      _buildMovieRow('Upcoming', _upcomingMovies, 'upcoming'),
-                    ],
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.error_outline,
+                      size: 48,
+                      color: Colors.red,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(_error!, style: const TextStyle(color: Colors.red)),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: _loadAllMovies,
+                      child: const Text('Retry'),
+                    ),
+                  ],
                 ),
+              )
+              : _isSearchExpanded
+              ? _isSearching
+                  ? const Center(child: CircularProgressIndicator())
+                  : _buildSearchResults()
+              : SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildMovieRow(
+                      'Popular on Movie Star',
+                      _popularMovies,
+                      'popular',
+                    ),
+                    _buildMovieRow(
+                      'Now Playing',
+                      _nowPlayingMovies,
+                      'nowPlaying',
+                    ),
+                    _buildMovieRow('Top Rated', _topRatedMovies, 'topRated'),
+                    _buildMovieRow('Upcoming', _upcomingMovies, 'upcoming'),
+                  ],
+                ),
+              ),
     );
   }
 }

@@ -177,29 +177,88 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
     });
   }
 
+  /// Builds a movie poster image with error handling.
+  Widget _buildMoviePoster(
+    String imageUrl, {
+    double width = 300,
+    double height = 450,
+  }) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: CachedNetworkImage(
+        imageUrl: imageUrl,
+        width: width,
+        height: height,
+        fit: BoxFit.cover,
+        placeholder:
+            (context, url) => Container(
+              width: width,
+              height: height,
+              color: Colors.grey[900],
+              child: const Center(child: CircularProgressIndicator()),
+            ),
+        errorWidget:
+            (context, url, error) => Container(
+              width: width,
+              height: height,
+              color: Colors.grey[900],
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.movie, color: Colors.grey, size: 64),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Poster not available',
+                    style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+        memCacheWidth: (width * 2).toInt(), // Optimize memory usage
+        memCacheHeight: (height * 2).toInt(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 300,
-            pinned: true,
-            backgroundColor: Colors.black,
-            flexibleSpace: FlexibleSpaceBar(
-              background: CachedNetworkImage(
-                imageUrl: widget.movie.backdropUrl,
-                fit: BoxFit.cover,
-                placeholder:
-                    (context, url) =>
-                        const Center(child: CircularProgressIndicator()),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Text(
+          widget.movie.title,
+          style: const TextStyle(color: Colors.white),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              _isInToWatch ? Icons.bookmark : Icons.bookmark_border,
+              color: _isInToWatch ? Colors.blue : Colors.white,
+            ),
+            onPressed: _toggleToWatch,
+          ),
+          IconButton(
+            icon: Icon(
+              _isInWatched ? Icons.check_circle : Icons.check_circle_outline,
+              color: _isInWatched ? Colors.green : Colors.white,
+            ),
+            onPressed: _toggleWatched,
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: _buildMoviePoster(widget.movie.posterUrl),
               ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
+            Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -216,36 +275,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                            icon: Icon(
-                              _isInToWatch
-                                  ? Icons.bookmark
-                                  : Icons.bookmark_border,
-                              color: _isInToWatch ? Colors.blue : Colors.white,
-                            ),
-                            onPressed: _toggleToWatch,
-                            tooltip:
-                                _isInToWatch
-                                    ? 'Remove from To Watch'
-                                    : 'Add to To Watch',
-                          ),
-                          IconButton(
-                            icon: Icon(
-                              _isInWatched
-                                  ? Icons.check_circle
-                                  : Icons.check_circle_outline,
-                              color: _isInWatched ? Colors.green : Colors.white,
-                            ),
-                            onPressed: _toggleWatched,
-                            tooltip:
-                                _isInWatched
-                                    ? 'Remove from Watched'
-                                    : 'Add to Watched',
-                          ),
-                        ],
                       ),
                     ],
                   ),
@@ -322,7 +351,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Personal Comments Section
+                  // Personal Comments Section.
                   const Text(
                     'My Comments',
                     style: TextStyle(
@@ -398,8 +427,8 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

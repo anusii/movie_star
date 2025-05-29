@@ -49,9 +49,11 @@ class ToWatchScreen extends StatefulWidget {
 
 class _ToWatchScreenState extends State<ToWatchScreen> {
   /// Currently selected sort criteria.
+
   MovieSortCriteria _sortCriteria = MovieSortCriteria.nameAsc;
 
   /// Sorts the list of movies based on the selected criteria.
+
   List<Movie> _sortMovies(List<Movie> movies) {
     switch (_sortCriteria) {
       case MovieSortCriteria.nameAsc:
