@@ -248,7 +248,7 @@ class _FileServiceWidgetState extends ConsumerState<FileServiceWidget> {
                                         backgroundColor:
                                             Theme.of(
                                               context,
-                                            ).dialogBackgroundColor,
+                                            ).dialogTheme.backgroundColor,
                                         title: Text(
                                           'Confirm Delete',
                                           style:
@@ -420,7 +420,7 @@ class _FileServiceWidgetState extends ConsumerState<FileServiceWidget> {
                                       backgroundColor:
                                           Theme.of(
                                             context,
-                                          ).dialogBackgroundColor,
+                                          ).dialogTheme.backgroundColor,
                                       title: Text(
                                         'Confirm Delete',
                                         style:

@@ -29,7 +29,6 @@ import 'package:flutter/material.dart';
 
 import 'package:moviestar/features/file/browser/components/file_list_item.dart';
 import 'package:moviestar/features/file/browser/models/file_item.dart';
-import 'package:moviestar/theme/app_theme.dart';
 
 /// A widget that displays a list of files with their metadata and actions.
 ///

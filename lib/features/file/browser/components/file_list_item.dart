@@ -197,7 +197,9 @@ class FileListItem extends StatelessWidget {
                             builder:
                                 (dialogContext) => AlertDialog(
                                   backgroundColor:
-                                      Theme.of(context).dialogBackgroundColor,
+                                      Theme.of(
+                                        context,
+                                      ).dialogTheme.backgroundColor,
                                   title: Text(
                                     'File Preview',
                                     style:

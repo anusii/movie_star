@@ -72,7 +72,8 @@ class AppTheme {
         seedColor: primaryColor,
         brightness: Brightness.light,
       ),
-      // Set primary text color for input fields
+
+      // Set primary text color for input fields.
       primaryColor: primaryColor,
       primaryColorDark: Colors.black87,
       primaryColorLight: Colors.black87,
@@ -147,7 +148,8 @@ class AppTheme {
           borderSide: BorderSide(color: primaryColor, width: 2),
         ),
         hintStyle: TextStyle(color: Colors.grey[600]),
-        // Ensure proper text color for light background
+
+        // Ensure proper text color for light background.
         labelStyle: const TextStyle(color: Colors.black87),
         helperStyle: const TextStyle(color: Colors.black87),
         counterStyle: const TextStyle(color: Colors.black87),
@@ -178,7 +180,8 @@ class AppTheme {
         seedColor: primaryColor,
         brightness: Brightness.dark,
       ),
-      // Set primary text color for input fields
+
+      // Set primary text color for input fields.
       primaryColor: primaryColor,
       primaryColorDark: Colors.white,
       primaryColorLight: Colors.white,
