@@ -48,7 +48,11 @@ class EmptyDirectoryView extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Display a large folder icon with reduced opacity.
-          const Icon(Icons.folder_open, size: 48, color: AppTheme.primaryColor),
+          Icon(
+            Icons.folder_open,
+            size: 48,
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.6),
+          ),
 
           const SizedBox(height: 16),
 
@@ -56,13 +60,18 @@ class EmptyDirectoryView extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             decoration: BoxDecoration(
-              color: AppTheme.primaryColor.withValues(alpha: 0.1),
+              color: Theme.of(
+                context,
+              ).colorScheme.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(AppTheme.defaultBorderRadius),
+              border: Border.all(
+                color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+              ),
             ),
-            child: const Text(
+            child: Text(
               'This folder is empty',
               style: TextStyle(
-                color: AppTheme.primaryTextColor,
+                color: Theme.of(context).textTheme.bodyMedium?.color,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),

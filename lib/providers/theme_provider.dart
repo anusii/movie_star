@@ -28,7 +28,9 @@ final themeServiceProvider = Provider<ThemeService>((ref) {
 });
 
 /// Provider for the current theme mode.
-final themeModeProvider = StateNotifierProvider<ThemeModeNotifier, ThemeMode>((ref) {
+final themeModeProvider = StateNotifierProvider<ThemeModeNotifier, ThemeMode>((
+  ref,
+) {
   final themeService = ref.watch(themeServiceProvider);
   return ThemeModeNotifier(themeService);
 });
@@ -37,28 +39,28 @@ final themeModeProvider = StateNotifierProvider<ThemeModeNotifier, ThemeMode>((r
 class ThemeModeNotifier extends StateNotifier<ThemeMode> {
   /// Theme service for persistence.
   final ThemeService _themeService;
-  
+
   /// Creates a new [ThemeModeNotifier] instance.
   ThemeModeNotifier(this._themeService) : super(_themeService.getThemeMode());
-  
+
   /// Toggles between light and dark theme modes.
   Future<void> toggleTheme() async {
     final newThemeMode = await _themeService.toggleTheme();
     state = newThemeMode;
   }
-  
+
   /// Sets a specific theme mode.
   Future<void> setThemeMode(ThemeMode themeMode) async {
     await _themeService.setThemeMode(themeMode);
     state = themeMode;
   }
-  
+
   /// Returns true if the current theme is dark mode.
   bool get isDarkMode => state == ThemeMode.dark;
-  
+
   /// Returns true if the current theme is light mode.
   bool get isLightMode => state == ThemeMode.light;
-  
+
   /// Returns true if the current theme follows system settings.
   bool get isSystemMode => state == ThemeMode.system;
-} 
+}

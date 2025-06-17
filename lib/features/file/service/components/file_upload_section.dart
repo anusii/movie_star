@@ -105,11 +105,11 @@ class _FileUploadSectionState extends ConsumerState<FileUploadSection> {
 
     return Card(
       elevation: 2,
-      color: Colors.grey[850],
+      color: Theme.of(context).cardColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppTheme.defaultBorderRadius),
         side: BorderSide(
-          color: AppTheme.primaryColor.withValues(alpha: 0.2),
+          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -180,12 +180,12 @@ class _FileUploadSectionState extends ConsumerState<FileUploadSection> {
       mainAxisSize: MainAxisSize.min,
       children: [
         // Title.
-        const Text(
+        Text(
           'Upload Files',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: AppTheme.primaryTextColor,
+            color: Theme.of(context).textTheme.headlineSmall?.color,
           ),
         ),
         const SizedBox(height: 16),

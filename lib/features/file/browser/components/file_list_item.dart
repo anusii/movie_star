@@ -102,8 +102,10 @@ class FileListItem extends StatelessWidget {
               decoration: BoxDecoration(
                 color:
                     isSelected
-                        ? AppTheme.primaryColor.withAlpha(30)
-                        : Colors.grey[850],
+                        ? Theme.of(
+                          context,
+                        ).colorScheme.primary.withValues(alpha: 0.1)
+                        : Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(
                   AppTheme.defaultBorderRadius,
                 ),
@@ -119,9 +121,9 @@ class FileListItem extends StatelessWidget {
                 children: [
                   // Show file icon only if width permits.
                   if (constraints.maxWidth > 40)
-                    const Icon(
+                    Icon(
                       Icons.insert_drive_file,
-                      color: AppTheme.primaryColor,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 20,
                     ),
 
@@ -138,9 +140,9 @@ class FileListItem extends StatelessWidget {
                         // File name with overflow protection.
                         Text(
                           file.name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            color: AppTheme.primaryTextColor,
+                            color: Theme.of(context).textTheme.bodyLarge?.color,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -149,8 +151,9 @@ class FileListItem extends StatelessWidget {
                         if (constraints.maxWidth > 150)
                           Text(
                             'Modified: ${file.dateModified.toString().split('.')[0]}',
-                            style: const TextStyle(
-                              color: AppTheme.secondaryTextColor,
+                            style: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.bodySmall?.color,
                               fontSize: 12,
                             ),
                             overflow: TextOverflow.ellipsis,
@@ -167,10 +170,10 @@ class FileListItem extends StatelessWidget {
                     if (file.name.toLowerCase().contains('.pdf.enc.ttl'))
                       IconButton(
                         visualDensity: VisualDensity.compact,
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.preview,
                           size: 20,
-                          color: AppTheme.primaryColor,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                         onPressed: () async {
                           // Retrieve the PDF file content as a base64-encoded string.
@@ -193,12 +196,12 @@ class FileListItem extends StatelessWidget {
                             context: context,
                             builder:
                                 (dialogContext) => AlertDialog(
-                                  backgroundColor: Colors.grey[900],
-                                  title: const Text(
+                                  backgroundColor:
+                                      Theme.of(context).dialogBackgroundColor,
+                                  title: Text(
                                     'File Preview',
-                                    style: TextStyle(
-                                      color: AppTheme.primaryTextColor,
-                                    ),
+                                    style:
+                                        Theme.of(context).textTheme.titleLarge,
                                   ),
                                   content: SizedBox(
                                     width: double.maxFinite,
@@ -218,7 +221,10 @@ class FileListItem extends StatelessWidget {
                                       onPressed:
                                           () => Navigator.pop(dialogContext),
                                       style: TextButton.styleFrom(
-                                        foregroundColor: AppTheme.primaryColor,
+                                        foregroundColor:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.primary,
                                       ),
                                       child: const Text('Close'),
                                     ),
@@ -227,7 +233,9 @@ class FileListItem extends StatelessWidget {
                           );
                         },
                         style: IconButton.styleFrom(
-                          backgroundColor: AppTheme.primaryColor.withAlpha(30),
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary.withValues(alpha: 0.1),
                           padding: EdgeInsets.zero,
                           minimumSize: const Size(35, 35),
                         ),
@@ -238,14 +246,16 @@ class FileListItem extends StatelessWidget {
                     // Download button.
                     IconButton(
                       visualDensity: VisualDensity.compact,
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.download,
                         size: 20,
-                        color: AppTheme.primaryColor,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                       onPressed: () => onFileDownload(file.name, currentPath),
                       style: IconButton.styleFrom(
-                        backgroundColor: AppTheme.primaryColor.withAlpha(30),
+                        backgroundColor: Theme.of(
+                          context,
+                        ).colorScheme.primary.withValues(alpha: 0.1),
                         padding: EdgeInsets.zero,
                         minimumSize: const Size(35, 35),
                       ),
@@ -255,14 +265,16 @@ class FileListItem extends StatelessWidget {
                     // Delete button.
                     IconButton(
                       visualDensity: VisualDensity.compact,
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.delete,
                         size: 20,
-                        color: AppTheme.primaryColor,
+                        color: Theme.of(context).colorScheme.error,
                       ),
                       onPressed: () => onFileDelete(file.name, currentPath),
                       style: IconButton.styleFrom(
-                        backgroundColor: AppTheme.primaryColor.withAlpha(30),
+                        backgroundColor: Theme.of(
+                          context,
+                        ).colorScheme.error.withValues(alpha: 0.1),
                         padding: EdgeInsets.zero,
                         minimumSize: const Size(35, 35),
                       ),

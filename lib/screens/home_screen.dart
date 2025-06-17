@@ -258,7 +258,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Theme.of(context).colorScheme.error,
                     ),
                     const SizedBox(height: 16),
-                    Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                    Text(
+                      _error!,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: _loadAllMovies,

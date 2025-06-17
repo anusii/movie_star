@@ -87,14 +87,14 @@ class FileList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Section header for files.
-        const Padding(
+        Padding(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(
             'Files',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: AppTheme.primaryTextColor,
+              color: Theme.of(context).textTheme.titleLarge?.color,
             ),
           ),
         ),

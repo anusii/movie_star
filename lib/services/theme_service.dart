@@ -17,13 +17,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ThemeService {
   /// Shared preferences instance for storing theme data.
   final SharedPreferences _prefs;
-  
+
   /// Key for storing theme mode in shared preferences.
   static const String _themeModeKey = 'theme_mode';
-  
+
   /// Creates a new [ThemeService] instance.
   ThemeService(this._prefs);
-  
+
   /// Gets the current theme mode from shared preferences.
   /// Returns [ThemeMode.dark] as default if no preference is set.
   ThemeMode getThemeMode() {
@@ -31,7 +31,7 @@ class ThemeService {
     if (themeModeString == null) {
       return ThemeMode.dark; // Default to dark mode for movie app
     }
-    
+
     switch (themeModeString) {
       case 'light':
         return ThemeMode.light;
@@ -43,7 +43,7 @@ class ThemeService {
         return ThemeMode.dark;
     }
   }
-  
+
   /// Sets the theme mode and saves it to shared preferences.
   Future<void> setThemeMode(ThemeMode themeMode) async {
     String themeModeString;
@@ -58,19 +58,18 @@ class ThemeService {
         themeModeString = 'system';
         break;
     }
-    
+
     await _prefs.setString(_themeModeKey, themeModeString);
   }
-  
+
   /// Toggles between light and dark theme modes.
   /// Returns the new theme mode.
   Future<ThemeMode> toggleTheme() async {
     final currentMode = getThemeMode();
-    final newMode = currentMode == ThemeMode.light 
-        ? ThemeMode.dark 
-        : ThemeMode.light;
-    
+    final newMode =
+        currentMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+
     await setThemeMode(newMode);
     return newMode;
   }
-} 
+}

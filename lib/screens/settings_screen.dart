@@ -127,7 +127,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-        title: Text('Settings', style: Theme.of(context).appBarTheme.titleTextStyle),
+        title: Text(
+          'Settings',
+          style: Theme.of(context).appBarTheme.titleTextStyle,
+        ),
       ),
       body: ListView(
         children: [
@@ -203,17 +206,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   const SizedBox(height: 8),
                   TextField(
                     controller: _apiKeyController,
-                    style: const TextStyle(color: Colors.white),
+                    style: Theme.of(context).textTheme.bodyLarge,
                     focusNode: _apiKeyFocusNode,
                     decoration: InputDecoration(
                       hintText: 'Enter your MovieDB API key',
-                      hintStyle: const TextStyle(color: Colors.grey),
+                      hintStyle:
+                          Theme.of(context).inputDecorationTheme.hintStyle,
                       filled: true,
-                      fillColor: Colors.grey[900],
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide.none,
-                      ),
+                      fillColor:
+                          Theme.of(context).inputDecorationTheme.fillColor,
+                      border: Theme.of(context).inputDecorationTheme.border,
+                      enabledBorder:
+                          Theme.of(context).inputDecorationTheme.enabledBorder,
+                      focusedBorder:
+                          Theme.of(context).inputDecorationTheme.focusedBorder,
                     ),
                     obscureText: true,
                   ),
@@ -293,7 +299,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           ),
                         ],
                       ),
-                      const ThemeToggleButton(isIconButton: false),
+                      const ThemeToggleButton(isIconButton: true),
                     ],
                   ),
                 ],
@@ -373,15 +379,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           padding: const EdgeInsets.all(16),
           child: Text(
             title,
-            style: const TextStyle(
-              color: Colors.grey,
+            style: TextStyle(
+              color: Theme.of(context).textTheme.bodyMedium?.color,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
         ...children,
-        const Divider(color: Colors.grey),
+        Divider(color: Theme.of(context).dividerColor),
       ],
     );
   }
@@ -395,11 +401,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     ValueChanged<bool> onChanged,
   ) {
     return SwitchListTile(
-      title: Text(title, style: const TextStyle(color: Colors.white)),
-      subtitle: Text(subtitle, style: const TextStyle(color: Colors.grey)),
+      title: Text(title, style: Theme.of(context).textTheme.bodyLarge),
+      subtitle: Text(subtitle, style: Theme.of(context).textTheme.bodyMedium),
       value: value,
       onChanged: onChanged,
-      activeColor: Colors.red,
+      activeColor: Theme.of(context).colorScheme.primary,
     );
   }
 
@@ -412,18 +418,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     ValueChanged<String?> onChanged,
   ) {
     return ListTile(
-      title: Text(title, style: const TextStyle(color: Colors.white)),
+      title: Text(title, style: Theme.of(context).textTheme.bodyLarge),
       trailing: DropdownButton<String>(
         value: value,
         items:
             items.map((String item) {
               return DropdownMenuItem<String>(
                 value: item,
-                child: Text(item, style: const TextStyle(color: Colors.white)),
+                child: Text(
+                  item,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               );
             }).toList(),
         onChanged: onChanged,
-        dropdownColor: Colors.grey[900],
+        dropdownColor: Theme.of(context).cardColor,
         underline: const SizedBox(),
       ),
     );
@@ -438,10 +447,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     bool isDestructive = false,
   }) {
     return ListTile(
-      leading: Icon(icon, color: isDestructive ? Colors.red : Colors.white),
+      leading: Icon(
+        icon,
+        color:
+            isDestructive
+                ? Theme.of(context).colorScheme.error
+                : Theme.of(context).iconTheme.color,
+      ),
       title: Text(
         title,
-        style: TextStyle(color: isDestructive ? Colors.red : Colors.white),
+        style: TextStyle(
+          color:
+              isDestructive
+                  ? Theme.of(context).colorScheme.error
+                  : Theme.of(context).textTheme.bodyLarge?.color,
+        ),
       ),
       onTap: onTap,
     );

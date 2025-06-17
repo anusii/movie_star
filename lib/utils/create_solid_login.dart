@@ -72,25 +72,31 @@ Widget _buildNormalLogin(String serverUrl, SharedPreferences prefs) {
         child: Column(
           children: [
             Expanded(
-              child: SolidLogin(
-                required: false,
-                title: 'Movie Star',
-                appDirectory: 'moviestar',
-                webID:
-                    serverUrl.isNotEmpty
-                        ? serverUrl
-                        : 'https://pods.dev.solidcommunity.au',
-                image: const AssetImage('assets/images/app_image.jpg'),
-                logo: const AssetImage('assets/images/app_icon.png'),
-                link:
-                    'https://github.com/yourusername/moviestar/blob/main/README.md',
+              child: Theme(
+                data:
+                    Theme.of(context).brightness == Brightness.dark
+                        ? ThemeData.dark()
+                        : ThemeData.light(),
+                child: SolidLogin(
+                  required: false,
+                  title: 'Movie Star',
+                  appDirectory: 'moviestar',
+                  webID:
+                      serverUrl.isNotEmpty
+                          ? serverUrl
+                          : 'https://pods.dev.solidcommunity.au',
+                  image: const AssetImage('assets/images/app_image.jpg'),
+                  logo: const AssetImage('assets/images/app_icon.png'),
+                  link:
+                      'https://github.com/yourusername/moviestar/blob/main/README.md',
 
-                // Use a wrapper widget to check for API key after login
-                child: ApiKeyCheckWrapper(
-                  prefs: prefs,
-                  child: MyHomePage(
-                    title: 'Movie Star Home Page',
+                  // Use a wrapper widget to check for API key after login
+                  child: ApiKeyCheckWrapper(
                     prefs: prefs,
+                    child: MyHomePage(
+                      title: 'Movie Star Home Page',
+                      prefs: prefs,
+                    ),
                   ),
                 ),
               ),

@@ -48,12 +48,10 @@ import 'package:moviestar/widgets/theme_toggle_button.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
-  
+
   runApp(
     ProviderScope(
-      overrides: [
-        sharedPreferencesProvider.overrideWithValue(prefs),
-      ],
+      overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
       child: const MyApp(),
     ),
   );
@@ -68,15 +66,13 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
     final prefs = ref.watch(sharedPreferencesProvider);
-    
+
     return MaterialApp(
       title: 'Movie Star',
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
-      home: Builder(
-        builder: (context) => createSolidLogin(context, prefs),
-      ),
+      home: Builder(builder: (context) => createSolidLogin(context, prefs)),
     );
   }
 }
@@ -214,14 +210,12 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               ? const Center(child: CircularProgressIndicator())
               : _screens[_selectedIndex],
           // Theme toggle positioned to be visible near debug banner
-          const Positioned(
-            right: 70, // Move left from debug banner
-            top: 16,
-            child: FloatingThemeToggle(
-              right: 0,
-              top: 0,
+          // Hide when on Settings page (index 4) since it has its own theme toggle
+          if (_selectedIndex != 4)
+            const FloatingThemeToggle(
+              right: 70, // Move left from debug banner
+              top: 16,
             ),
-          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

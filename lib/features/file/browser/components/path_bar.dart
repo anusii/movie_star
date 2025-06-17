@@ -84,7 +84,7 @@ class PathBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.grey[900],
+      color: Theme.of(context).colorScheme.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppTheme.defaultBorderRadius),
       ),
@@ -100,9 +100,9 @@ class PathBar extends StatelessWidget {
             // Back button (only shown if there's history).
             if (pathHistory.length > 1)
               IconButton(
-                icon: const Icon(
+                icon: Icon(
                   Icons.arrow_back,
-                  color: AppTheme.primaryTextColor,
+                  color: Theme.of(context).iconTheme.color,
                 ),
                 tooltip: 'Back to $friendlyFolderName',
                 onPressed: onNavigateUp,
@@ -115,8 +115,8 @@ class PathBar extends StatelessWidget {
             Expanded(
               child: Text(
                 friendlyFolderName,
-                style: const TextStyle(
-                  color: AppTheme.primaryTextColor,
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.titleMedium?.color,
                   fontWeight: FontWeight.bold,
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -126,8 +126,8 @@ class PathBar extends StatelessWidget {
             // File count.
             Text(
               'Files in current directory: $currentDirFileCount',
-              style: const TextStyle(
-                color: AppTheme.secondaryTextColor,
+              style: TextStyle(
+                color: Theme.of(context).textTheme.bodySmall?.color,
                 fontSize: 12,
               ),
             ),
@@ -139,17 +139,17 @@ class PathBar extends StatelessWidget {
                 duration: const Duration(milliseconds: 300),
                 child:
                     isLoading
-                        ? const SizedBox(
+                        ? SizedBox(
                           width: 16,
                           height: 16,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: AppTheme.primaryColor,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         )
-                        : const Icon(
+                        : Icon(
                           Icons.refresh,
-                          color: AppTheme.primaryTextColor,
+                          color: Theme.of(context).iconTheme.color,
                         ),
               ),
               tooltip: 'Refresh',

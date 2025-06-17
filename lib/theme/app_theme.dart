@@ -31,8 +31,9 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   /// Primary color for the application.
+  /// Using a more balanced red that provides better contrast in both light and dark modes.
 
-  static const Color primaryColor = Colors.red;
+  static const Color primaryColor = Color(0xFFD32F2F);
 
   /// Background color for the application.
 
@@ -71,6 +72,10 @@ class AppTheme {
         seedColor: primaryColor,
         brightness: Brightness.light,
       ),
+      // Set primary text color for input fields
+      primaryColor: primaryColor,
+      primaryColorDark: Colors.black87,
+      primaryColorLight: Colors.black87,
       scaffoldBackgroundColor: Colors.grey[50],
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.white,
@@ -142,6 +147,11 @@ class AppTheme {
           borderSide: BorderSide(color: primaryColor, width: 2),
         ),
         hintStyle: TextStyle(color: Colors.grey[600]),
+        // Ensure proper text color for light background
+        labelStyle: const TextStyle(color: Colors.black87),
+        helperStyle: const TextStyle(color: Colors.black87),
+        counterStyle: const TextStyle(color: Colors.black87),
+        errorStyle: TextStyle(color: Colors.red[700]),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -168,6 +178,10 @@ class AppTheme {
         seedColor: primaryColor,
         brightness: Brightness.dark,
       ),
+      // Set primary text color for input fields
+      primaryColor: primaryColor,
+      primaryColorDark: Colors.white,
+      primaryColorLight: Colors.white,
       scaffoldBackgroundColor: Colors.black,
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.black,
@@ -238,6 +252,11 @@ class AppTheme {
           borderSide: BorderSide(color: primaryColor, width: 2),
         ),
         hintStyle: const TextStyle(color: Colors.grey),
+        // Ensure proper text color for dark background
+        labelStyle: const TextStyle(color: Colors.white),
+        helperStyle: const TextStyle(color: Colors.white),
+        counterStyle: const TextStyle(color: Colors.white),
+        errorStyle: const TextStyle(color: Colors.red),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
