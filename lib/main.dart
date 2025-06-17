@@ -209,13 +209,11 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           _isLoadingFolders
               ? const Center(child: CircularProgressIndicator())
               : _screens[_selectedIndex],
-          // Theme toggle positioned to be visible near debug banner
-          // Hide when on Settings page (index 4) since it has its own theme toggle
+
+          // Theme toggle positioned to be visible near debug banner.
+          // Hide when on Settings page (index 4) since it has its own theme toggle.
           if (_selectedIndex != 4)
-            const FloatingThemeToggle(
-              right: 70, // Move left from debug banner
-              top: 16,
-            ),
+            const FloatingThemeToggle(right: 70, top: 16),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

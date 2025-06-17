@@ -92,6 +92,7 @@ class FloatingThemeToggle extends ConsumerWidget {
 ${isDarkMode ? '☀️ **Light Mode**' : '🌙 **Dark Mode**'}
 
 Tap to switch to ${isDarkMode ? 'light' : 'dark'} theme for optimal viewing.
+
             ''',
             child: IconButton(
               icon: AnimatedSwitcher(

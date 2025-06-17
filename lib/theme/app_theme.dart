@@ -255,7 +255,8 @@ class AppTheme {
           borderSide: BorderSide(color: primaryColor, width: 2),
         ),
         hintStyle: const TextStyle(color: Colors.grey),
-        // Ensure proper text color for dark background
+
+        // Ensure proper text color for dark background.
         labelStyle: const TextStyle(color: Colors.white),
         helperStyle: const TextStyle(color: Colors.white),
         counterStyle: const TextStyle(color: Colors.white),
