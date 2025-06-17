@@ -68,8 +68,7 @@ Widget _buildNormalLogin(String serverUrl, SharedPreferences prefs) {
       // Wrap SolidLogin in a container with custom image.
 
       return Container(
-        // TODO: Replace with theme configuration.
-        color: Colors.black,
+        // Let SolidLogin handle its own theming
         child: Column(
           children: [
             Expanded(
