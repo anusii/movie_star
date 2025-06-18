@@ -69,14 +69,14 @@ class DirectoryList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Section header for directories.
-        const Padding(
+        Padding(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(
             'Folders',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: AppTheme.primaryTextColor,
+              color: Theme.of(context).textTheme.titleLarge?.color,
             ),
           ),
         ),
@@ -84,16 +84,19 @@ class DirectoryList extends StatelessWidget {
         // List of directory items.
         ...directories.map(
           (dir) => ListTile(
-            leading: const Icon(Icons.folder, color: AppTheme.primaryColor),
+            leading: Icon(
+              Icons.folder,
+              color: Theme.of(context).colorScheme.primary,
+            ),
             title: Row(
               children: [
                 // Directory name with overflow protection.
                 Expanded(
                   child: Text(
                     dir,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.w500,
-                      color: AppTheme.primaryTextColor,
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -106,14 +109,16 @@ class DirectoryList extends StatelessWidget {
                     vertical: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: AppTheme.primaryColor.withAlpha(30),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     '${directoryCounts[dir] ?? 0} files',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: AppTheme.primaryTextColor,
+                      color: Theme.of(context).textTheme.bodySmall?.color,
                     ),
                   ),
                 ),
@@ -124,8 +129,10 @@ class DirectoryList extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppTheme.defaultBorderRadius),
             ),
             onTap: () => onDirectorySelected(dir),
-            tileColor: Colors.grey[850],
-            selectedTileColor: AppTheme.primaryColor.withAlpha(30),
+            tileColor: Theme.of(context).cardColor,
+            selectedTileColor: Theme.of(
+              context,
+            ).colorScheme.primary.withValues(alpha: 0.1),
           ),
         ),
       ],

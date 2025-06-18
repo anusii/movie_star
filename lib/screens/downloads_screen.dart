@@ -50,10 +50,13 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text('Downloads', style: TextStyle(color: Colors.white)),
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        title: Text(
+          'Downloads',
+          style: Theme.of(context).appBarTheme.titleTextStyle,
+        ),
       ),
       body:
           _downloadedMovies.isEmpty
@@ -67,9 +70,9 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
                       color: Colors.grey,
                     ),
                     const SizedBox(height: 16),
-                    const Text(
+                    Text(
                       'Movies you download appear here',
-                      style: TextStyle(color: Colors.white, fontSize: 18),
+                      style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(height: 24),
                     ElevatedButton.icon(

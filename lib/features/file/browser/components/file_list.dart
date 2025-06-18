@@ -29,7 +29,6 @@ import 'package:flutter/material.dart';
 
 import 'package:moviestar/features/file/browser/components/file_list_item.dart';
 import 'package:moviestar/features/file/browser/models/file_item.dart';
-import 'package:moviestar/theme/app_theme.dart';
 
 /// A widget that displays a list of files with their metadata and actions.
 ///
@@ -87,14 +86,14 @@ class FileList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Section header for files.
-        const Padding(
+        Padding(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(
             'Files',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: AppTheme.primaryTextColor,
+              color: Theme.of(context).textTheme.titleLarge?.color,
             ),
           ),
         ),

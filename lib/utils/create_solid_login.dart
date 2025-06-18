@@ -67,12 +67,14 @@ Widget _buildNormalLogin(String serverUrl, SharedPreferences prefs) {
     builder: (context) {
       // Wrap SolidLogin in a container with custom image.
 
-      return Container(
-        // TODO: Replace with theme configuration.
-        color: Colors.black,
-        child: Column(
-          children: [
-            Expanded(
+      return Column(
+        children: [
+          Expanded(
+            child: Theme(
+              data:
+                  Theme.of(context).brightness == Brightness.dark
+                      ? ThemeData.dark()
+                      : ThemeData.light(),
               child: SolidLogin(
                 required: false,
                 title: 'Movie Star',
@@ -86,7 +88,7 @@ Widget _buildNormalLogin(String serverUrl, SharedPreferences prefs) {
                 link:
                     'https://github.com/yourusername/moviestar/blob/main/README.md',
 
-                // Use a wrapper widget to check for API key after login
+                // Use a wrapper widget to check for API key after login.
                 child: ApiKeyCheckWrapper(
                   prefs: prefs,
                   child: MyHomePage(
@@ -96,8 +98,8 @@ Widget _buildNormalLogin(String serverUrl, SharedPreferences prefs) {
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       );
     },
   );

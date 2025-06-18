@@ -90,18 +90,18 @@ class FileBrowserContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[900],
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(AppTheme.defaultBorderRadius),
       ),
       child:
           directories.isEmpty && files.isEmpty
-              ? const Center(
+              ? Center(
                 child: Padding(
                   padding: EdgeInsets.all(AppTheme.defaultPadding),
                   child: Text(
                     'No files or folders found in this directory',
                     style: TextStyle(
-                      color: AppTheme.secondaryTextColor,
+                      color: Theme.of(context).textTheme.bodyMedium?.color,
                       fontSize: 14,
                     ),
                   ),
@@ -119,10 +119,7 @@ class FileBrowserContent extends StatelessWidget {
 
                   // Add visual separator if both directories and files exist.
                   if (directories.isNotEmpty && files.isNotEmpty)
-                    const Divider(
-                      height: 24,
-                      color: AppTheme.secondaryTextColor,
-                    ),
+                    Divider(height: 24, color: Theme.of(context).dividerColor),
 
                   // File list.
                   FileList(
