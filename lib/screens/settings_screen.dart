@@ -99,9 +99,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   @override
   void initState() {
     super.initState();
-    _apiKeyController = TextEditingController(
-      text: widget.apiKeyService.getApiKey(),
-    );
+    _apiKeyController = TextEditingController();
+    _loadApiKey();
 
     // If navigated from API key prompt, scroll to the API key section and focus the field.
 
@@ -111,6 +110,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _apiKeyFocusNode.requestFocus();
       });
+    }
+  }
+
+  /// Loads the API key from secure storage.
+
+  Future<void> _loadApiKey() async {
+    final apiKey = await widget.apiKeyService.getApiKey();
+    if (mounted) {
+      _apiKeyController.text = apiKey ?? '';
     }
   }
 
