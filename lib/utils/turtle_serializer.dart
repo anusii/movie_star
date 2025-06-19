@@ -21,6 +21,7 @@ import 'package:moviestar/models/movie.dart';
 
 class TurtleSerializer {
   // Define namespaces for movie data.
+  // TODO: We may need to update this once the ontology design is complete.
 
   static final movieNS = Namespace(ns: 'http://schema.org/');
   static final localNS = Namespace(ns: '#');
@@ -91,21 +92,18 @@ class TurtleSerializer {
         final movieResource = localNS.withAttr('movie${movie.id}');
         triples[movieResource] = {
           rdfType: movieType,
-          identifier: Literal(
-            '${movie.id}',
-            datatype: URIRef('http://www.w3.org/2001/XMLSchema#integer'),
-          ),
+          identifier: Literal('${movie.id}', datatype: XSD.int),
           name: Literal(_escapeString(movie.title)),
           description: Literal(_escapeString(movie.overview)),
           image: Literal(_escapeString(movie.posterUrl)),
           thumbnailUrl: Literal(_escapeString(movie.backdropUrl)),
           aggregateRating: Literal(
             '${movie.voteAverage}',
-            datatype: URIRef('http://www.w3.org/2001/XMLSchema#double'),
+            datatype: XSD.double,
           ),
           datePublished: Literal(
             movie.releaseDate.toIso8601String(),
-            datatype: URIRef('http://www.w3.org/2001/XMLSchema#dateTime'),
+            datatype: XSD.dateTime,
           ),
           genre: Literal(movie.genreIds.join(',')),
         };
@@ -138,14 +136,8 @@ class TurtleSerializer {
       final ratingResource = localNS.withAttr('rating${entry.key}');
       triples[ratingResource] = {
         rdfType: ratingType,
-        movieId: Literal(
-          entry.key,
-          datatype: URIRef('http://www.w3.org/2001/XMLSchema#integer'),
-        ),
-        value: Literal(
-          '${entry.value}',
-          datatype: URIRef('http://www.w3.org/2001/XMLSchema#double'),
-        ),
+        movieId: Literal(entry.key, datatype: XSD.int),
+        value: Literal('${entry.value}', datatype: XSD.double),
       };
     }
 
@@ -175,10 +167,7 @@ class TurtleSerializer {
       final commentResource = localNS.withAttr('comment${entry.key}');
       triples[commentResource] = {
         rdfType: commentType,
-        movieId: Literal(
-          entry.key,
-          datatype: URIRef('http://www.w3.org/2001/XMLSchema#integer'),
-        ),
+        movieId: Literal(entry.key, datatype: XSD.int),
         text: Literal(_escapeString(entry.value)),
       };
     }
