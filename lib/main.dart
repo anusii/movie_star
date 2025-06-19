@@ -117,7 +117,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       widget,
     );
     _favoritesService = FavoritesServiceAdapter(_favoritesServiceManager);
-    _apiKeyService = ApiKeyService(widget.prefs);
+    _apiKeyService = ApiKeyService();
     _movieService = MovieService(_apiKeyService);
 
     // Listen for API key changes.
