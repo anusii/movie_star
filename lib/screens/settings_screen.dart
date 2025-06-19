@@ -27,6 +27,7 @@ library;
 
 import 'package:flutter/material.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:moviestar/screens/to_watch_screen.dart';
@@ -34,10 +35,11 @@ import 'package:moviestar/screens/watched_screen.dart';
 import 'package:moviestar/services/api_key_service.dart';
 import 'package:moviestar/services/favorites_service.dart';
 import 'package:moviestar/services/favorites_service_manager.dart';
+import 'package:moviestar/widgets/theme_toggle_button.dart';
 
 /// A screen that displays and manages user settings.
 
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   /// Service for managing favorite movies.
 
   final FavoritesService favoritesService;
@@ -59,12 +61,12 @@ class SettingsScreen extends StatefulWidget {
   });
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
 }
 
 /// State class for the settings screen.
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   /// Whether notifications are enabled.
 
   bool _notificationsEnabled = true;
@@ -224,9 +226,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
-    _apiKeyController = TextEditingController(
-      text: widget.apiKeyService.getApiKey(),
-    );
+    _apiKeyController = TextEditingController();
+    _loadApiKey();
 
     // Initialise POD storage state from service manager.
 
@@ -245,6 +246,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
+  /// Loads the API key from secure storage.
+
+  Future<void> _loadApiKey() async {
+    final apiKey = await widget.apiKeyService.getApiKey();
+    if (mounted) {
+      _apiKeyController.text = apiKey ?? '';
+    }
+  }
+
   @override
   void dispose() {
     _apiKeyController.dispose();
@@ -255,10 +265,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text('Settings', style: TextStyle(color: Colors.white)),
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        title: Text(
+          'Settings',
+          style: Theme.of(context).appBarTheme.titleTextStyle,
+        ),
       ),
       body: ListView(
         children: [
@@ -334,17 +347,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const SizedBox(height: 8),
                   TextField(
                     controller: _apiKeyController,
-                    style: const TextStyle(color: Colors.white),
+                    style: Theme.of(context).textTheme.bodyLarge,
                     focusNode: _apiKeyFocusNode,
                     decoration: InputDecoration(
                       hintText: 'Enter your MovieDB API key',
-                      hintStyle: const TextStyle(color: Colors.grey),
+                      hintStyle:
+                          Theme.of(context).inputDecorationTheme.hintStyle,
                       filled: true,
-                      fillColor: Colors.grey[900],
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide.none,
-                      ),
+                      fillColor:
+                          Theme.of(context).inputDecorationTheme.fillColor,
+                      border: Theme.of(context).inputDecorationTheme.border,
+                      enabledBorder:
+                          Theme.of(context).inputDecorationTheme.enabledBorder,
+                      focusedBorder:
+                          Theme.of(context).inputDecorationTheme.focusedBorder,
                     ),
                     obscureText: true,
                   ),
@@ -413,6 +429,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   await _disablePodStorage();
                 }
               },
+            ),
+          ]),
+          _buildSection('Appearance', [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Theme',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Switch between light and dark mode',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                      const ThemeToggleButton(isIconButton: true),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ]),
           _buildSection('Preferences', [
@@ -488,15 +534,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
           padding: const EdgeInsets.all(16),
           child: Text(
             title,
-            style: const TextStyle(
-              color: Colors.grey,
+            style: TextStyle(
+              color: Theme.of(context).textTheme.bodyMedium?.color,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
         ...children,
-        const Divider(color: Colors.grey),
+        Divider(color: Theme.of(context).dividerColor),
       ],
     );
   }
@@ -510,11 +556,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ValueChanged<bool> onChanged,
   ) {
     return SwitchListTile(
-      title: Text(title, style: const TextStyle(color: Colors.white)),
-      subtitle: Text(subtitle, style: const TextStyle(color: Colors.grey)),
+      title: Text(title, style: Theme.of(context).textTheme.bodyLarge),
+      subtitle: Text(subtitle, style: Theme.of(context).textTheme.bodyMedium),
       value: value,
       onChanged: onChanged,
-      activeColor: Colors.red,
+      activeColor: Theme.of(context).colorScheme.primary,
     );
   }
 
@@ -527,18 +573,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ValueChanged<String?> onChanged,
   ) {
     return ListTile(
-      title: Text(title, style: const TextStyle(color: Colors.white)),
+      title: Text(title, style: Theme.of(context).textTheme.bodyLarge),
       trailing: DropdownButton<String>(
         value: value,
         items:
             items.map((String item) {
               return DropdownMenuItem<String>(
                 value: item,
-                child: Text(item, style: const TextStyle(color: Colors.white)),
+                child: Text(
+                  item,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               );
             }).toList(),
         onChanged: onChanged,
-        dropdownColor: Colors.grey[900],
+        dropdownColor: Theme.of(context).cardColor,
         underline: const SizedBox(),
       ),
     );
@@ -553,10 +602,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
     bool isDestructive = false,
   }) {
     return ListTile(
-      leading: Icon(icon, color: isDestructive ? Colors.red : Colors.white),
+      leading: Icon(
+        icon,
+        color:
+            isDestructive
+                ? Theme.of(context).colorScheme.error
+                : Theme.of(context).iconTheme.color,
+      ),
       title: Text(
         title,
-        style: TextStyle(color: isDestructive ? Colors.red : Colors.white),
+        style: TextStyle(
+          color:
+              isDestructive
+                  ? Theme.of(context).colorScheme.error
+                  : Theme.of(context).textTheme.bodyLarge?.color,
+        ),
       ),
       onTap: onTap,
     );

@@ -98,10 +98,13 @@ class _ComingSoonScreenState extends State<ComingSoonScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text('Coming Soon', style: TextStyle(color: Colors.white)),
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        title: Text(
+          'Coming Soon',
+          style: Theme.of(context).appBarTheme.titleTextStyle,
+        ),
       ),
       body:
           _isLoading
@@ -130,7 +133,7 @@ class _ComingSoonScreenState extends State<ComingSoonScreen> {
                     ),
                     title: Text(
                       movie.title,
-                      style: const TextStyle(color: Colors.white),
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     subtitle: Text(
                       'Release Date: ${DateFormatUtil.formatNumeric(movie.releaseDate)}',

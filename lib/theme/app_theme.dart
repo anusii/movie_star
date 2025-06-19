@@ -31,8 +31,9 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   /// Primary color for the application.
+  /// Using a more balanced red that provides better contrast in both light and dark modes.
 
-  static const Color primaryColor = Colors.red;
+  static const Color primaryColor = Color(0xFFD32F2F);
 
   /// Background color for the application.
 
@@ -71,70 +72,93 @@ class AppTheme {
         seedColor: primaryColor,
         brightness: Brightness.light,
       ),
-      scaffoldBackgroundColor: backgroundColor,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: backgroundColor,
-        elevation: 0,
-        iconTheme: IconThemeData(color: primaryTextColor),
-        titleTextStyle: TextStyle(
-          color: primaryTextColor,
+
+      // Set primary text color for input fields.
+      primaryColor: primaryColor,
+      primaryColorDark: Colors.black87,
+      primaryColorLight: Colors.black87,
+      scaffoldBackgroundColor: Colors.grey[50],
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.white,
+        elevation: 1,
+        shadowColor: Colors.grey[300],
+        iconTheme: const IconThemeData(color: Colors.black87),
+        titleTextStyle: const TextStyle(
+          color: Colors.black87,
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
       ),
-      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: backgroundColor,
-        selectedItemColor: selectedItemColor,
-        unselectedItemColor: unselectedItemColor,
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: Colors.white,
+        selectedItemColor: primaryColor,
+        unselectedItemColor: Colors.grey[600],
+        elevation: 8,
       ),
-      textTheme: const TextTheme(
-        displayLarge: TextStyle(
-          color: primaryTextColor,
+      textTheme: TextTheme(
+        displayLarge: const TextStyle(
+          color: Colors.black87,
           fontSize: 32,
           fontWeight: FontWeight.bold,
         ),
-        displayMedium: TextStyle(
-          color: primaryTextColor,
+        displayMedium: const TextStyle(
+          color: Colors.black87,
           fontSize: 28,
           fontWeight: FontWeight.bold,
         ),
-        displaySmall: TextStyle(
-          color: primaryTextColor,
+        displaySmall: const TextStyle(
+          color: Colors.black87,
           fontSize: 24,
           fontWeight: FontWeight.bold,
         ),
-        headlineMedium: TextStyle(
-          color: primaryTextColor,
+        headlineMedium: const TextStyle(
+          color: Colors.black87,
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
-        bodyLarge: TextStyle(color: primaryTextColor, fontSize: 16),
-        bodyMedium: TextStyle(color: primaryTextColor, fontSize: 14),
-        labelLarge: TextStyle(
-          color: primaryTextColor,
+        bodyLarge: const TextStyle(color: Colors.black87, fontSize: 16),
+        bodyMedium: TextStyle(color: Colors.grey[700], fontSize: 14),
+        labelLarge: const TextStyle(
+          color: Colors.black87,
           fontSize: 16,
           fontWeight: FontWeight.bold,
         ),
       ),
       cardTheme: CardThemeData(
-        color: Colors.grey[900],
+        color: Colors.white,
+        elevation: 2,
+        shadowColor: Colors.grey[300],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(defaultBorderRadius),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: Colors.grey[900],
+        fillColor: Colors.grey[100],
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(defaultBorderRadius),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(color: Colors.grey[300]!),
         ),
-        hintStyle: const TextStyle(color: secondaryTextColor),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(defaultBorderRadius),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(defaultBorderRadius),
+          borderSide: BorderSide(color: primaryColor, width: 2),
+        ),
+        hintStyle: TextStyle(color: Colors.grey[600]),
+
+        // Ensure proper text color for light background.
+        labelStyle: const TextStyle(color: Colors.black87),
+        helperStyle: const TextStyle(color: Colors.black87),
+        counterStyle: const TextStyle(color: Colors.black87),
+        errorStyle: TextStyle(color: Colors.red[700]),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: primaryColor,
-          foregroundColor: primaryTextColor,
+          foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(
             horizontal: defaultPadding,
             vertical: defaultPadding / 2,
@@ -156,53 +180,61 @@ class AppTheme {
         seedColor: primaryColor,
         brightness: Brightness.dark,
       ),
-      scaffoldBackgroundColor: backgroundColor,
+
+      // Set primary text color for input fields.
+      primaryColor: primaryColor,
+      primaryColorDark: Colors.white,
+      primaryColorLight: Colors.white,
+      scaffoldBackgroundColor: Colors.black,
       appBarTheme: const AppBarTheme(
-        backgroundColor: backgroundColor,
+        backgroundColor: Colors.black,
         elevation: 0,
-        iconTheme: IconThemeData(color: primaryTextColor),
+        iconTheme: IconThemeData(color: Colors.white),
         titleTextStyle: TextStyle(
-          color: primaryTextColor,
+          color: Colors.white,
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: backgroundColor,
-        selectedItemColor: selectedItemColor,
-        unselectedItemColor: unselectedItemColor,
+        backgroundColor: Colors.black,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.grey,
+        elevation: 0,
       ),
       textTheme: const TextTheme(
         displayLarge: TextStyle(
-          color: primaryTextColor,
+          color: Colors.white,
           fontSize: 32,
           fontWeight: FontWeight.bold,
         ),
         displayMedium: TextStyle(
-          color: primaryTextColor,
+          color: Colors.white,
           fontSize: 28,
           fontWeight: FontWeight.bold,
         ),
         displaySmall: TextStyle(
-          color: primaryTextColor,
+          color: Colors.white,
           fontSize: 24,
           fontWeight: FontWeight.bold,
         ),
         headlineMedium: TextStyle(
-          color: primaryTextColor,
+          color: Colors.white,
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
-        bodyLarge: TextStyle(color: primaryTextColor, fontSize: 16),
-        bodyMedium: TextStyle(color: primaryTextColor, fontSize: 14),
+        bodyLarge: TextStyle(color: Colors.white, fontSize: 16),
+        bodyMedium: TextStyle(color: Colors.grey, fontSize: 14),
         labelLarge: TextStyle(
-          color: primaryTextColor,
+          color: Colors.white,
           fontSize: 16,
           fontWeight: FontWeight.bold,
         ),
       ),
       cardTheme: CardThemeData(
         color: Colors.grey[900],
+        elevation: 4,
+        shadowColor: Colors.black54,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(defaultBorderRadius),
         ),
@@ -214,12 +246,26 @@ class AppTheme {
           borderRadius: BorderRadius.circular(defaultBorderRadius),
           borderSide: BorderSide.none,
         ),
-        hintStyle: const TextStyle(color: secondaryTextColor),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(defaultBorderRadius),
+          borderSide: BorderSide(color: Colors.grey[700]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(defaultBorderRadius),
+          borderSide: BorderSide(color: primaryColor, width: 2),
+        ),
+        hintStyle: const TextStyle(color: Colors.grey),
+
+        // Ensure proper text color for dark background.
+        labelStyle: const TextStyle(color: Colors.white),
+        helperStyle: const TextStyle(color: Colors.white),
+        counterStyle: const TextStyle(color: Colors.white),
+        errorStyle: const TextStyle(color: Colors.red),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: primaryColor,
-          foregroundColor: primaryTextColor,
+          foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(
             horizontal: defaultPadding,
             vertical: defaultPadding / 2,

@@ -138,16 +138,21 @@ class _FileServiceWidgetState extends ConsumerState<FileServiceWidget> {
                 _browserKey.currentState?.navigateToPath(rootPath);
               }
             },
-            icon: const Icon(Icons.arrow_back, color: AppTheme.primaryColor),
-            label: const Text(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            label: Text(
               'Back to Home Folder',
               style: TextStyle(
-                color: AppTheme.primaryTextColor,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
                 fontWeight: FontWeight.bold,
               ),
             ),
             style: TextButton.styleFrom(
-              backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.1),
+              backgroundColor: Theme.of(
+                context,
+              ).colorScheme.primary.withValues(alpha: 0.1),
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(
@@ -170,7 +175,7 @@ class _FileServiceWidgetState extends ConsumerState<FileServiceWidget> {
                         Expanded(
                           flex: 2,
                           child: Card(
-                            color: Colors.grey[900],
+                            color: Theme.of(context).cardColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
                                 AppTheme.defaultBorderRadius,
@@ -240,18 +245,23 @@ class _FileServiceWidgetState extends ConsumerState<FileServiceWidget> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        backgroundColor: Colors.grey[900],
-                                        title: const Text(
+                                        backgroundColor:
+                                            Theme.of(
+                                              context,
+                                            ).dialogTheme.backgroundColor,
+                                        title: Text(
                                           'Confirm Delete',
-                                          style: TextStyle(
-                                            color: AppTheme.primaryTextColor,
-                                          ),
+                                          style:
+                                              Theme.of(
+                                                context,
+                                              ).textTheme.titleLarge,
                                         ),
                                         content: Text(
                                           'Are you sure you want to delete "$name"?',
-                                          style: const TextStyle(
-                                            color: AppTheme.primaryTextColor,
-                                          ),
+                                          style:
+                                              Theme.of(
+                                                context,
+                                              ).textTheme.bodyMedium,
                                         ),
                                         actions: [
                                           TextButton(
@@ -316,7 +326,7 @@ class _FileServiceWidgetState extends ConsumerState<FileServiceWidget> {
                         Expanded(
                           flex: 1,
                           child: Card(
-                            color: Colors.grey[900],
+                            color: Theme.of(context).cardColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
                                 AppTheme.defaultBorderRadius,
@@ -341,7 +351,7 @@ class _FileServiceWidgetState extends ConsumerState<FileServiceWidget> {
                       children: [
                         // File browser.
                         Card(
-                          color: Colors.grey[900],
+                          color: Theme.of(context).cardColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(
                               AppTheme.defaultBorderRadius,
@@ -407,18 +417,23 @@ class _FileServiceWidgetState extends ConsumerState<FileServiceWidget> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      backgroundColor: Colors.grey[900],
-                                      title: const Text(
+                                      backgroundColor:
+                                          Theme.of(
+                                            context,
+                                          ).dialogTheme.backgroundColor,
+                                      title: Text(
                                         'Confirm Delete',
-                                        style: TextStyle(
-                                          color: AppTheme.primaryTextColor,
-                                        ),
+                                        style:
+                                            Theme.of(
+                                              context,
+                                            ).textTheme.titleLarge,
                                       ),
                                       content: Text(
                                         'Are you sure you want to delete "$name"?',
-                                        style: const TextStyle(
-                                          color: AppTheme.primaryTextColor,
-                                        ),
+                                        style:
+                                            Theme.of(
+                                              context,
+                                            ).textTheme.bodyMedium,
                                       ),
                                       actions: [
                                         TextButton(
@@ -480,7 +495,7 @@ class _FileServiceWidgetState extends ConsumerState<FileServiceWidget> {
 
                         // Upload section.
                         Card(
-                          color: Colors.grey[900],
+                          color: Theme.of(context).cardColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(
                               AppTheme.defaultBorderRadius,
