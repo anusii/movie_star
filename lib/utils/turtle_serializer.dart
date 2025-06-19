@@ -11,6 +11,9 @@ library;
 import 'dart:convert';
 
 import 'package:rdflib/rdflib.dart';
+// ignore: implementation_imports
+import 'package:solidpod/src/solid/utils/rdf.dart'
+    show tripleMapToTurtle, turtleToTripleMap;
 
 import 'package:moviestar/models/movie.dart';
 
