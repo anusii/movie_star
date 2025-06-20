@@ -1,0 +1,26 @@
+@prefix : <https://sii.anu.edu.au/onto/moviestar#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sdo: <https://schema.org/> .
+@prefix moviestar-data: <https://sii.anu.edu.au/data/moviestar/> .
+@prefix moviestar-onto: <https://sii.anu.edu.au/onto/moviestar#> .
+
+<https://pods.solidcommunity.au/john_doe/profile/card#me> rdf:type owl:NamedIndividual ,
+                                                                moviestar-onto:Participant ;
+                                                       moviestar-onto:hasMovie moviestar-data:movie-5fc3b7da690126, moviestar-data:movie-0gr3b7d4260172 ;
+                                                       moviestar-onto:DOB "1995-05-07"^^xsd:date ;
+                                                       moviestar-onto:gender "Male" ;
+                                                       moviestar-onto:apiKey "1235486" ;
+                                                       moviestar-onto:webID "https://pods.solidcommunity.au/john_doe/profile/card#me"^^xsd:anyURI ;
+                                                       rdfs:label "|webID=https://pods.solidcommunity.au/john_doe/profile/card#me|" .
+													   
+moviestar-data:movie-5fc3b7da690126 rdf:type owl:NamedIndividual ,
+                                                          sdo:Movie ;
+                                                 moviestar-onto:filePath "moviestar/data/movie-5fc3b7da690126.ttl" ;
+                                                 rdfs:label "|filePath=moviestar/data/movie-5fc3b7da690126.ttl|" .
+												 
+moviestar-data:movie-0gr3b7d4260172 rdf:type owl:NamedIndividual ,
+                                                          sdo:Movie ;
+                                                 moviestar-onto:filePath "moviestar/data/movie-0gr3b7d4260172.ttl" ;
+                                                 rdfs:label "|filePath=moviestar/data/movie-0gr3b7d4260172.ttl|" .
