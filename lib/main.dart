@@ -38,6 +38,8 @@ import 'package:moviestar/screens/home_screen.dart';
 import 'package:moviestar/screens/settings_screen.dart';
 import 'package:moviestar/services/api_key_service.dart';
 import 'package:moviestar/services/favorites_service.dart';
+import 'package:moviestar/services/favorites_service_adapter.dart';
+import 'package:moviestar/services/favorites_service_manager.dart';
 import 'package:moviestar/services/movie_service.dart';
 import 'package:moviestar/theme/app_theme.dart';
 import 'package:moviestar/utils/create_solid_login.dart';
@@ -97,6 +99,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
   /// Service for managing favorite movies.
 
+  late final FavoritesServiceManager _favoritesServiceManager;
   late final FavoritesService _favoritesService;
   late final ApiKeyService _apiKeyService;
   late final MovieService _movieService;
@@ -108,7 +111,12 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    _favoritesService = FavoritesService(widget.prefs);
+    _favoritesServiceManager = FavoritesServiceManager(
+      widget.prefs,
+      context,
+      widget,
+    );
+    _favoritesService = FavoritesServiceAdapter(_favoritesServiceManager);
     _apiKeyService = ApiKeyService();
     _movieService = MovieService(_apiKeyService);
 
@@ -160,6 +168,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       SettingsScreen(
         favoritesService: _favoritesService,
         apiKeyService: _apiKeyService,
+        favoritesServiceManager: _favoritesServiceManager,
       ),
     ];
     _initialiseAppData();
@@ -181,13 +190,16 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               });
             }
           },
-          onComplete: () {
+          onComplete: () async {
             if (mounted) {
               setState(() {
                 _isLoadingFolders = false;
               });
             }
             debugPrint('App folders initialised.');
+            // Now reload POD data since folders are ready.
+
+            await _favoritesServiceManager.reloadPodDataAfterInit();
           },
         );
         if (mounted && _isLoadingFolders) {
