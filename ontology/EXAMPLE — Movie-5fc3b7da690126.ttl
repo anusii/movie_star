@@ -9,14 +9,12 @@
 moviestar-data:movie-785b0c2260e45d rdf:type owl:NamedIndividual ,
                                                         sdo:Movie ;
                                                sdo:identifier "12345678"^^xsd:positiveInteger ;
-											   sdo:name "12345678" ;
-											   sdo:description "12345678" ;
+											   sdo:name "Don't Look Up" ;
+											   sdo:description "Two low-level astronomers must go on a giant media tour to warn humankind of an approaching comet that will destroy planet Earth." ;
 											   sdo:image "https://url.to.image"^^xsd:anyURI ;
 											   sdo:thumbnailUrl "https://url.to.thumbnail"^^xsd:anyURI ;
-											   sdo:aggregateRating "7.5"^^xsd:double ;
+											   sdo:aggregateRating "7.2"^^xsd:double ;
 											   sdo:datePublished "2024-10-30"^^xsd:date ;
-											   sdo:genre "sci-fi,commedy,action" ;
-											   moviestar-onto:toWatch "false"^^xsd:boolean ;
-											   moviestar-onto:favourite "true"^^xsd:boolean ;
-											   sdo:contentRating "6.0"^^xsd:double ;
+											   sdo:genre "sci-fi,commedy,drama" ;
+											   sdo:contentRating "6.5"^^xsd:double ;
 											   sdo:comment "Good watch. Funny. Storyline could have been better" .
