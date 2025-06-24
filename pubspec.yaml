@@ -19,7 +19,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.7.2
+  sdk: ^3.7.0
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -43,6 +43,10 @@ dependencies:
   rxdart: ^0.28.0
   intl: ^0.19.0
   flutter_riverpod: ^2.6.1
+  # Database dependencies for local caching
+  drift: ^2.18.0
+  sqlite3_flutter_libs: ^0.5.0
+  path_provider: ^2.0.15
   solidpod:
     git:
       url: https://github.com/anusii/solidpod.git
@@ -66,6 +70,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  # Database code generation dependencies
+  build_runner: ^2.4.7
+  drift_dev: ^2.18.0
   import_order_lint:
     git:
       url: https://github.com/anusii/import-order-lint.git
