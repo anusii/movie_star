@@ -30,6 +30,7 @@ import 'dart:developer' as developer;
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Service for managing cache-related settings with persistent storage.
+
 class CacheSettingsService {
   static const String _cachingEnabledKey = 'cache_settings_caching_enabled';
   static const String _cacheOnlyModeKey = 'cache_settings_cache_only_mode';
@@ -41,12 +42,14 @@ class CacheSettingsService {
   CacheSettingsService._();
 
   /// Gets the singleton instance of CacheSettingsService.
+
   static CacheSettingsService get instance {
     _instance ??= CacheSettingsService._();
     return _instance!;
   }
 
-  /// Initializes the service and loads settings from SharedPreferences.
+  /// Initialises the service and loads settings from SharedPreferences.
+
   Future<void> initialize() async {
     if (_initialized) return;
 
@@ -59,11 +62,13 @@ class CacheSettingsService {
   }
 
   /// Gets whether caching is enabled (defaults to true).
+
   bool get cachingEnabled {
     return _prefs?.getBool(_cachingEnabledKey) ?? true;
   }
 
   /// Sets whether caching is enabled.
+
   Future<void> setCachingEnabled(bool enabled) async {
     await _prefs?.setBool(_cachingEnabledKey, enabled);
     developer.log(
@@ -72,12 +77,14 @@ class CacheSettingsService {
     );
   }
 
-  /// Gets whether cache-only mode is enabled (defaults to false).
+  /// Gets whether cache-only mode is enabled (defaults to false)
+
   bool get cacheOnlyMode {
     return _prefs?.getBool(_cacheOnlyModeKey) ?? false;
   }
 
   /// Sets whether cache-only mode is enabled.
+
   Future<void> setCacheOnlyMode(bool enabled) async {
     await _prefs?.setBool(_cacheOnlyModeKey, enabled);
     developer.log(
@@ -87,6 +94,7 @@ class CacheSettingsService {
   }
 
   /// Resets all cache settings to defaults.
+
   Future<void> resetToDefaults() async {
     await _prefs?.remove(_cachingEnabledKey);
     await _prefs?.remove(_cacheOnlyModeKey);

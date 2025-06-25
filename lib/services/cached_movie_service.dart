@@ -93,13 +93,15 @@ class CachedMovieService {
 
     if (!_cachingEnabled) {
       // Caching disabled, go straight to network.
+
       developer.log(
         'Caching disabled for ${category.value}, going to network',
         name: 'CachedMovieService',
       );
 
       if (_cacheOnlyMode) {
-        // This shouldn't happen with the new UI logic, but handle it gracefully
+        // This shouldn't happen with the new UI logic, but handle it gracefully.
+
         developer.log(
           'Invalid state: Cache-only mode enabled but caching is disabled for ${category.value}',
           name: 'CachedMovieService',
@@ -148,7 +150,8 @@ class CachedMovieService {
         name: 'CachedMovieService',
       );
 
-      // Try to return stale cache if available
+      // Try to return stale cache if available.
+
       final staleMovies = await _cacheRepository.getStaleMovies(category);
       if (staleMovies != null && staleMovies.isNotEmpty) {
         developer.log(
@@ -158,7 +161,8 @@ class CachedMovieService {
         return CacheResult(data: staleMovies, fromCache: true);
       }
 
-      // No cache data available at all
+      // No cache data available at all.
+
       developer.log(
         'No cache data available for ${category.value} in cache-only mode',
         name: 'CachedMovieService',

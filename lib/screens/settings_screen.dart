@@ -144,13 +144,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     List<Widget> actions;
 
     if (!cachingEnabled) {
-      // Caching is disabled - clearing cache is harmless
+      // Caching is disabled - clearing cache is harmless.
+
       dialogTitle = 'Clear All Cache';
       dialogContent =
           'This will remove any cached movie data. Since caching is disabled, this won\'t affect your ability to load movies from the network.';
       confirmButtonText = 'Clear';
     } else if (cacheOnlyMode) {
       // Cache-only mode is enabled - this will break the app!
+
       dialogTitle = '⚠️ Clear Cache in Cache-Only Mode';
       dialogContent =
           'WARNING: You have Cache-Only Mode enabled, which means no network calls are allowed.\n\n'
@@ -158,7 +160,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           'Recommended: Disable Cache-Only Mode first, then clear cache.';
       confirmButtonText = 'Clear Anyway';
     } else {
-      // Normal case - caching enabled but can fallback to network
+      // Normal case - caching enabled but can fallback to network.
+
       dialogTitle = 'Clear All Cache';
       dialogContent =
           'This will remove all cached movie data. Fresh data will be downloaded from the network when needed.';
@@ -174,9 +177,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         TextButton(
           onPressed: () {
             Navigator.of(context).pop(false);
-            // Automatically disable cache-only mode
+            // Automatically disable cache-only mode.
             ref.read(cacheOnlyModeProvider.notifier).setCacheOnlyMode(false);
-            // Show feedback
+            // Show feedback.
+
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text(
@@ -212,7 +216,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     if (confirmed == true) {
       await _clearAllCache();
 
-      // Show additional warning if they cleared cache in cache-only mode
+      // Show additional warning if they cleared cache in cache-only mode.
+
       if (cachingEnabled && cacheOnlyMode && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -271,11 +276,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           );
         }
 
-        // Now do the refresh
+        // Now do the refresh.
+
         await _forceRefreshAll();
       }
     } else {
-      // Normal case - just refresh
+      // Normal case - just refresh.
+
       await _forceRefreshAll();
     }
   }
@@ -780,7 +787,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           cachingEnabled,
           (value) {
             ref.read(cachingEnabledProvider.notifier).setCachingEnabled(value);
-            // If disabling caching, also disable cache-only mode
+            // If disabling caching, also disable cache-only mode.
+
             if (!value && cacheOnlyMode) {
               ref.read(cacheOnlyModeProvider.notifier).setCacheOnlyMode(false);
             }
