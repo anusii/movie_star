@@ -26,9 +26,9 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:moviestar/database/movie_cache_repository.dart';
 import 'package:moviestar/providers/cached_movie_service_provider.dart';
@@ -37,11 +37,14 @@ import 'package:moviestar/services/favorites_service.dart';
 import 'package:moviestar/utils/date_format_util.dart';
 
 /// A screen that displays upcoming movies and their release dates with caching.
+
 class ComingSoonScreen extends ConsumerStatefulWidget {
   /// Service for managing favorite movies.
+
   final FavoritesService favoritesService;
 
   /// Creates a new [ComingSoonScreen] widget.
+
   const ComingSoonScreen({super.key, required this.favoritesService});
 
   @override
@@ -49,13 +52,17 @@ class ComingSoonScreen extends ConsumerStatefulWidget {
 }
 
 /// State class for the coming soon screen.
+
 class _ComingSoonScreenState extends ConsumerState<ComingSoonScreen> {
   /// Forces refresh of upcoming movies data.
+
   Future<void> _forceRefresh() async {
-    // Invalidate the provider to force refresh
+    // Invalidate the provider to force refresh.
+
     ref.invalidate(upcomingMoviesProvider);
 
-    // Force refresh through the cached service
+    // Force refresh through the cached service.
+
     final cachedService = ref.read(configuredCachedMovieServiceProvider);
     await cachedService.forceRefresh(CacheCategory.upcoming);
   }

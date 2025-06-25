@@ -26,9 +26,9 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:moviestar/models/movie.dart';
 import 'package:moviestar/providers/cached_movie_service_provider.dart';
@@ -37,11 +37,14 @@ import 'package:moviestar/screens/search_screen.dart';
 import 'package:moviestar/services/favorites_service.dart';
 
 /// A screen that displays various movie categories and trending content with caching.
+
 class HomeScreen extends ConsumerStatefulWidget {
   /// Service for managing favorite movies.
+
   final FavoritesService favoritesService;
 
   /// Creates a new [HomeScreen] widget.
+
   const HomeScreen({super.key, required this.favoritesService});
 
   @override
@@ -49,8 +52,10 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 /// State class for the home screen.
+
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   /// Map of scroll controllers for different movie categories.
+
   final Map<String, ScrollController> _scrollControllers = {};
 
   @override
@@ -71,6 +76,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   /// Builds a horizontal scrollable row of movies.
+
   Widget _buildMovieRow(
     String title,
     AsyncValue<List<Movie>> moviesAsync,
@@ -189,15 +195,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   /// Forces refresh of all movie data.
+
   Future<void> _forceRefresh() async {
-    // Invalidate all providers to force refresh
+    // Invalidate all providers to force refresh.
+
     ref.invalidate(popularMoviesProvider);
     ref.invalidate(nowPlayingMoviesProvider);
     ref.invalidate(topRatedMoviesProvider);
     ref.invalidate(upcomingMoviesProvider);
     ref.invalidate(cacheStatsProvider);
 
-    // Force refresh through the cached service
+    // Force refresh through the cached service.
+
     final cachedService = ref.read(configuredCachedMovieServiceProvider);
     await cachedService.forceRefreshAll();
   }

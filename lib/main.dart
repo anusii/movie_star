@@ -37,6 +37,7 @@ import 'package:moviestar/screens/downloads_screen.dart';
 import 'package:moviestar/screens/home_screen.dart';
 import 'package:moviestar/screens/settings_screen.dart';
 import 'package:moviestar/services/api_key_service.dart';
+import 'package:moviestar/services/cache_settings_service.dart';
 import 'package:moviestar/services/favorites_service.dart';
 import 'package:moviestar/services/favorites_service_adapter.dart';
 import 'package:moviestar/services/favorites_service_manager.dart';
@@ -50,6 +51,10 @@ import 'package:moviestar/widgets/floating_theme_toggle.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
+
+  // Initialise cache settings service early.
+
+  await CacheSettingsService.instance.initialize();
 
   runApp(
     ProviderScope(

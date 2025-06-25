@@ -97,14 +97,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   final FocusNode _apiKeyFocusNode = FocusNode();
 
-  /// Whether caching is enabled.
-
-  bool _cachingEnabled = true;
-
-  /// Whether cache-only mode is enabled.
-
-  bool _cacheOnlyMode = false;
-
   /// Launch a URL in the browser.
 
   Future<void> _launchUrl(Uri url) async {
@@ -137,6 +129,154 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
         );
       }
+    }
+  }
+
+  /// Shows smart confirmation dialog for clearing cache based on current settings.
+
+  Future<void> _showClearCacheDialog(
+    bool cachingEnabled,
+    bool cacheOnlyMode,
+  ) async {
+    String dialogTitle;
+    String dialogContent;
+    String confirmButtonText;
+    List<Widget> actions;
+
+    if (!cachingEnabled) {
+      // Caching is disabled - clearing cache is harmless
+      dialogTitle = 'Clear All Cache';
+      dialogContent =
+          'This will remove any cached movie data. Since caching is disabled, this won\'t affect your ability to load movies from the network.';
+      confirmButtonText = 'Clear';
+    } else if (cacheOnlyMode) {
+      // Cache-only mode is enabled - this will break the app!
+      dialogTitle = '⚠️ Clear Cache in Cache-Only Mode';
+      dialogContent =
+          'WARNING: You have Cache-Only Mode enabled, which means no network calls are allowed.\n\n'
+          'Clearing the cache now will leave you with no movie data and no way to fetch new data!\n\n'
+          'Recommended: Disable Cache-Only Mode first, then clear cache.';
+      confirmButtonText = 'Clear Anyway';
+    } else {
+      // Normal case - caching enabled but can fallback to network
+      dialogTitle = 'Clear All Cache';
+      dialogContent =
+          'This will remove all cached movie data. Fresh data will be downloaded from the network when needed.';
+      confirmButtonText = 'Clear';
+    }
+
+    actions = [
+      TextButton(
+        onPressed: () => Navigator.of(context).pop(false),
+        child: const Text('Cancel'),
+      ),
+      if (cachingEnabled && cacheOnlyMode) ...[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(false);
+            // Automatically disable cache-only mode
+            ref.read(cacheOnlyModeProvider.notifier).setCacheOnlyMode(false);
+            // Show feedback
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Cache-Only Mode disabled. You can now clear cache safely.',
+                ),
+                backgroundColor: Colors.blue,
+              ),
+            );
+          },
+          child: const Text('Disable Cache-Only Mode'),
+        ),
+      ],
+      TextButton(
+        onPressed: () => Navigator.of(context).pop(true),
+        style:
+            cachingEnabled && cacheOnlyMode
+                ? TextButton.styleFrom(foregroundColor: Colors.red)
+                : null,
+        child: Text(confirmButtonText),
+      ),
+    ];
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text(dialogTitle),
+            content: Text(dialogContent),
+            actions: actions,
+          ),
+    );
+
+    if (confirmed == true) {
+      await _clearAllCache();
+
+      // Show additional warning if they cleared cache in cache-only mode
+      if (cachingEnabled && cacheOnlyMode && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Cache cleared! You\'re now in Cache-Only Mode with no cached data. Consider disabling Cache-Only Mode to load fresh data.',
+            ),
+            backgroundColor: Colors.orange,
+            duration: Duration(seconds: 5),
+          ),
+        );
+      }
+    }
+  }
+
+  /// Shows smart confirmation dialog for force refresh based on current settings.
+
+  Future<void> _showForceRefreshDialog(
+    bool cachingEnabled,
+    bool cacheOnlyMode,
+  ) async {
+    if (cacheOnlyMode) {
+      // In cache-only mode, force refresh would require network calls
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder:
+            (context) => AlertDialog(
+              title: const Text('⚠️ Force Refresh in Cache-Only Mode'),
+              content: const Text(
+                'Force refresh requires downloading fresh data from the network, but you have Cache-Only Mode enabled.\n\n'
+                'Do you want to temporarily disable Cache-Only Mode and refresh all data?',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text('Disable Cache-Only & Refresh'),
+                ),
+              ],
+            ),
+      );
+
+      if (confirmed == true) {
+        // Disable cache-only mode temporarily
+        ref.read(cacheOnlyModeProvider.notifier).setCacheOnlyMode(false);
+
+        // Show feedback
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Cache-Only Mode disabled. Refreshing all data...'),
+              backgroundColor: Colors.blue,
+            ),
+          );
+        }
+
+        // Now do the refresh
+        await _forceRefreshAll();
+      }
+    } else {
+      // Normal case - just refresh
+      await _forceRefreshAll();
     }
   }
 
@@ -189,16 +329,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         );
       }
     }
-  }
-
-  /// Updates cache configuration.
-
-  void _updateCacheSettings() {
-    final cachingEnabledNotifier = ref.read(cachingEnabledProvider.notifier);
-    final cacheOnlyModeNotifier = ref.read(cacheOnlyModeProvider.notifier);
-
-    cachingEnabledNotifier.state = _cachingEnabled;
-    cacheOnlyModeNotifier.state = _cacheOnlyMode;
   }
 
   /// Enable POD storage and migrate data.
@@ -627,6 +757,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   Widget _buildCacheSection() {
     final cacheStatsAsync = ref.watch(cacheStatsProvider);
+    final cachingEnabled = ref.watch(cachingEnabledProvider);
+    final cacheOnlyMode = ref.watch(cacheOnlyModeProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -645,22 +777,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         _buildSwitchTile(
           'Enable Caching',
           'Cache movie data to improve performance',
-          _cachingEnabled,
+          cachingEnabled,
           (value) {
-            setState(() => _cachingEnabled = value);
-            _updateCacheSettings();
+            ref.read(cachingEnabledProvider.notifier).setCachingEnabled(value);
+            // If disabling caching, also disable cache-only mode
+            if (!value && cacheOnlyMode) {
+              ref.read(cacheOnlyModeProvider.notifier).setCacheOnlyMode(false);
+            }
           },
         ),
-        _buildSwitchTile(
-          'Cache-Only Mode',
-          'Use only cached data (no network calls)',
-          _cacheOnlyMode,
-          (value) {
-            setState(() => _cacheOnlyMode = value);
-            _updateCacheSettings();
-          },
-        ),
-        // Cache Statistics
+        _buildCacheOnlyModeTile(cachingEnabled, cacheOnlyMode),
+
+        // Cache Statistics.
         cacheStatsAsync.when(
           data:
               (stats) =>
@@ -756,34 +884,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           loading: () => const SizedBox.shrink(),
           error: (_, __) => const SizedBox.shrink(),
         ),
-        // Cache Actions
-        _buildListTile('Force Refresh All', Icons.refresh, _forceRefreshAll),
-        _buildListTile('Clear All Cache', Icons.delete_sweep, () async {
-          // Show confirmation dialog
-          final confirmed = await showDialog<bool>(
-            context: context,
-            builder:
-                (context) => AlertDialog(
-                  title: const Text('Clear All Cache'),
-                  content: const Text(
-                    'This will remove all cached movie data. You\'ll need to download fresh data from the network. Continue?',
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(false),
-                      child: const Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(true),
-                      child: const Text('Clear'),
-                    ),
-                  ],
-                ),
-          );
 
-          if (confirmed == true) {
-            await _clearAllCache();
-          }
+        // Cache Actions.
+        _buildListTile('Force Refresh All', Icons.refresh, () async {
+          await _showForceRefreshDialog(cachingEnabled, cacheOnlyMode);
+        }),
+        _buildListTile('Clear All Cache', Icons.delete_sweep, () async {
+          await _showClearCacheDialog(cachingEnabled, cacheOnlyMode);
         }, isDestructive: true),
         Divider(color: Theme.of(context).dividerColor),
       ],
@@ -817,6 +924,45 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     } else {
       return 'just now';
     }
+  }
+
+  /// Builds the cache-only mode tile with proper enabled/disabled state.
+
+  Widget _buildCacheOnlyModeTile(bool cachingEnabled, bool cacheOnlyMode) {
+    return SwitchListTile(
+      title: Text(
+        'Cache-Only Mode',
+        style:
+            cachingEnabled
+                ? Theme.of(context).textTheme.bodyLarge
+                : Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: Theme.of(context).disabledColor,
+                ),
+      ),
+      subtitle: Text(
+        cachingEnabled
+            ? (cacheOnlyMode
+                ? 'Using only cached data (no network calls)'
+                : 'Allow network calls when cache is empty')
+            : 'Enable caching first to use cache-only mode',
+        style:
+            cachingEnabled
+                ? Theme.of(context).textTheme.bodyMedium
+                : Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).disabledColor,
+                ),
+      ),
+      value: cacheOnlyMode && cachingEnabled,
+      onChanged:
+          cachingEnabled
+              ? (value) {
+                ref
+                    .read(cacheOnlyModeProvider.notifier)
+                    .setCacheOnlyMode(value);
+              }
+              : null,
+      activeColor: Theme.of(context).colorScheme.primary,
+    );
   }
 
   /// Builds a section of settings with a title and children widgets.

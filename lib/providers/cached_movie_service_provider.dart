@@ -31,8 +31,49 @@ import 'package:moviestar/database/movie_cache_repository.dart';
 import 'package:moviestar/models/movie.dart';
 import 'package:moviestar/providers/database_provider.dart';
 import 'package:moviestar/services/api_key_service.dart';
+import 'package:moviestar/services/cache_settings_service.dart';
 import 'package:moviestar/services/cached_movie_service.dart';
 import 'package:moviestar/services/movie_service.dart';
+
+/// StateNotifier for managing caching enabled setting with persistence.
+
+class CachingEnabledNotifier extends StateNotifier<bool> {
+  final CacheSettingsService _settingsService;
+
+  CachingEnabledNotifier(this._settingsService) : super(true) {
+    _init();
+  }
+
+  Future<void> _init() async {
+    await _settingsService.initialize();
+    state = _settingsService.cachingEnabled;
+  }
+
+  Future<void> setCachingEnabled(bool enabled) async {
+    await _settingsService.setCachingEnabled(enabled);
+    state = enabled;
+  }
+}
+
+/// StateNotifier for managing cache-only mode setting with persistence.
+
+class CacheOnlyModeNotifier extends StateNotifier<bool> {
+  final CacheSettingsService _settingsService;
+
+  CacheOnlyModeNotifier(this._settingsService) : super(false) {
+    _init();
+  }
+
+  Future<void> _init() async {
+    await _settingsService.initialize();
+    state = _settingsService.cacheOnlyMode;
+  }
+
+  Future<void> setCacheOnlyMode(bool enabled) async {
+    await _settingsService.setCacheOnlyMode(enabled);
+    state = enabled;
+  }
+}
 
 /// Provider for the API key service.
 
@@ -44,7 +85,15 @@ final apiKeyServiceProvider = Provider<ApiKeyService>((ref) {
 
 final movieServiceProvider = Provider<MovieService>((ref) {
   final apiKeyService = ref.watch(apiKeyServiceProvider);
-  return MovieService(apiKeyService);
+  final movieService = MovieService(apiKeyService);
+
+  // Ensure proper disposal.
+
+  ref.onDispose(() {
+    movieService.dispose();
+  });
+
+  return movieService;
 });
 
 /// Provider for the movie cache repository.
@@ -76,65 +125,102 @@ final cachedMovieServiceProvider = Provider<CachedMovieService>((ref) {
   return cachedService;
 });
 
-/// Provider for cache-only mode state.
+/// Provider for the cache settings service.
 
-final cacheOnlyModeProvider = StateProvider<bool>((ref) => false);
+final cacheSettingsServiceProvider = Provider<CacheSettingsService>((ref) {
+  return CacheSettingsService.instance;
+});
 
-/// Provider for caching enabled state.
+/// Provider for cache-only mode state with persistence.
 
-final cachingEnabledProvider = StateProvider<bool>((ref) => true);
+final cacheOnlyModeProvider =
+    StateNotifierProvider<CacheOnlyModeNotifier, bool>((ref) {
+      final settingsService = ref.watch(cacheSettingsServiceProvider);
+      return CacheOnlyModeNotifier(settingsService);
+    });
+
+/// Provider for caching enabled state with persistence.
+
+final cachingEnabledProvider =
+    StateNotifierProvider<CachingEnabledNotifier, bool>((ref) {
+      final settingsService = ref.watch(cacheSettingsServiceProvider);
+      return CachingEnabledNotifier(settingsService);
+    });
 
 /// Provider for configured cached movie service (with settings).
 
-final configuredCachedMovieServiceProvider = Provider<CachedMovieService>((
-  ref,
-) {
-  final movieService = ref.watch(movieServiceProvider);
-  final cacheRepository = ref.watch(movieCacheRepositoryProvider);
-  final cachingEnabled = ref.watch(cachingEnabledProvider);
-  final cacheOnlyMode = ref.watch(cacheOnlyModeProvider);
+final configuredCachedMovieServiceProvider =
+    Provider.autoDispose<CachedMovieService>((ref) {
+      final movieService = ref.watch(movieServiceProvider);
+      final cacheRepository = ref.watch(movieCacheRepositoryProvider);
+      final cachingEnabled = ref.watch(cachingEnabledProvider);
+      final cacheOnlyMode = ref.watch(cacheOnlyModeProvider);
 
-  final cachedService = CachedMovieService(
-    movieService,
-    cacheRepository,
-    cachingEnabled: cachingEnabled,
-    cacheOnlyMode: cacheOnlyMode,
-  );
+      final cachedService = CachedMovieService(
+        movieService,
+        cacheRepository,
+        cachingEnabled: cachingEnabled,
+        cacheOnlyMode: cacheOnlyMode,
+      );
 
-  // Ensure proper disposal.
+      // Ensure proper disposal.
 
-  ref.onDispose(() {
-    cachedService.dispose();
-  });
+      ref.onDispose(() {
+        cachedService.dispose();
+      });
 
-  return cachedService;
-});
+      return cachedService;
+    });
 
 /// Provider for popular movies with caching.
 
-final popularMoviesProvider = FutureProvider<List<Movie>>((ref) async {
+final popularMoviesProvider = FutureProvider.autoDispose<List<Movie>>((
+  ref,
+) async {
   final cachedService = ref.watch(configuredCachedMovieServiceProvider);
+  // Watch cache settings to invalidate when they change.
+
+  ref.watch(cachingEnabledProvider);
+  ref.watch(cacheOnlyModeProvider);
   return await cachedService.getPopularMovies();
 });
 
 /// Provider for now playing movies with caching.
 
-final nowPlayingMoviesProvider = FutureProvider<List<Movie>>((ref) async {
+final nowPlayingMoviesProvider = FutureProvider.autoDispose<List<Movie>>((
+  ref,
+) async {
   final cachedService = ref.watch(configuredCachedMovieServiceProvider);
+  // Watch cache settings to invalidate when they change.
+
+  ref.watch(cachingEnabledProvider);
+  ref.watch(cacheOnlyModeProvider);
   return await cachedService.getNowPlayingMovies();
 });
 
 /// Provider for top rated movies with caching.
 
-final topRatedMoviesProvider = FutureProvider<List<Movie>>((ref) async {
+final topRatedMoviesProvider = FutureProvider.autoDispose<List<Movie>>((
+  ref,
+) async {
   final cachedService = ref.watch(configuredCachedMovieServiceProvider);
+  // Watch cache settings to invalidate when they change.
+
+  ref.watch(cachingEnabledProvider);
+  ref.watch(cacheOnlyModeProvider);
   return await cachedService.getTopRatedMovies();
 });
 
 /// Provider for upcoming movies with caching.
 
-final upcomingMoviesProvider = FutureProvider<List<Movie>>((ref) async {
+final upcomingMoviesProvider = FutureProvider.autoDispose<List<Movie>>((
+  ref,
+) async {
   final cachedService = ref.watch(configuredCachedMovieServiceProvider);
+  // Watch cache settings to invalidate when they change.
+
+  ref.watch(cachingEnabledProvider);
+  ref.watch(cacheOnlyModeProvider);
   return await cachedService.getUpcomingMovies();
 });
 
