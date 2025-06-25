@@ -155,14 +155,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
   void _buildScreens() {
     _screens = [
-      HomeScreen(
-        favoritesService: _favoritesService,
-        movieService: _movieService,
-      ),
-      ComingSoonScreen(
-        favoritesService: _favoritesService,
-        movieService: _movieService,
-      ),
+      HomeScreen(favoritesService: _favoritesService),
+      ComingSoonScreen(favoritesService: _favoritesService),
       const DownloadsScreen(),
       const FileService(),
       SettingsScreen(

@@ -30,6 +30,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:moviestar/database/movie_cache_repository.dart';
+import 'package:moviestar/providers/cached_movie_service_provider.dart';
 import 'package:moviestar/screens/to_watch_screen.dart';
 import 'package:moviestar/screens/watched_screen.dart';
 import 'package:moviestar/services/api_key_service.dart';
@@ -95,12 +97,108 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   final FocusNode _apiKeyFocusNode = FocusNode();
 
+  /// Whether caching is enabled.
+
+  bool _cachingEnabled = true;
+
+  /// Whether cache-only mode is enabled.
+
+  bool _cacheOnlyMode = false;
+
   /// Launch a URL in the browser.
 
   Future<void> _launchUrl(Uri url) async {
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');
     }
+  }
+
+  /// Clears all cached movie data.
+
+  Future<void> _clearAllCache() async {
+    try {
+      final cachedService = ref.read(configuredCachedMovieServiceProvider);
+      await cachedService.clearAllCache();
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('All cached movie data cleared successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to clear cache: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  /// Forces refresh of all movie categories.
+
+  Future<void> _forceRefreshAll() async {
+    try {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Row(
+              children: [
+                SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                ),
+                SizedBox(width: 16),
+                Text('Refreshing all movie data...'),
+              ],
+            ),
+            duration: Duration(seconds: 10),
+          ),
+        );
+      }
+
+      final cachedService = ref.read(configuredCachedMovieServiceProvider);
+      await cachedService.forceRefreshAll();
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('All movie data refreshed successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to refresh data: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  /// Updates cache configuration.
+
+  void _updateCacheSettings() {
+    final cachingEnabledNotifier = ref.read(cachingEnabledProvider.notifier);
+    final cacheOnlyModeNotifier = ref.read(cacheOnlyModeProvider.notifier);
+
+    cachingEnabledNotifier.state = _cachingEnabled;
+    cacheOnlyModeNotifier.state = _cacheOnlyMode;
   }
 
   /// Enable POD storage and migrate data.
@@ -475,6 +573,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               (value) => setState(() => _autoPlayEnabled = value),
             ),
           ]),
+          _buildCacheSection(),
           _buildSection('Playback', [
             _buildDropdownTile(
               'Language',
@@ -522,6 +621,202 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ],
       ),
     );
+  }
+
+  /// Builds the cache management section.
+
+  Widget _buildCacheSection() {
+    final cacheStatsAsync = ref.watch(cacheStatsProvider);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Text(
+            'Cache Management',
+            style: TextStyle(
+              color: Theme.of(context).textTheme.bodyMedium?.color,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        _buildSwitchTile(
+          'Enable Caching',
+          'Cache movie data to improve performance',
+          _cachingEnabled,
+          (value) {
+            setState(() => _cachingEnabled = value);
+            _updateCacheSettings();
+          },
+        ),
+        _buildSwitchTile(
+          'Cache-Only Mode',
+          'Use only cached data (no network calls)',
+          _cacheOnlyMode,
+          (value) {
+            setState(() => _cacheOnlyMode = value);
+            _updateCacheSettings();
+          },
+        ),
+        // Cache Statistics
+        cacheStatsAsync.when(
+          data:
+              (stats) =>
+                  stats.isEmpty
+                      ? const SizedBox.shrink()
+                      : Card(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(Icons.storage, size: 16),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'Cache Statistics',
+                                    style:
+                                        Theme.of(context).textTheme.titleSmall,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              ...stats.entries.map((entry) {
+                                final category = entry.key;
+                                final stat = entry.value;
+                                final categoryName = _getCategoryDisplayName(
+                                  category,
+                                );
+
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 8),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            categoryName,
+                                            style:
+                                                Theme.of(
+                                                  context,
+                                                ).textTheme.bodyMedium,
+                                          ),
+                                          Text(
+                                            'Updated ${_getTimeAgo(stat.age)} ago',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall
+                                                ?.copyWith(color: Colors.grey),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            stat.isValid
+                                                ? Icons.check_circle
+                                                : Icons.schedule,
+                                            size: 16,
+                                            color:
+                                                stat.isValid
+                                                    ? Colors.green
+                                                    : Colors.orange,
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            stat.isValid
+                                                ? '${stat.movieCount} movies'
+                                                : 'Expired',
+                                            style:
+                                                Theme.of(
+                                                  context,
+                                                ).textTheme.bodySmall,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }),
+                            ],
+                          ),
+                        ),
+                      ),
+          loading: () => const SizedBox.shrink(),
+          error: (_, __) => const SizedBox.shrink(),
+        ),
+        // Cache Actions
+        _buildListTile('Force Refresh All', Icons.refresh, _forceRefreshAll),
+        _buildListTile('Clear All Cache', Icons.delete_sweep, () async {
+          // Show confirmation dialog
+          final confirmed = await showDialog<bool>(
+            context: context,
+            builder:
+                (context) => AlertDialog(
+                  title: const Text('Clear All Cache'),
+                  content: const Text(
+                    'This will remove all cached movie data. You\'ll need to download fresh data from the network. Continue?',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child: const Text('Clear'),
+                    ),
+                  ],
+                ),
+          );
+
+          if (confirmed == true) {
+            await _clearAllCache();
+          }
+        }, isDestructive: true),
+        Divider(color: Theme.of(context).dividerColor),
+      ],
+    );
+  }
+
+  /// Gets display name for cache category.
+
+  String _getCategoryDisplayName(CacheCategory category) {
+    switch (category) {
+      case CacheCategory.popular:
+        return 'Popular Movies';
+      case CacheCategory.nowPlaying:
+        return 'Now Playing';
+      case CacheCategory.topRated:
+        return 'Top Rated';
+      case CacheCategory.upcoming:
+        return 'Upcoming Movies';
+    }
+  }
+
+  /// Gets human-readable time ago string.
+
+  String _getTimeAgo(Duration duration) {
+    if (duration.inDays > 0) {
+      return '${duration.inDays}d';
+    } else if (duration.inHours > 0) {
+      return '${duration.inHours}h';
+    } else if (duration.inMinutes > 0) {
+      return '${duration.inMinutes}m';
+    } else {
+      return 'just now';
+    }
   }
 
   /// Builds a section of settings with a title and children widgets.
