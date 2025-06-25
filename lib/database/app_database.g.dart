@@ -266,31 +266,31 @@ class $MoviesTable extends Movies with TableInfo<$MoviesTable, Movy> {
 }
 
 class Movy extends DataClass implements Insertable<Movy> {
-  /// Unique identifier for the movie (from TMDB API)
+  /// Unique identifier for the movie (from TMDB API).
   final int id;
 
-  /// Title of the movie
+  /// Title of the movie.
   final String title;
 
-  /// Overview/description of the movie
+  /// Overview/description of the movie.
   final String overview;
 
-  /// Path to the movie's poster image (without base URL)
+  /// Path to the movie's poster image (without base URL).
   final String posterPath;
 
-  /// Path to the movie's backdrop image (without base URL)
+  /// Path to the movie's backdrop image (without base URL).
   final String backdropPath;
 
-  /// Average rating of the movie
+  /// Average rating of the movie.
   final double voteAverage;
 
-  /// Release date of the movie
+  /// Release date of the movie.
   final DateTime releaseDate;
 
-  /// JSON string of genre IDs
+  /// JSON string of genre IDs.
   final String genreIds;
 
-  /// Timestamp when this movie was cached
+  /// Timestamp when this movie was cached.
   final DateTime cachedAt;
   const Movy({
     required this.id,
@@ -749,19 +749,19 @@ class $MovieCategoriesTable extends MovieCategories
 }
 
 class MovieCategory extends DataClass implements Insertable<MovieCategory> {
-  /// Auto-incrementing primary key
+  /// Auto-incrementing primary key.
   final int id;
 
-  /// Movie ID (foreign key to Movies table)
+  /// Movie ID (foreign key to Movies table).
   final int movieId;
 
-  /// Category type (popular, now_playing, top_rated, upcoming)
+  /// Category type (popular, now_playing, top_rated, upcoming).
   final String category;
 
-  /// Position in the category list (for maintaining order)
+  /// Position in the category list (for maintaining order).
   final int position;
 
-  /// Timestamp when this category entry was cached
+  /// Timestamp when this category entry was cached.
   final DateTime cachedAt;
   const MovieCategory({
     required this.id,
@@ -1067,13 +1067,13 @@ class $CacheMetadataTable extends CacheMetadata
 
 class CacheMetadataData extends DataClass
     implements Insertable<CacheMetadataData> {
-  /// Category identifier (e.g., 'popular', 'now_playing')
+  /// Category identifier (e.g., 'popular', 'now_playing').
   final String category;
 
-  /// Timestamp when this category was last updated
+  /// Timestamp when this category was last updated.
   final DateTime lastUpdated;
 
-  /// Number of movies in this category
+  /// Number of movies in this category.
   final int movieCount;
   const CacheMetadataData({
     required this.category,
