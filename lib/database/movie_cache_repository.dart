@@ -1,10 +1,27 @@
-/// Repository for managing cached movie data with configurable TTL and category-based organization.
+/// Path constants for the health pod application.
 ///
-/// This repository provides a clean interface for caching and retrieving movie data,
-/// implementing the repository pattern to separate data access logic from business logic.
+// Time-stamp: <Friday 2025-02-21 17:02:01 +1100 Graham Williams>
 ///
-/// Copyright (C) 2025, Software Innovation Institute, ANU.
+/// Copyright (C) 2024-2025, Software Innovation Institute, ANU.
+///
 /// Licensed under the GNU General Public License, Version 3 (the "License").
+///
+/// License: https://www.gnu.org/licenses/gpl-3.0.en.html.
+//
+// This program is free software: you can redistribute it and/or modify it under
+// the terms of the GNU General Public License as published by the Free Software
+// Foundation, either version 3 of the License, or (at your option) any later
+// version.
+//
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+// details.
+//
+// You should have received a copy of the GNU General Public License along with
+// this program.  If not, see <https://www.gnu.org/licenses/>.
+///
+/// Authors: Ashley Tang.
 
 library;
 
@@ -12,43 +29,56 @@ import 'package:moviestar/database/app_database.dart';
 import 'package:moviestar/models/movie.dart';
 
 /// Categories available for movie caching.
+
 enum CacheCategory {
   /// Popular movies from TMDB.
+
   popular('popular'),
-  
+
   /// Movies currently playing in theaters.
+
   nowPlaying('now_playing'),
-  
+
   /// Top rated movies.
+
   topRated('top_rated'),
-  
+
   /// Upcoming movies.
+
   upcoming('upcoming');
 
   const CacheCategory(this.value);
-  
+
   /// String value of the category.
+
   final String value;
 }
 
 /// Configuration for cache behavior.
+
 class CacheConfig {
   /// Default TTL for cached data (1 hour).
+
   static const Duration defaultTtl = Duration(hours: 1);
-  
+
   /// TTL for popular movies (30 minutes).
+
   static const Duration popularTtl = Duration(minutes: 30);
-  
+
   /// TTL for now playing movies (15 minutes).
+
   static const Duration nowPlayingTtl = Duration(minutes: 15);
-  
+
   /// TTL for top rated movies (2 hours).
+
   static const Duration topRatedTtl = Duration(hours: 2);
-  
+
   /// TTL for upcoming movies (6 hours).
+
   static const Duration upcomingTtl = Duration(hours: 6);
-  
+
   /// Gets the TTL for a specific category.
+
   static Duration getTtlForCategory(CacheCategory category) {
     switch (category) {
       case CacheCategory.popular:
@@ -64,17 +94,22 @@ class CacheConfig {
 }
 
 /// Result of a cache operation.
+
 class CacheResult<T> {
   /// The data retrieved from cache or API.
+
   final T data;
-  
+
   /// Whether the data came from cache.
+
   final bool fromCache;
-  
+
   /// Age of the cached data (null if from API).
+
   final Duration? cacheAge;
-  
+
   /// Timestamp when the data was cached (null if from API).
+
   final DateTime? cachedAt;
 
   const CacheResult({
@@ -86,27 +121,34 @@ class CacheResult<T> {
 }
 
 /// Repository for managing cached movie data.
+
 class MovieCacheRepository {
   /// Database instance for accessing cached data.
+
   final AppDatabase _database;
-  
+
   /// Cache configuration.
+
   final Map<CacheCategory, Duration> _customTtls = {};
 
   /// Creates a new MovieCacheRepository.
+
   MovieCacheRepository(this._database);
 
   /// Sets custom TTL for a specific category.
+
   void setCustomTtl(CacheCategory category, Duration ttl) {
     _customTtls[category] = ttl;
   }
 
   /// Gets the TTL for a category (custom or default).
+
   Duration _getTtl(CacheCategory category) {
     return _customTtls[category] ?? CacheConfig.getTtlForCategory(category);
   }
 
   /// Checks if cached data for a category is still valid.
+
   Future<bool> isCacheValid(CacheCategory category) async {
     final ttl = _getTtl(category);
     return await _database.isCacheValid(category.value, ttl);
@@ -114,34 +156,37 @@ class MovieCacheRepository {
 
   /// Gets cached movies for a category.
   /// Returns null if cache is invalid or empty.
+
   Future<List<Movie>?> getCachedMovies(CacheCategory category) async {
     final isValid = await isCacheValid(category);
     if (!isValid) return null;
-    
+
     final movies = await _database.getCachedMoviesForCategory(category.value);
     return movies.isEmpty ? null : movies;
   }
 
   /// Caches movies for a specific category.
+
   Future<void> cacheMovies(CacheCategory category, List<Movie> movies) async {
     await _database.cacheMoviesForCategory(category.value, movies);
   }
 
   /// Gets movies with cache information.
   /// If cache is valid, returns cached data. Otherwise returns null.
+
   Future<CacheResult<List<Movie>>?> getMoviesWithCacheInfo(
     CacheCategory category,
   ) async {
     final metadata = await _database.getCacheMetadata(category.value);
     final isValid = await isCacheValid(category);
-    
+
     if (!isValid || metadata == null) return null;
-    
+
     final movies = await _database.getCachedMoviesForCategory(category.value);
     if (movies.isEmpty) return null;
-    
+
     final cacheAge = DateTime.now().difference(metadata.lastUpdated);
-    
+
     return CacheResult(
       data: movies,
       fromCache: true,
@@ -151,24 +196,27 @@ class MovieCacheRepository {
   }
 
   /// Invalidates cache for a specific category.
+
   Future<void> invalidateCache(CacheCategory category) async {
     await _database.clearCacheForCategory(category.value);
   }
 
   /// Invalidates all cached data.
+
   Future<void> invalidateAllCache() async {
     await _database.clearAllCache();
   }
 
   /// Gets cache statistics for a category.
+
   Future<CacheStats?> getCacheStats(CacheCategory category) async {
     final metadata = await _database.getCacheMetadata(category.value);
     if (metadata == null) return null;
-    
+
     final age = DateTime.now().difference(metadata.lastUpdated);
     final ttl = _getTtl(category);
     final isValid = age <= ttl;
-    
+
     return CacheStats(
       category: category,
       movieCount: metadata.movieCount,
@@ -180,63 +228,74 @@ class MovieCacheRepository {
   }
 
   /// Gets cache statistics for all categories.
+
   Future<Map<CacheCategory, CacheStats>> getAllCacheStats() async {
     final stats = <CacheCategory, CacheStats>{};
-    
+
     for (final category in CacheCategory.values) {
       final categoryStats = await getCacheStats(category);
       if (categoryStats != null) {
         stats[category] = categoryStats;
       }
     }
-    
+
     return stats;
   }
 
   /// Preloads cache validity for multiple categories.
   /// Useful for optimizing multiple cache checks.
+
   Future<Map<CacheCategory, bool>> getCacheValidityMap(
     List<CacheCategory> categories,
   ) async {
     final validityMap = <CacheCategory, bool>{};
-    
+
     for (final category in categories) {
       validityMap[category] = await isCacheValid(category);
     }
-    
+
     return validityMap;
   }
 
   /// Updates cache configuration for multiple categories.
+
   void updateCacheConfig(Map<CacheCategory, Duration> ttls) {
     _customTtls.clear();
     _customTtls.addAll(ttls);
   }
 
   /// Resets cache configuration to defaults.
+
   void resetCacheConfig() {
     _customTtls.clear();
   }
 }
 
 /// Statistics about cached data for a category.
+
 class CacheStats {
   /// The movie category.
+
   final CacheCategory category;
-  
+
   /// Number of movies in cache.
+
   final int movieCount;
-  
+
   /// When the cache was last updated.
+
   final DateTime lastUpdated;
-  
+
   /// Age of the cached data.
+
   final Duration age;
-  
+
   /// TTL for this category.
+
   final Duration ttl;
-  
+
   /// Whether the cache is still valid.
+
   final bool isValid;
 
   const CacheStats({
@@ -249,14 +308,17 @@ class CacheStats {
   });
 
   /// Time remaining before cache expires (null if already expired).
+
   Duration? get timeRemaining {
     if (!isValid) return null;
     return ttl - age;
   }
 
   /// Cache hit ratio as a percentage (0-100).
+
   double get freshness {
-    final ratio = (ttl.inMilliseconds - age.inMilliseconds) / ttl.inMilliseconds;
+    final ratio =
+        (ttl.inMilliseconds - age.inMilliseconds) / ttl.inMilliseconds;
     return (ratio * 100).clamp(0.0, 100.0);
   }
-} 
+}
