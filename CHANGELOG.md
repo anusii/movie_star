@@ -15,4 +15,5 @@ Run in browser: [**Web**](https://moviestar.solidcommunity.au).
 
 ## 0.1 First stable release
 
++ ICON: Crop and lighten [0.0.4 20250626 gjw]
 + CHANGELOG: Initialise [0.0.3 20250626 gjw]
