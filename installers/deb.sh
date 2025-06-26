@@ -36,7 +36,7 @@ EOL
 cat > ${APP}_${VER}_amd64/usr/share/applications/${APP}.desktop << EOL
 [Desktop Entry]
 Name=MovieStar
-Comment=Movie Star Playlsits
+Comment=Movie Star Playlists
 Exec=/usr/bin/${APP}
 Icon=${APP}
 Terminal=false
