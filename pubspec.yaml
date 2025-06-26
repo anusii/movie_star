@@ -14,6 +14,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   file_picker: ^10.1.9
   flutter_dotenv: ^5.1.0
+  flutter_launcher_icons: ^0.14.2
   flutter_riverpod: ^2.6.1
   # Database dependencies for local caching
   drift: ^2.18.0
@@ -47,3 +48,27 @@ flutter:
 
   assets:
     - assets/images/
+
+# Define launcher icons for all platforms (except Linux) so icons for
+# the apps can be automatically updated using:
+#
+# `dart run flutter_launcher_icons`
+#
+# (gjw 20250429)
+
+flutter_launcher_icons:
+  image_path: "assets/images/app_icon.png"
+  android: true
+  min_sdk_android: 21
+  ios: true
+  remove_alpha_ios: true
+  background_color_ios: "#ffffff"
+  macos:
+    generate: true
+  web:
+    generate: true
+    background_color: "#ffffff"
+    theme_color: "#ffffff"
+  windows:
+    generate: true
+    icon_size: 48 # min:48, max:256, default: 48
