@@ -5,7 +5,7 @@
 [![Flutter Version](https://img.shields.io/badge/dynamic/yaml?url=https://raw.githubusercontent.com/anusii/moviestar/master/pubspec.yaml&query=$.version&label=version)](https://github.com/anusii/moviestar/blob/dev/CHANGELOG.md)
 [![GitHub Issues](https://img.shields.io/github/issues/anusii/moviestar)](https://github.com/anusii/moviestar/issues)
 [![GitHub License](https://img.shields.io/github/license/anusii/moviestar)](https://raw.githubusercontent.com/anusii/moviestar/main/LICENSE)
-[![GitHub commit activity (dev)](https://img.shields.io/github/commit-activity/w/anusii/moviestar/dev)](https://github.com/gjwgit/rattle/commits/dev/)
+[![GitHub commit activity (dev)](https://img.shields.io/github/commit-activity/w/anusii/moviestar/dev)](https://github.com/anusii/moviestar/commits/dev/)
 
 Binaries to download latest version:
 [**GNU/Linux**](https://solidcommunity.au/moviestar-dev-linux.zip) -
