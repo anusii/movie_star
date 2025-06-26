@@ -147,24 +147,26 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       // Caching is disabled - clearing cache is harmless.
 
       dialogTitle = 'Clear All Cache';
-      dialogContent =
-          'This will remove any cached movie data. Since caching is disabled, this won\'t affect your ability to load movies from the network.';
+      dialogContent = '''
+This will remove any cached movie data. Since caching is disabled, this won't affect your ability to load movies from the network.''';
       confirmButtonText = 'Clear';
     } else if (cacheOnlyMode) {
       // Cache-only mode is enabled - this will break the app!
 
       dialogTitle = '⚠️ Clear Cache in Cache-Only Mode';
-      dialogContent =
-          'WARNING: You have Cache-Only Mode enabled, which means no network calls are allowed.\n\n'
-          'Clearing the cache now will leave you with no movie data and no way to fetch new data!\n\n'
-          'Recommended: Disable Cache-Only Mode first, then clear cache.';
+      dialogContent = '''
+WARNING: You have Cache-Only Mode enabled, which means no network calls are allowed.
+
+Clearing the cache now will leave you with no movie data and no way to fetch new data!
+
+Recommended: Disable Cache-Only Mode first, then clear cache.''';
       confirmButtonText = 'Clear Anyway';
     } else {
       // Normal case - caching enabled but can fallback to network.
 
       dialogTitle = 'Clear All Cache';
-      dialogContent =
-          'This will remove all cached movie data. Fresh data will be downloaded from the network when needed.';
+      dialogContent = '''
+This will remove all cached movie data. Fresh data will be downloaded from the network when needed.''';
       confirmButtonText = 'Clear';
     }
 
@@ -222,7 +224,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-              'Cache cleared! You\'re now in Cache-Only Mode with no cached data. Consider disabling Cache-Only Mode to load fresh data.',
+              '''
+Cache cleared! You're now in Cache-Only Mode with no cached data. Consider disabling Cache-Only Mode to load fresh data.''',
             ),
             backgroundColor: Colors.orange,
             duration: Duration(seconds: 5),
@@ -239,16 +242,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     bool cacheOnlyMode,
   ) async {
     if (cacheOnlyMode) {
-      // In cache-only mode, force refresh would require network calls
+      // In cache-only mode, force refresh would require network calls.
+
       final confirmed = await showDialog<bool>(
         context: context,
         builder:
             (context) => AlertDialog(
               title: const Text('⚠️ Force Refresh in Cache-Only Mode'),
-              content: const Text(
-                'Force refresh requires downloading fresh data from the network, but you have Cache-Only Mode enabled.\n\n'
-                'Do you want to temporarily disable Cache-Only Mode and refresh all data?',
-              ),
+              content: const Text('''
+Force refresh requires downloading fresh data from the network, but you have Cache-Only Mode enabled.
+
+Do you want to temporarily disable Cache-Only Mode and refresh all data?'''),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
@@ -388,7 +392,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                'POD storage enabled successfully! Your movie lists are now stored in your Solid POD.',
+                '''
+POD storage enabled successfully! Your movie lists are now stored in your Solid POD.''',
               ),
               backgroundColor: Colors.green,
               duration: Duration(seconds: 5),
@@ -403,7 +408,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                'Failed to enable POD storage. Please check your Solid POD login and try again.',
+                '''
+Failed to enable POD storage. Please check your Solid POD login and try again.''',
               ),
               backgroundColor: Colors.red,
               duration: Duration(seconds: 5),
