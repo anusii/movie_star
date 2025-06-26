@@ -10,15 +10,15 @@ dependencies:
   flutter:
     sdk: flutter
 
-  build_runner: ^2.4.14
   cached_network_image: ^3.3.0
   cupertino_icons: ^1.0.2
   file_picker: ^10.1.9
   flutter_dotenv: ^5.1.0
   flutter_riverpod: ^2.6.1
-  flutter_secure_storage: ^10.0.0-beta.4
-  http: ^1.1.0
-  intl: ^0.20.2
+  # Database dependencies for local caching
+  drift: ^2.18.0
+  sqlite3_flutter_libs: ^0.5.0
+  path_provider: ^2.0.15
   markdown_tooltip: ^0.0.7
   path: ^1.9.1
   pdf: ^3.11.3
@@ -36,6 +36,9 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^5.0.0
+  # Database code generation dependencies
+  build_runner: ^2.4.7
+  drift_dev: ^2.18.0
   import_order_lint: ^0.1.1
   ubuntu_lints: ^0.4.0
 

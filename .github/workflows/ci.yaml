@@ -58,14 +58,23 @@ jobs:
       - run: flutter pub get
       - name: Check copyright headers
         run: |
-          # Find Dart files without proper copyright headers
-          missing_copyright=$(find lib -type f -name '*.dart' -exec grep -L "Copyright" {} \;)
+          # Find Dart files without proper copyright headers, excluding generated files
+          missing_copyright=$(find lib -type f -name '*.dart' \
+            ! -name '*.g.dart' \
+            ! -name '*.gr.dart' \
+            ! -name '*.freezed.dart' \
+            ! -name '*.chopper.dart' \
+            ! -name '*.part.dart' \
+            ! -name '*.config.dart' \
+            -exec grep -L "Copyright" {} \;)
           if [ -n "$missing_copyright" ]; then
-            echo "Files missing copyright headers:"
+            echo "❌ Files missing copyright headers:"
             echo "$missing_copyright"
+            echo ""
+            echo "💡 Note: Generated files (*.g.dart, *.freezed.dart, etc.) are automatically excluded"
             exit 1
           else
-            echo "All Dart files have copyright headers"
+            echo "✅ All non-generated Dart files have copyright headers"
           fi
 
   build:
