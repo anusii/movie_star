@@ -35,6 +35,7 @@ import 'package:moviestar/providers/cached_movie_service_provider.dart';
 import 'package:moviestar/screens/movie_details_screen.dart';
 import 'package:moviestar/services/favorites_service.dart';
 import 'package:moviestar/utils/date_format_util.dart';
+import 'package:moviestar/widgets/error_display_widget.dart';
 
 /// A screen that displays upcoming movies and their release dates with caching.
 
@@ -136,29 +137,9 @@ class _ComingSoonScreenState extends ConsumerState<ComingSoonScreen> {
               ),
           loading: () => const Center(child: CircularProgressIndicator()),
           error:
-              (error, stack) => Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.error_outline,
-                      size: 48,
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Failed to load upcoming movies',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: _forceRefresh,
-                      child: const Text('Retry'),
-                    ),
-                  ],
-                ),
+              (error, stack) => ErrorDisplayWidget(
+                message: 'Failed to load upcoming movies',
+                onRetry: _forceRefresh,
               ),
         ),
       ),

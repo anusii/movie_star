@@ -35,6 +35,7 @@ import 'package:moviestar/providers/cached_movie_service_provider.dart';
 import 'package:moviestar/screens/movie_details_screen.dart';
 import 'package:moviestar/screens/search_screen.dart';
 import 'package:moviestar/services/favorites_service.dart';
+import 'package:moviestar/widgets/error_display_widget.dart';
 
 /// A screen that displays various movie categories and trending content with caching.
 
@@ -155,38 +156,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 ),
             error:
-                (error, stack) => Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.error_outline,
-                          size: 32,
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Failed to load $title',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.error,
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        ElevatedButton(
-                          onPressed: () {
-                            ref.invalidate(popularMoviesProvider);
-                            ref.invalidate(nowPlayingMoviesProvider);
-                            ref.invalidate(topRatedMoviesProvider);
-                            ref.invalidate(upcomingMoviesProvider);
-                          },
-                          child: const Text('Retry'),
-                        ),
-                      ],
-                    ),
-                  ),
+                (error, stack) => ErrorDisplayWidget.compact(
+                  message: 'Failed to load $title',
+                  onRetry: () {
+                    ref.invalidate(popularMoviesProvider);
+                    ref.invalidate(nowPlayingMoviesProvider);
+                    ref.invalidate(topRatedMoviesProvider);
+                    ref.invalidate(upcomingMoviesProvider);
+                  },
                 ),
           ),
         ),
