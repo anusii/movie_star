@@ -4,7 +4,7 @@
 [![Last Updated](https://img.shields.io/github/last-commit/anusii/moviestar?label=last%20updated)](https://github.com/anusii/moviestar/commits/dev/)
 [![Flutter Version](https://img.shields.io/badge/dynamic/yaml?url=https://raw.githubusercontent.com/anusii/moviestar/master/pubspec.yaml&query=$.version&label=version)](https://github.com/anusii/moviestar/blob/dev/CHANGELOG.md)
 [![GitHub Issues](https://img.shields.io/github/issues/anusii/moviestar)](https://github.com/anusii/moviestar/issues)
-[![GitHub License](https://img.shields.io/github/license/anusii/moviestar)](https://raw.githubusercontent.com/anusii/moviestar/main/LICENSE)
+[![GitHub License](https://img.shields.io/github/license/anusii/moviestar)](https://raw.github.com/anusii/moviestar/blob/dev/LICENSE)
 [![GitHub commit activity (dev)](https://img.shields.io/github/commit-activity/w/anusii/moviestar/dev)](https://github.com/anusii/moviestar/commits/dev/)
 
 Binaries to download latest version:
