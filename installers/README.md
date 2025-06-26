@@ -7,7 +7,7 @@ identical across all platforms so the experience across different
 platforms will be very similar.
 
 Visit the
-[CHANGELOG](https://github.com/gjwgit/moviestar/blob/dev/CHANGELOG.md)
+[CHANGELOG](https://github.com/anusii/moviestar/blob/dev/CHANGELOG.md)
 for the latest updates.
 
 Binaries to download latest version:
@@ -70,10 +70,10 @@ Then set up your local installation (only required once):
 
 ```bash
 ln -s ${HOME}/.local/share/moviestar/moviestar ${HOME}/.local/bin/
-wget https://raw.githubusercontent.com/gjwgit/moviestar/dev/installers/moviestar.desktop -O ${HOME}/.local/share/applications/moviestar.desktop
+wget https://raw.githubusercontent.com/anusii/moviestar/dev/installers/moviestar.desktop -O ${HOME}/.local/share/applications/moviestar.desktop
 sed -i "s/USER/$(whoami)/g" ${HOME}/.local/share/applications/moviestar.desktop
 mkdir -p ${HOME}/.local/share/icons/hicolor/256x256/apps/
-wget https://github.com/gjwgit/moviestar/raw/dev/installers/moviestar.png -O ${HOME}/.local/share/icons/hicolor/256x256/apps/moviestar.png
+wget https://github.com/anusii/moviestar/raw/dev/installers/moviestar.png -O ${HOME}/.local/share/icons/hicolor/256x256/apps/moviestar.png
 ```
 
 To install for any user on the computer:
