@@ -34,14 +34,14 @@ conclusion=$(gh run view ${bumpId} --json conclusion --jq '.conclusion')
 # 20250611 gjw Currently failing:
 #
 # gh run download ${bumpId} --name ${APP}-linux-zip
-# error downloading moviestar-linux-zip: would result in path traversal
+# error downloading ${APP}-linux-zip: would result in path traversal
 #
 # I was then manually downloading through browser, unzip and move
 # here, then run this script.
 #
 # But this should work as an alternative:
 #
-# gh api -H "Accept: application/vnd.github+json"   repos/anusii/moviestar/actions/artifacts/3300608315/zip >| artifact.zip
+# gh api -H "Accept: application/vnd.github+json"   repos/${REP}/${APP}/actions/artifacts/3300608315/zip >| artifact.zip
 #
 # Need to get the correct artifact ID for each artefact.
 
@@ -59,10 +59,10 @@ if [[ "${status}" == "completed" && "${conclusion}" == "success" ]]; then
 
     ## gh run download ${bumpId} --name ${APP}-linux-zip
 
-    artifactId=$(gh api -H "Accept: application/vnd.github+json" /repos/anusii/moviestar/actions/artifacts \
-		    --jq '.artifacts[] | select(.name=="moviestar-linux-zip") | .id' | head -n 1)
+    artifactId=$(gh api -H "Accept: application/vnd.github+json" /repos/${REP}/${APP}/actions/artifacts \
+		    --jq '.artifacts[] | select(.name | endswith("-linux-zip")) | .id' | head -n 1)
     echo "artifact id: $artifactId"
-    gh api -H "Accept: application/vnd.github+json" repos/anusii/moviestar/actions/artifacts/${artifactId}/zip > artifact.zip
+    gh api -H "Accept: application/vnd.github+json" repos/${REP}/${APP}/actions/artifacts/${artifactId}/zip > artifact.zip
     unzip artifact.zip
     rm -f artifact.zip
 
@@ -75,10 +75,10 @@ if [[ "${status}" == "completed" && "${conclusion}" == "success" ]]; then
 
     ## gh run download ${bumpId} --name ${APP}-windows-inno
 
-    artifactId=$(gh api -H "Accept: application/vnd.github+json" /repos/anusii/moviestar/actions/artifacts \
-		    --jq '.artifacts[] | select(.name=="moviestar-windows-inno") | .id' | head -n 1)
+    artifactId=$(gh api -H "Accept: application/vnd.github+json" /repos/${REP}/${APP}/actions/artifacts \
+		    --jq '.artifacts[] | select(.name | endswith("-windows-inno")) | .id' | head -n 1)
     echo "artifact id: $artifactId"
-    gh api -H "Accept: application/vnd.github+json" repos/anusii/moviestar/actions/artifacts/${artifactId}/zip > artifact.zip
+    gh api -H "Accept: application/vnd.github+json" repos/${REP}/${APP}/actions/artifacts/${artifactId}/zip > artifact.zip
     unzip artifact.zip
     rm -f artifact.zip
 
@@ -91,10 +91,10 @@ if [[ "${status}" == "completed" && "${conclusion}" == "success" ]]; then
 
     ## gh run download ${bumpId} --name ${APP}-windows-zip
 
-    artifactId=$(gh api -H "Accept: application/vnd.github+json" /repos/anusii/moviestar/actions/artifacts \
-		    --jq '.artifacts[] | select(.name=="moviestar-windows-zip") | .id' | head -n 1)
+    artifactId=$(gh api -H "Accept: application/vnd.github+json" /repos/${REP}/${APP}/actions/artifacts \
+		    --jq '.artifacts[] | select(.name | endswith("-windows-zip")) | .id' | head -n 1)
     echo "artifact id: $artifactId"
-    gh api -H "Accept: application/vnd.github+json" repos/anusii/moviestar/actions/artifacts/${artifactId}/zip > artifact.zip
+    gh api -H "Accept: application/vnd.github+json" repos/${REP}/${APP}/actions/artifacts/${artifactId}/zip > artifact.zip
     unzip artifact.zip
     rm -f artifact.zip
 
@@ -109,10 +109,10 @@ if [[ "${status}" == "completed" && "${conclusion}" == "success" ]]; then
 
     ## gh run download ${bumpId} --name ${APP}-macos-zip
 
-    artifactId=$(gh api -H "Accept: application/vnd.github+json" /repos/anusii/moviestar/actions/artifacts \
-		    --jq '.artifacts[] | select(.name=="moviestar-macos-zip") | .id' | head -n 1)
+    artifactId=$(gh api -H "Accept: application/vnd.github+json" /repos/${REP}/${APP}/actions/artifacts \
+		    --jq '.artifacts[] | select(.name | endswith("-macos-zip")) | .id' | head -n 1)
     echo "artifact id: $artifactId"
-    gh api -H "Accept: application/vnd.github+json" repos/anusii/moviestar/actions/artifacts/${artifactId}/zip > artifact.zip
+    gh api -H "Accept: application/vnd.github+json" repos/${REP}/${APP}/actions/artifacts/${artifactId}/zip > artifact.zip
     unzip artifact.zip
     rm -f artifact.zip
 
