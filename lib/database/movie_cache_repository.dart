@@ -57,27 +57,27 @@ enum CacheCategory {
 /// Configuration for cache behavior.
 
 class CacheConfig {
-  /// Default TTL for cached data (1 hour).
+  /// Default time-to-live (TTL) for cached data (1 hour).
 
   static const Duration defaultTtl = Duration(hours: 1);
 
-  /// TTL for popular movies (30 minutes).
+  /// Time-to-live (TTL) for popular movies (30 minutes).
 
   static const Duration popularTtl = Duration(minutes: 30);
 
-  /// TTL for now playing movies (15 minutes).
+  /// Time-to-live (TTL) for now playing movies (15 minutes).
 
   static const Duration nowPlayingTtl = Duration(minutes: 15);
 
-  /// TTL for top rated movies (2 hours).
+  /// Time-to-live (TTL) for top rated movies (2 hours).
 
   static const Duration topRatedTtl = Duration(hours: 2);
 
-  /// TTL for upcoming movies (6 hours).
+  /// Time-to-live (TTL) for upcoming movies (6 hours).
 
   static const Duration upcomingTtl = Duration(hours: 6);
 
-  /// Gets the TTL for a specific category.
+  /// Gets the time-to-live (TTL) for a specific category.
 
   static Duration getTtlForCategory(CacheCategory category) {
     switch (category) {
@@ -135,13 +135,13 @@ class MovieCacheRepository {
 
   MovieCacheRepository(this._database);
 
-  /// Sets custom TTL for a specific category.
+  /// Sets custom time-to-live (TTL) for a specific category.
 
   void setCustomTtl(CacheCategory category, Duration ttl) {
     _customTtls[category] = ttl;
   }
 
-  /// Gets the TTL for a category (custom or default).
+  /// Gets the time-to-live (TTL) for a category (custom or default).
 
   Duration _getTtl(CacheCategory category) {
     return _customTtls[category] ?? CacheConfig.getTtlForCategory(category);
@@ -290,7 +290,7 @@ class CacheStats {
 
   final Duration age;
 
-  /// TTL for this category.
+  /// Time-to-live (TTL) for this category.
 
   final Duration ttl;
 
