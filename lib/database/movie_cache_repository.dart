@@ -165,6 +165,14 @@ class MovieCacheRepository {
     return movies.isEmpty ? null : movies;
   }
 
+  /// Gets cached movies regardless of TTL (for stale cache fallback).
+  /// Returns null if no movies are cached.
+
+  Future<List<Movie>?> getStaleMovies(CacheCategory category) async {
+    final movies = await _database.getCachedMoviesForCategory(category.value);
+    return movies.isEmpty ? null : movies;
+  }
+
   /// Caches movies for a specific category.
 
   Future<void> cacheMovies(CacheCategory category, List<Movie> movies) async {
