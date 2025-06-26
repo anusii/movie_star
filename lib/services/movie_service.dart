@@ -61,6 +61,9 @@ class MovieService {
 
   Future<void> updateApiKey() async {
     _client?.dispose();
+    // Reset to null to force recreation.
+
+    _client = null;
     await _initializeClient();
   }
 
@@ -124,5 +127,8 @@ class MovieService {
 
   void dispose() {
     _client?.dispose();
+    // Reset to null after disposal.
+
+    _client = null;
   }
 }
