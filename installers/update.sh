@@ -5,6 +5,7 @@
 # distribution.
 
 APP=moviestar
+REP=anusii
 
 HOST=solidcommunity.au
 FLDR=/var/www/html/installers/
