@@ -12,7 +12,7 @@
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 ; (On Ubuntu run `uuidgen` to generate a unique AppId.)
-AppId={{85ebe0b2-aa0a-4c65-b800-87b7af070424}}
+AppId={{a11d20f0-a287-497b-a42d-59a5caf38187}}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
