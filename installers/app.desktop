@@ -1,8 +1,8 @@
 #!/usr/bin/env xdg-open
 [Desktop Entry]
+Name=MovieStar
 Version=1.0
 Terminal=false
 Type=Application
-Name=MovieStar
 Exec=.local/bin/moviestar
 Icon=/home/USER/.local/share/icons/hicolor/256x256/apps/moviestar.png

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 20241024 gjw After a github action has built the bundles and stored
-# them as artefacts on github, we can upload them to solidcommunity.au for
+# them as artefacts on github, we can upload them to the ${HOST} for
 # distribution.
 
 APP=$(basename "$(dirname "$(pwd)")")
