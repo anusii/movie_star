@@ -13,16 +13,16 @@ for the latest updates.
 Run the app online: [**web**](https://moviestar.solidcommunity.au).
 
 Download the latest version:
-GNU/Linux
-[**deb**](https://solidcommunity.au/installers/moviestar_amd64.deb) or
-[**zip**](https://solidcommunity.au/installers/moviestar-dev-linux.zip) -
-Android
-[**apk**](https://solidcommunity.au/installers/moviestar.apk) -
-macOS
-[**zip**](https://solidcommunity.au/installers/moviestar-dev-macos.zip) -
-Windows
-[**zip**](https://solidcommunity.au/installers/moviestar-dev-windows.zip) or
-[**inno**](https://solidcommunity.au/installers/moviestar-dev-windows-inno.exe).
+**GNU/Linux**
+[deb](https://solidcommunity.au/installers/moviestar_amd64.deb) or
+[zip](https://solidcommunity.au/installers/moviestar-dev-linux.zip);
+**Android**
+[apk](https://solidcommunity.au/installers/moviestar.apk);
+**macOS**
+[zip](https://solidcommunity.au/installers/moviestar-dev-macos.zip);
+**Windows**
+[zip](https://solidcommunity.au/installers/moviestar-dev-windows.zip) or
+[inno](https://solidcommunity.au/installers/moviestar-dev-windows-inno.exe).
 
 ## Prerequisite
 
