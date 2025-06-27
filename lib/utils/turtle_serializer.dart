@@ -391,43 +391,35 @@ class TurtleSerializer {
     try {
       // Try different namespace variations for predicates.
 
-      final idValues =
-          predicates['http://schema.org/identifier'] ??
+      final idValues = predicates['http://schema.org/identifier'] ??
           predicates['identifier'] ??
           predicates['#identifier'] ??
           [];
-      final titleValues =
-          predicates['http://schema.org/name'] ??
+      final titleValues = predicates['http://schema.org/name'] ??
           predicates['name'] ??
           predicates['#name'] ??
           [];
-      final overviewValues =
-          predicates['http://schema.org/description'] ??
+      final overviewValues = predicates['http://schema.org/description'] ??
           predicates['description'] ??
           predicates['#description'] ??
           [];
-      final posterValues =
-          predicates['http://schema.org/image'] ??
+      final posterValues = predicates['http://schema.org/image'] ??
           predicates['image'] ??
           predicates['#image'] ??
           [];
-      final backdropValues =
-          predicates['http://schema.org/thumbnailUrl'] ??
+      final backdropValues = predicates['http://schema.org/thumbnailUrl'] ??
           predicates['thumbnailUrl'] ??
           predicates['#thumbnailUrl'] ??
           [];
-      final ratingValues =
-          predicates['http://schema.org/aggregateRating'] ??
+      final ratingValues = predicates['http://schema.org/aggregateRating'] ??
           predicates['aggregateRating'] ??
           predicates['#aggregateRating'] ??
           [];
-      final dateValues =
-          predicates['http://schema.org/datePublished'] ??
+      final dateValues = predicates['http://schema.org/datePublished'] ??
           predicates['datePublished'] ??
           predicates['#datePublished'] ??
           [];
-      final genreValues =
-          predicates['http://schema.org/genre'] ??
+      final genreValues = predicates['http://schema.org/genre'] ??
           predicates['genre'] ??
           predicates['#genre'] ??
           [];
@@ -444,24 +436,21 @@ class TurtleSerializer {
           posterValues.isNotEmpty ? posterValues.first.toString() : '';
       final backdropUrl =
           backdropValues.isNotEmpty ? backdropValues.first.toString() : '';
-      final voteAverage =
-          double.tryParse(
+      final voteAverage = double.tryParse(
             ratingValues.isNotEmpty ? ratingValues.first.toString() : '0',
           ) ??
           0.0;
-      final releaseDate =
-          dateValues.isNotEmpty
-              ? DateTime.tryParse(dateValues.first.toString()) ?? DateTime.now()
-              : DateTime.now();
+      final releaseDate = dateValues.isNotEmpty
+          ? DateTime.tryParse(dateValues.first.toString()) ?? DateTime.now()
+          : DateTime.now();
       final genreString =
           genreValues.isNotEmpty ? genreValues.first.toString() : '';
-      final genreIds =
-          genreString.isNotEmpty
-              ? genreString
-                  .split(',')
-                  .map((s) => int.tryParse(s.trim()) ?? 0)
-                  .toList()
-              : <int>[];
+      final genreIds = genreString.isNotEmpty
+          ? genreString
+              .split(',')
+              .map((s) => int.tryParse(s.trim()) ?? 0)
+              .toList()
+          : <int>[];
 
       return Movie(
         id: id,

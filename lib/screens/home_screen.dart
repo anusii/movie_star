@@ -180,11 +180,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder:
-                              (context) => MovieDetailsScreen(
-                                movie: movie,
-                                favoritesService: widget.favoritesService,
-                              ),
+                          builder: (context) => MovieDetailsScreen(
+                            movie: movie,
+                            favoritesService: widget.favoritesService,
+                          ),
                         ),
                       );
                     },
@@ -194,12 +193,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         imageUrl: movie.posterUrl,
                         width: 130,
                         fit: BoxFit.cover,
-                        placeholder:
-                            (context, url) => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                        errorWidget:
-                            (context, url, error) => const Icon(Icons.error),
+                        placeholder: (context, url) => const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
                       ),
                     ),
                   ),
@@ -233,64 +231,62 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder:
-                      (context) => SearchScreen(
-                        favoritesService: widget.favoritesService,
-                        movieService: widget.movieService,
-                      ),
+                  builder: (context) => SearchScreen(
+                    favoritesService: widget.favoritesService,
+                    movieService: widget.movieService,
+                  ),
                 ),
               );
             },
           ),
         ],
       ),
-      body:
-          _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : _error != null
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _error != null
               ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.error_outline,
-                      size: 48,
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      _error!,
-                      style: TextStyle(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.error_outline,
+                        size: 48,
                         color: Theme.of(context).colorScheme.error,
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: _loadAllMovies,
-                      child: const Text('Retry'),
-                    ),
-                  ],
-                ),
-              )
+                      const SizedBox(height: 16),
+                      Text(
+                        _error!,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: _loadAllMovies,
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                )
               : SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildMovieRow(
-                      'Popular on Movie Star',
-                      _popularMovies,
-                      'popular',
-                    ),
-                    _buildMovieRow(
-                      'Now Playing',
-                      _nowPlayingMovies,
-                      'nowPlaying',
-                    ),
-                    _buildMovieRow('Top Rated', _topRatedMovies, 'topRated'),
-                    _buildMovieRow('Upcoming', _upcomingMovies, 'upcoming'),
-                  ],
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildMovieRow(
+                        'Popular on Movie Star',
+                        _popularMovies,
+                        'popular',
+                      ),
+                      _buildMovieRow(
+                        'Now Playing',
+                        _nowPlayingMovies,
+                        'nowPlaying',
+                      ),
+                      _buildMovieRow('Top Rated', _topRatedMovies, 'topRated'),
+                      _buildMovieRow('Upcoming', _upcomingMovies, 'upcoming'),
+                    ],
+                  ),
                 ),
-              ),
     );
   }
 }

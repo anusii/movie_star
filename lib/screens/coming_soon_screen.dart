@@ -106,54 +106,51 @@ class _ComingSoonScreenState extends State<ComingSoonScreen> {
           style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
       ),
-      body:
-          _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : _error != null
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _error != null
               ? Center(child: Text(_error!))
               : ListView.builder(
-                itemCount: _upcomingMovies.length,
-                itemBuilder: (context, index) {
-                  final movie = _upcomingMovies[index];
-                  return ListTile(
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: CachedNetworkImage(
-                        imageUrl: movie.posterUrl,
-                        width: 50,
-                        height: 75,
-                        fit: BoxFit.cover,
-                        placeholder:
-                            (context, url) => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                        errorWidget:
-                            (context, url, error) => const Icon(Icons.error),
-                      ),
-                    ),
-                    title: Text(
-                      movie.title,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    subtitle: Text(
-                      'Release Date: ${DateFormatUtil.formatNumeric(movie.releaseDate)}',
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => MovieDetailsScreen(
-                                movie: movie,
-                                favoritesService: widget.favoritesService,
-                              ),
+                  itemCount: _upcomingMovies.length,
+                  itemBuilder: (context, index) {
+                    final movie = _upcomingMovies[index];
+                    return ListTile(
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: CachedNetworkImage(
+                          imageUrl: movie.posterUrl,
+                          width: 50,
+                          height: 75,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
                         ),
-                      );
-                    },
-                  );
-                },
-              ),
+                      ),
+                      title: Text(
+                        movie.title,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      subtitle: Text(
+                        'Release Date: ${DateFormatUtil.formatNumeric(movie.releaseDate)}',
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MovieDetailsScreen(
+                              movie: movie,
+                              favoritesService: widget.favoritesService,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
     );
   }
 }
