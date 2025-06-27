@@ -1,6 +1,40 @@
-pubspec.lock
-ios/Flutter/flutter_export_environment.sh
-installers
+########################################################################
+# Local ignores
+########################################################################
+
+output
+tmp
+*~
+!lib
+ignore
+script.R
+.Rhistory
+NOTES.md
+TODO.md
+ARCHIVE
+TMP*
+*.tmp
+qtest*.txt
+REMOVE
+*.json
+!integration_test/data/*.json
+solidpod
+import_order_lint
+
+installers/*.apk
+installers/*.exe
+installers/*.snap
+installers/*.tar.gz
+installers/*-linux.zip
+installers/*-macos.zip
+installers/*-windows.zip
+tools/chromedriver/
+
+# ORIGINAL
+
+*generated*
+*Generated*
+*#*
 
 # See https://www.dartlang.org/guides/libraries/private-files
 
@@ -8,8 +42,10 @@ installers
 .dart_tool/
 .packages
 build/
+
 # If you're building an application, you may want to check-in your pubspec.lock
 # pubspec.lock
+pubspec.lock
 
 # Directory created by dartdoc
 # If you don't generate documentation locally you can remove this line.
@@ -30,15 +66,35 @@ doc/api/
 .flutter-plugins
 .flutter-plugins-dependencies
 
-# Project specific additions
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
 
-*generated*
+# Submodules
+/markdown_tooltip/
+/solidpod/
+/solid_auth/
 
-# IntelliJ
+# IntelliJ related
 *.iml
 *.ipr
 *.iws
 .idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+.vscode/
 
 # Mac
 .DS_Store
@@ -49,6 +105,7 @@ ios/.gitignore
 ios/Flutter/
 ios/Flutter/Flutter-Debug.xcconfig
 ios/Flutter/Flutter-Release.xcconfig
+ios/Flutter/flutter_export_environment.sh
 ios/Flutter/Podfile
 ios/Flutter/Podfile.lock
 ios/Runner.xcodeproj/
@@ -103,6 +160,7 @@ DerivedData/
 .pub-cache/
 .pub/
 /build/
+/installers/build/
 
 # Symbolication related
 app.*.symbols
@@ -131,3 +189,5 @@ app.*.map.json
 coverage/
 .coverage/
 *.lcov
+
+android/app/.cxx/

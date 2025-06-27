@@ -4,8 +4,8 @@
 # them as artefacts on github, we can upload them to solidcommunity.au for
 # distribution.
 
-APP=moviestar
-REP=anusii
+APP=$(basename "$(dirname "$(pwd)")")
+REP=$(git remote get-url origin | sed -E 's#.*[/:]([^/]+)/[^/]+(\.git)?$#\1#')
 
 HOST=solidcommunity.au
 FLDR=/var/www/html/installers/

@@ -4,10 +4,22 @@ publish_to: "none"
 version: 0.0.4+3
 
 environment:
-  sdk: ^3.7.2
+  sdk: ">=3.2.3 <4.0.0"
+
+# To automatically upgrade package dependencies:
+#
+# `flutter pub upgrade --major-versions`.
+#
+# To see which dependencies have newer versions available:
+#
+# `flutter pub outdated`.
+#
+# (gjw 20250429)
 
 dependencies:
   flutter:
+    sdk: flutter
+  integration_test:
     sdk: flutter
 
   cached_network_image: ^3.3.0
@@ -44,6 +56,7 @@ dev_dependencies:
   build_runner: ^2.4.7
   drift_dev: ^2.18.0
   import_order_lint: ^0.1.1
+  test: ^1.25.15
   ubuntu_lints: ^0.4.0
 
 flutter:
