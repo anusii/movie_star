@@ -1,4 +1,4 @@
-/// Path constants for the health pod application.
+/// Path constants for the movie star application.
 ///
 // Time-stamp: <Friday 2025-02-21 17:02:01 +1100 Graham Williams>
 ///

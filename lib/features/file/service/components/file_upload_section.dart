@@ -239,7 +239,7 @@ class _FileUploadSectionState extends ConsumerState<FileUploadSection> {
               child: MarkdownTooltip(
                 message: '''
 
-                **Upload**: Tap here to upload a file to your Solid Health Pod.
+                **Upload**: Tap here to upload a file to your Solid Movie Star.
 
                 ''',
                 child: ElevatedButton.icon(
