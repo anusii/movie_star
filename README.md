@@ -7,14 +7,19 @@
 [![GitHub License](https://img.shields.io/github/license/anusii/moviestar)](https://github.com/anusii/moviestar/blob/dev/LICENSE)
 [![GitHub commit activity (dev)](https://img.shields.io/github/commit-activity/w/anusii/moviestar/dev)](https://github.com/anusii/moviestar/commits/dev/)
 
-Binaries to download latest version:
-[**GNU/Linux**](https://solidcommunity.au/installers/moviestar-dev-linux.zip) -
-[**Debian/Ubuntu**](https://solidcommunity.au/installers/moviestar_amd64.deb) -
-[**Android**](https://solidcommunity.au/installers/moviestar.apk) -
-[**MacOS**](https://solidcommunity.au/installers/moviestar-dev-macos.zip) -
-[**Windows**](https://solidcommunity.au/installers/moviestar-dev-windows-inno.exe).
+Run the app online: [**web**](https://moviestar.solidcommunity.au).
 
-Run in browser: [**Web**](https://moviestar.solidcommunity.au).
+Download the latest version:
+GNU/Linux
+[**deb**](https://solidcommunity.au/installers/moviestar_amd64.deb) or
+[**zip**](https://solidcommunity.au/installers/moviestar-dev-linux.zip) -
+Android
+[**apk**](https://solidcommunity.au/installers/moviestar.apk) -
+macOS
+[**zip**](https://solidcommunity.au/installers/moviestar-dev-macos.zip) -
+Windows
+[**zip**](https://solidcommunity.au/installers/moviestar-dev-windows.zip) or
+[**inno**](https://solidcommunity.au/installers/moviestar-dev-windows-inno.exe).
 
 # Movie Star Personal Data Wallet
 
