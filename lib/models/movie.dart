@@ -77,14 +77,28 @@ class Movie {
   /// Creates a [Movie] instance from a JSON map.
 
   factory Movie.fromJson(Map<String, dynamic> json) {
+    // Helper function to safely parse release date
+    DateTime parseReleaseDate(dynamic dateValue) {
+      if (dateValue == null || dateValue.toString().isEmpty) {
+        return DateTime.now(); // Default to current date if no release date
+      }
+      
+      try {
+        return DateTime.parse(dateValue.toString());
+      } catch (e) {
+        // If parsing fails, return current date as fallback
+        return DateTime.now();
+      }
+    }
+
     return Movie(
-      id: json['id'],
-      title: json['title'],
-      overview: json['overview'],
+      id: json['id'] ?? 0,
+      title: json['title'] ?? 'Unknown Title',
+      overview: json['overview'] ?? '',
       posterUrl: TmdbImageUtil.getPosterUrl(json['poster_path'] ?? ''),
       backdropUrl: TmdbImageUtil.getBackdropUrl(json['backdrop_path'] ?? ''),
-      voteAverage: (json['vote_average'] as num).toDouble(),
-      releaseDate: DateTime.parse(json['release_date']),
+      voteAverage: (json['vote_average'] as num?)?.toDouble() ?? 0.0,
+      releaseDate: parseReleaseDate(json['release_date']),
       genreIds: List<int>.from(json['genre_ids'] ?? []),
     );
   }
