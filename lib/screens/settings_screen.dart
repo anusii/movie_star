@@ -736,10 +736,9 @@ Failed to enable POD storage. Please check your Solid POD login and try again.''
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder:
-                      (context) => ToWatchScreen(
-                        favoritesService: widget.favoritesService,
-                      ),
+                  builder: (context) => ToWatchScreen(
+                    favoritesService: widget.favoritesService,
+                  ),
                 ),
               );
             }),
@@ -747,10 +746,9 @@ Failed to enable POD storage. Please check your Solid POD login and try again.''
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder:
-                      (context) => WatchedScreen(
-                        favoritesService: widget.favoritesService,
-                      ),
+                  builder: (context) => WatchedScreen(
+                    favoritesService: widget.favoritesService,
+                  ),
                 ),
               );
             }),
@@ -1031,16 +1029,15 @@ Failed to enable POD storage. Please check your Solid POD login and try again.''
       title: Text(title, style: Theme.of(context).textTheme.bodyLarge),
       trailing: DropdownButton<String>(
         value: value,
-        items:
-            items.map((String item) {
-              return DropdownMenuItem<String>(
-                value: item,
-                child: Text(
-                  item,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              );
-            }).toList(),
+        items: items.map((String item) {
+          return DropdownMenuItem<String>(
+            value: item,
+            child: Text(
+              item,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          );
+        }).toList(),
         onChanged: onChanged,
         dropdownColor: Theme.of(context).cardColor,
         underline: const SizedBox(),
@@ -1059,18 +1056,16 @@ Failed to enable POD storage. Please check your Solid POD login and try again.''
     return ListTile(
       leading: Icon(
         icon,
-        color:
-            isDestructive
-                ? Theme.of(context).colorScheme.error
-                : Theme.of(context).iconTheme.color,
+        color: isDestructive
+            ? Theme.of(context).colorScheme.error
+            : Theme.of(context).iconTheme.color,
       ),
       title: Text(
         title,
         style: TextStyle(
-          color:
-              isDestructive
-                  ? Theme.of(context).colorScheme.error
-                  : Theme.of(context).textTheme.bodyLarge?.color,
+          color: isDestructive
+              ? Theme.of(context).colorScheme.error
+              : Theme.of(context).textTheme.bodyLarge?.color,
         ),
       ),
       onTap: onTap,

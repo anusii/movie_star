@@ -105,7 +105,7 @@ class PodFavoritesService extends ChangeNotifier {
   /// Creates a new [PodFavoritesService] instance.
 
   PodFavoritesService(this._prefs, this._context, this._child)
-    : _fallbackService = FavoritesService(_prefs) {
+      : _fallbackService = FavoritesService(_prefs) {
     _initializePodData();
   }
 

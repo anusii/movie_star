@@ -120,15 +120,14 @@ class AppDatabase extends _$AppDatabase {
   Future<List<movie_model.Movie>> getCachedMoviesForCategory(
     String category,
   ) async {
-    final query =
-        select(movies).join([
-            innerJoin(
-              movieCategories,
-              movieCategories.movieId.equalsExp(movies.id),
-            ),
-          ])
-          ..where(movieCategories.category.equals(category))
-          ..orderBy([OrderingTerm.asc(movieCategories.position)]);
+    final query = select(movies).join([
+      innerJoin(
+        movieCategories,
+        movieCategories.movieId.equalsExp(movies.id),
+      ),
+    ])
+      ..where(movieCategories.category.equals(category))
+      ..orderBy([OrderingTerm.asc(movieCategories.position)]);
 
     final rows = await query.get();
     return rows.map((row) {
@@ -137,14 +136,12 @@ class AppDatabase extends _$AppDatabase {
         id: movieData.id,
         title: movieData.title,
         overview: movieData.overview,
-        posterUrl:
-            movieData.posterPath.isNotEmpty
-                ? 'https://image.tmdb.org/t/p/w500${movieData.posterPath}'
-                : '',
-        backdropUrl:
-            movieData.backdropPath.isNotEmpty
-                ? 'https://image.tmdb.org/t/p/original${movieData.backdropPath}'
-                : '',
+        posterUrl: movieData.posterPath.isNotEmpty
+            ? 'https://image.tmdb.org/t/p/w500${movieData.posterPath}'
+            : '',
+        backdropUrl: movieData.backdropPath.isNotEmpty
+            ? 'https://image.tmdb.org/t/p/original${movieData.backdropPath}'
+            : '',
         voteAverage: movieData.voteAverage,
         releaseDate: movieData.releaseDate,
         genreIds: List<int>.from(jsonDecode(movieData.genreIds)),
@@ -162,7 +159,8 @@ class AppDatabase extends _$AppDatabase {
       // Clear existing category entries.
 
       await (delete(movieCategories)
-        ..where((tbl) => tbl.category.equals(category))).go();
+            ..where((tbl) => tbl.category.equals(category)))
+          .go();
 
       // Insert/update movies.
 
@@ -207,9 +205,9 @@ class AppDatabase extends _$AppDatabase {
   /// Checks if cache for a category is valid (not expired).
 
   Future<bool> isCacheValid(String category, Duration maxAge) async {
-    final metadata =
-        await (select(cacheMetadata)
-          ..where((tbl) => tbl.category.equals(category))).getSingleOrNull();
+    final metadata = await (select(cacheMetadata)
+          ..where((tbl) => tbl.category.equals(category)))
+        .getSingleOrNull();
 
     if (metadata == null) return false;
 
@@ -221,7 +219,8 @@ class AppDatabase extends _$AppDatabase {
 
   Future<CacheMetadataData?> getCacheMetadata(String category) async {
     return await (select(cacheMetadata)
-      ..where((tbl) => tbl.category.equals(category))).getSingleOrNull();
+          ..where((tbl) => tbl.category.equals(category)))
+        .getSingleOrNull();
   }
 
   /// Clears all cached data.
@@ -239,9 +238,11 @@ class AppDatabase extends _$AppDatabase {
   Future<void> clearCacheForCategory(String category) async {
     await transaction(() async {
       await (delete(movieCategories)
-        ..where((tbl) => tbl.category.equals(category))).go();
+            ..where((tbl) => tbl.category.equals(category)))
+          .go();
       await (delete(cacheMetadata)
-        ..where((tbl) => tbl.category.equals(category))).go();
+            ..where((tbl) => tbl.category.equals(category)))
+          .go();
     });
   }
 

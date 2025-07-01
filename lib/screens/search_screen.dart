@@ -134,55 +134,53 @@ class _SearchScreenState extends State<SearchScreen> {
                 onRetry: () => _searchMovies(_searchController.text),
               )
               : _searchResults.isEmpty
-              ? const Center(
-                child: Text(
-                  'Search for movies to get started',
-                  style: TextStyle(color: Colors.grey),
-                ),
-              )
-              : ListView.builder(
-                itemCount: _searchResults.length,
-                itemBuilder: (context, index) {
-                  final movie = _searchResults[index];
-                  return ListTile(
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: CachedNetworkImage(
-                        imageUrl: movie.posterUrl,
-                        width: 50,
-                        height: 75,
-                        fit: BoxFit.cover,
-                        placeholder:
-                            (context, url) => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                        errorWidget:
-                            (context, url, error) => const Icon(Icons.error),
+                  ? const Center(
+                      child: Text(
+                        'Search for movies to get started',
+                        style: TextStyle(color: Colors.grey),
                       ),
-                    ),
-                    title: Text(
-                      movie.title,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    subtitle: Text(
-                      '⭐ ${movie.voteAverage.toStringAsFixed(1)}',
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => MovieDetailsScreen(
-                                movie: movie,
-                                favoritesService: widget.favoritesService,
+                    )
+                  : ListView.builder(
+                      itemCount: _searchResults.length,
+                      itemBuilder: (context, index) {
+                        final movie = _searchResults[index];
+                        return ListTile(
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: CachedNetworkImage(
+                              imageUrl: movie.posterUrl,
+                              width: 50,
+                              height: 75,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator(),
                               ),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                            ),
+                          ),
+                          title: Text(
+                            movie.title,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          subtitle: Text(
+                            '⭐ ${movie.voteAverage.toStringAsFixed(1)}',
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MovieDetailsScreen(
+                                  movie: movie,
+                                  favoritesService: widget.favoritesService,
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
     );
   }
 }
