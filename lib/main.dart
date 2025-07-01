@@ -46,8 +46,8 @@ import 'package:moviestar/theme/app_theme.dart';
 import 'package:moviestar/utils/create_solid_login.dart';
 import 'package:moviestar/utils/initialise_app_folders.dart';
 import 'package:moviestar/utils/is_logged_in.dart';
-import 'package:moviestar/widgets/floating_theme_toggle.dart';
 import 'package:moviestar/widgets/floating_search_button.dart';
+import 'package:moviestar/widgets/floating_theme_toggle.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
