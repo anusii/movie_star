@@ -109,10 +109,11 @@ Search movies by title, actor, or genre for your perfect film.
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SearchScreen(
-                      favoritesService: favoritesService,
-                      movieService: movieService,
-                    ),
+                    builder:
+                        (context) => SearchScreen(
+                          favoritesService: favoritesService,
+                          movieService: movieService,
+                        ),
                   ),
                 );
               },
@@ -122,4 +123,4 @@ Search movies by title, actor, or genre for your perfect film.
       ),
     );
   }
-} 
+}

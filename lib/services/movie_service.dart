@@ -111,7 +111,9 @@ class MovieService {
 
   Future<List<Movie>> searchMovies(String query) async {
     await _ensureClientInitialized();
-    final results = await _client!.getJsonList('search/movie?query=${Uri.encodeComponent(query)}');
+    final results = await _client!.getJsonList(
+      'search/movie?query=${Uri.encodeComponent(query)}',
+    );
     return results.map((movie) => Movie.fromJson(movie)).toList();
   }
 
@@ -119,59 +121,70 @@ class MovieService {
 
   Future<List<Movie>> searchMoviesByActor(String actorName) async {
     await _ensureClientInitialized();
-    
-    // First search for people
-    final personResults = await _client!.getJsonList('search/person?query=${Uri.encodeComponent(actorName)}');
-    
+
+    // First search for people.
+
+    final personResults = await _client!.getJsonList(
+      'search/person?query=${Uri.encodeComponent(actorName)}',
+    );
+
     if (personResults.isEmpty) return [];
-    
+
     final allMovies = <Movie>[];
     final seenMovieIds = <int>{};
-    
-    // Determine if this is a specific search (contains space) or generic search
+
+    // Determine if this is a specific search (contains space) or generic search.
+
     final isSpecificSearch = actorName.contains(' ');
-    
-    // Sort people by popularity (descending) and known_for_department
+
+    // Sort people by popularity (descending) and known_for_department.
+
     final sortedPeople = List<Map<String, dynamic>>.from(personResults);
     sortedPeople.sort((a, b) {
       final popularityA = (a['popularity'] as num?)?.toDouble() ?? 0.0;
       final popularityB = (b['popularity'] as num?)?.toDouble() ?? 0.0;
-      
-      // Prioritize actors over other professions
+
+      // Prioritise actors over other professions.
+
       final knownForA = a['known_for_department'] as String? ?? '';
       final knownForB = b['known_for_department'] as String? ?? '';
       final isActorA = knownForA.toLowerCase() == 'acting';
       final isActorB = knownForB.toLowerCase() == 'acting';
-      
+
       if (isActorA && !isActorB) return -1;
       if (!isActorA && isActorB) return 1;
-      
+
       return popularityB.compareTo(popularityA);
     });
-    
-    // For generic searches, process more people to find famous actors
-    // For specific searches, process fewer but still enough to find the target
+
+    // For generic searches, process more people to find famous actors.
+    // For specific searches, process fewer but still enough to find the target.
+
     final maxPeopleToProcess = isSpecificSearch ? 5 : 10;
     final peopleToProcess = sortedPeople.take(maxPeopleToProcess);
-    
+
     for (final person in peopleToProcess) {
       try {
         final personId = person['id'];
         final popularity = (person['popularity'] as num?)?.toDouble() ?? 0.0;
-        
-        // Skip people who are too unknown (but be more lenient for specific searches)
+
+        // Skip people who are too unknown (but be more lenient for specific searches).
+
         final minPopularity = isSpecificSearch ? 0.1 : 0.5;
         if (popularity < minPopularity) {
           continue;
         }
-        
-        final movieCredits = await _client!.getJson('person/$personId/movie_credits');
+
+        final movieCredits = await _client!.getJson(
+          'person/$personId/movie_credits',
+        );
         final cast = movieCredits['cast'] as List<dynamic>? ?? [];
-        
+
         for (final movieData in cast) {
           final movieId = movieData['id'] as int;
-          
-          // Avoid duplicate movies
+
+          // Avoid duplicate movies.
+
           if (!seenMovieIds.contains(movieId)) {
             try {
               final movie = Movie.fromJson(movieData);
@@ -182,20 +195,21 @@ class MovieService {
             }
           }
         }
-        
-        // If we have a very specific search and found a highly popular match, prioritize that
+
+        // If we have a very specific search and found a highly popular match, prioritise that.
+
         if (isSpecificSearch && popularity > 10.0) {
           break;
         }
-        
       } catch (e) {
         continue;
       }
     }
-    
-    // Sort by popularity/rating for better results ordering
+
+    // Sort by popularity/rating for better results ordering.
+
     allMovies.sort((a, b) => b.voteAverage.compareTo(a.voteAverage));
-    
+
     return allMovies;
   }
 
@@ -203,54 +217,66 @@ class MovieService {
 
   Future<List<Movie>> searchMoviesByGenre(String genreName) async {
     await _ensureClientInitialized();
-    
-    // Get genre list first
+
+    // Get genre list first.
+
     final genreResponse = await _client!.getJson('genre/movie/list');
     final genres = genreResponse['genres'] as List<dynamic>;
-    
-    // Find matching genre
+
+    // Find matching genre.
+
     final matchingGenre = genres.firstWhere(
-      (genre) => (genre['name'] as String).toLowerCase().contains(genreName.toLowerCase()),
+      (genre) => (genre['name'] as String).toLowerCase().contains(
+        genreName.toLowerCase(),
+      ),
       orElse: () => null,
     );
-    
+
     if (matchingGenre == null) return [];
-    
-    // Search movies by genre ID
+
+    // Search movies by genre ID.
+
     final genreId = matchingGenre['id'];
-    final results = await _client!.getJsonList('discover/movie?with_genres=$genreId');
-    
+    final results = await _client!.getJsonList(
+      'discover/movie?with_genres=$genreId',
+    );
+
     return results.map((movie) => Movie.fromJson(movie)).toList();
   }
 
   /// Comprehensive search that searches by title, actor, and genre.
 
-  Future<Map<String, List<Movie>>> searchMoviesComprehensive(String query) async {
+  Future<Map<String, List<Movie>>> searchMoviesComprehensive(
+    String query,
+  ) async {
     await _ensureClientInitialized();
-    
+
     final results = <String, List<Movie>>{};
-    
+
     try {
-      // Search by title
+      // Search by title.
+
       results['title'] = await searchMovies(query);
     } catch (e) {
       results['title'] = [];
     }
-    
+
     try {
-      // Search by actor
+      // Search by actor.
+
       results['actor'] = await searchMoviesByActor(query);
     } catch (e) {
       results['actor'] = [];
     }
-    
+
     try {
-      // Search by genre
+      // Search by genre.
+
       results['genre'] = await searchMoviesByGenre(query);
     } catch (e) {
       results['genre'] = [];
     }
-    
+
     return results;
   }
 

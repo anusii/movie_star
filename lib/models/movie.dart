@@ -77,16 +77,19 @@ class Movie {
   /// Creates a [Movie] instance from a JSON map.
 
   factory Movie.fromJson(Map<String, dynamic> json) {
-    // Helper function to safely parse release date
+    // Helper function to safely parse release date.
     DateTime parseReleaseDate(dynamic dateValue) {
       if (dateValue == null || dateValue.toString().isEmpty) {
-        return DateTime.now(); // Default to current date if no release date
+        // Default to current date if no release date.
+
+        return DateTime.now();
       }
-      
+
       try {
         return DateTime.parse(dateValue.toString());
       } catch (e) {
-        // If parsing fails, return current date as fallback
+        // If parsing fails, return current date as fallback.
+
         return DateTime.now();
       }
     }
