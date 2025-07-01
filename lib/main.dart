@@ -46,6 +46,7 @@ import 'package:moviestar/theme/app_theme.dart';
 import 'package:moviestar/utils/create_solid_login.dart';
 import 'package:moviestar/utils/initialise_app_folders.dart';
 import 'package:moviestar/utils/is_logged_in.dart';
+import 'package:moviestar/widgets/cache_status_indicator.dart';
 import 'package:moviestar/widgets/floating_theme_toggle.dart';
 
 void main() async {
@@ -225,6 +226,16 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           // Hide when on Settings page (index 4) since it has its own theme toggle.
           if (_selectedIndex != 4)
             const FloatingThemeToggle(right: 70, top: 16),
+
+          // Cache status indicator in top-right corner
+          Positioned(
+            top: 16,
+            right: 16,
+            child: CacheStatusIndicator(
+              compact: true,
+              favoritesService: _favoritesService,
+            ),
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

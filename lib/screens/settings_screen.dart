@@ -37,6 +37,7 @@ import 'package:moviestar/screens/watched_screen.dart';
 import 'package:moviestar/services/api_key_service.dart';
 import 'package:moviestar/services/favorites_service.dart';
 import 'package:moviestar/services/favorites_service_manager.dart';
+import 'package:moviestar/widgets/cache_feedback_widget.dart';
 import 'package:moviestar/widgets/theme_toggle_button.dart';
 
 /// A screen that displays and manages user settings.
@@ -973,6 +974,14 @@ Failed to enable POD storage. Please check your Solid POD login and try again.''
                 ref
                     .read(cacheOnlyModeProvider.notifier)
                     .setCacheOnlyMode(value);
+
+                // Show feedback about the mode change
+                if (mounted) {
+                  CacheFeedbackWidget.showOfflineModeNotification(
+                    context,
+                    isEnabled: value,
+                  );
+                }
               }
               : null,
       activeColor: Theme.of(context).colorScheme.primary,
