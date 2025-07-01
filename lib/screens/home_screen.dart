@@ -322,7 +322,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     } else if (age.inMinutes > 0) {
       return '${age.inMinutes}m old';
     } else {
-      return 'fresh';
+      return 'cached';
     }
   }
 
