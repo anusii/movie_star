@@ -179,7 +179,7 @@ class _ComingSoonScreenState extends ConsumerState<ComingSoonScreen> {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.8),
+            color: color.withValues(alpha: 0.8),
             borderRadius: BorderRadius.circular(4),
           ),
           child: Row(

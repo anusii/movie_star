@@ -36,7 +36,6 @@ import 'package:moviestar/screens/movie_details_screen.dart';
 import 'package:moviestar/screens/search_screen.dart';
 import 'package:moviestar/services/favorites_service.dart';
 import 'package:moviestar/widgets/cache_feedback_widget.dart';
-import 'package:moviestar/widgets/cache_welcome_dialog.dart';
 import 'package:moviestar/widgets/error_display_widget.dart';
 import 'package:moviestar/widgets/movie_card.dart';
 
@@ -73,11 +72,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     _scrollControllers['nowPlaying'] = ScrollController();
     _scrollControllers['topRated'] = ScrollController();
     _scrollControllers['upcoming'] = ScrollController();
-
-    // Show welcome dialog for first-time users
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      CacheWelcomeDialog.showIfFirstTime(context);
-    });
   }
 
   @override
@@ -243,7 +237,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: Colors.green.withOpacity(0.8),
+        color: Colors.green.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Row(
@@ -297,7 +291,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: Colors.blue.withOpacity(0.8),
+        color: Colors.blue.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(4),
       ),
       child: const Row(
@@ -359,7 +353,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final topRatedMovies = ref.read(topRatedMoviesWithCacheInfoProvider);
     final upcomingMovies = ref.read(upcomingMoviesWithCacheInfoProvider);
 
-    // Check if all categories have loaded
+    // Check if all categories have loaded.
+
     final allLoaded = [
       popularMovies,
       nowPlayingMovies,
@@ -369,7 +364,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     if (!allLoaded) return;
 
-    // Extract cache results
+    // Extract cache results.
+
     final results = <String, bool>{};
     popularMovies.whenOrNull(
       data: (result) => results['Popular'] = result.fromCache,
@@ -404,7 +400,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final upcomingMovies = ref.watch(upcomingMoviesWithCacheInfoProvider);
     final cacheOnlyMode = ref.watch(cacheOnlyModeProvider);
 
-    // Show performance feedback after initial load
+    // Show performance feedback after initial load.
+
     _showCachePerformanceFeedback();
 
     return Scaffold(
@@ -430,7 +427,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: const Text(
-                  'OFFLINE MODE',
+                  'OFFLINE',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 10,

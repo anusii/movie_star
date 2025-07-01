@@ -55,7 +55,7 @@ class CachingEnabledNotifier extends StateNotifier<bool> {
   }
 }
 
-/// StateNotifier for managing cache-only mode setting with persistence.
+/// StateNotifier for managing offline mode setting with persistence.
 
 class CacheOnlyModeNotifier extends StateNotifier<bool> {
   final CacheSettingsService _settingsService;
@@ -131,7 +131,7 @@ final cacheSettingsServiceProvider = Provider<CacheSettingsService>((ref) {
   return CacheSettingsService.instance;
 });
 
-/// Provider for cache-only mode state with persistence.
+/// Provider for offline mode state with persistence.
 
 final cacheOnlyModeProvider =
     StateNotifierProvider<CacheOnlyModeNotifier, bool>((ref) {

@@ -61,7 +61,9 @@ class CacheStatusIndicator extends ConsumerWidget {
     final cacheStatsAsync = ref.watch(cacheStatsProvider);
 
     if (!cachingEnabled) {
-      return const SizedBox.shrink(); // Hide if caching is disabled
+      // Hide if caching is disabled.
+
+      return const SizedBox.shrink();
     }
 
     return GestureDetector(
@@ -107,24 +109,24 @@ class CacheStatusIndicator extends ConsumerWidget {
     AsyncValue<Map<CacheCategory, CacheStats>> cacheStatsAsync,
   ) {
     if (cacheOnlyMode) {
-      return Colors.orange.withOpacity(0.9);
+      return Colors.orange.withValues(alpha: 0.9);
     }
 
     return cacheStatsAsync.when(
       data: (stats) {
-        if (stats.isEmpty) return Colors.grey.withOpacity(0.8);
+        if (stats.isEmpty) return Colors.grey.withValues(alpha: 0.8);
 
         final totalCached = stats.values.fold(
           0,
           (sum, stat) => sum + stat.movieCount,
         );
         if (totalCached > 0) {
-          return Colors.green.withOpacity(0.8);
+          return Colors.green.withValues(alpha: 0.8);
         }
-        return Colors.grey.withOpacity(0.8);
+        return Colors.grey.withValues(alpha: 0.8);
       },
-      loading: () => Colors.blue.withOpacity(0.8),
-      error: (_, __) => Colors.red.withOpacity(0.8),
+      loading: () => Colors.blue.withValues(alpha: 0.8),
+      error: (_, __) => Colors.red.withValues(alpha: 0.8),
     );
   }
 
@@ -168,7 +170,7 @@ class CacheStatusIndicator extends ConsumerWidget {
           (sum, stat) => sum + stat.movieCount,
         );
         if (totalCached > 0) {
-          return '${totalCached} CACHED';
+          return '$totalCached CACHED';
         }
         return 'NO CACHE';
       },
@@ -193,7 +195,7 @@ class CacheStatusIndicator extends ConsumerWidget {
         String message;
         if (cacheOnlyMode) {
           message =
-              'Offline Mode: Using only cached data\n$totalCached movies cached';
+              'Offline Mode: Browse movies without internet\n$totalCached movies available offline';
         } else if (totalCached > 0) {
           final validCategories =
               stats.values.where((stat) => stat.isValid).length;
@@ -279,7 +281,8 @@ class CacheStatusIndicator extends ConsumerWidget {
         ),
       );
     } else {
-      // Fallback - show message that settings can be accessed from main navigation
+      // Fallback - show message that settings can be accessed from main navigation.
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Access Cache Settings from the Settings tab'),

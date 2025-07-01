@@ -56,7 +56,7 @@ class MovieCard extends StatelessWidget {
 
   final Duration? cacheAge;
 
-  /// Whether the app is in cache-only mode.
+  /// Whether the app is in offline mode.
 
   final bool? cacheOnlyMode;
 
@@ -232,8 +232,8 @@ class MovieCard extends StatelessWidget {
         decoration: BoxDecoration(
           color:
               fromCache!
-                  ? Colors.green.withOpacity(0.8)
-                  : Colors.blue.withOpacity(0.8),
+                  ? Colors.green.withValues(alpha: 0.8)
+                  : Colors.blue.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(
@@ -254,7 +254,7 @@ class MovieCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
         decoration: BoxDecoration(
-          color: Colors.orange.withOpacity(0.9),
+          color: Colors.orange.withValues(alpha: 0.9),
           borderRadius: BorderRadius.circular(8),
         ),
         child: const Row(
@@ -296,7 +296,7 @@ class MovieCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
       decoration: BoxDecoration(
-        color: Colors.grey.withOpacity(0.2),
+        color: Colors.grey.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
