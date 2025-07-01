@@ -135,42 +135,42 @@ final cacheSettingsServiceProvider = Provider<CacheSettingsService>((ref) {
 
 final cacheOnlyModeProvider =
     StateNotifierProvider<CacheOnlyModeNotifier, bool>((ref) {
-      final settingsService = ref.watch(cacheSettingsServiceProvider);
-      return CacheOnlyModeNotifier(settingsService);
-    });
+  final settingsService = ref.watch(cacheSettingsServiceProvider);
+  return CacheOnlyModeNotifier(settingsService);
+});
 
 /// Provider for caching enabled state with persistence.
 
 final cachingEnabledProvider =
     StateNotifierProvider<CachingEnabledNotifier, bool>((ref) {
-      final settingsService = ref.watch(cacheSettingsServiceProvider);
-      return CachingEnabledNotifier(settingsService);
-    });
+  final settingsService = ref.watch(cacheSettingsServiceProvider);
+  return CachingEnabledNotifier(settingsService);
+});
 
 /// Provider for configured cached movie service (with settings).
 
 final configuredCachedMovieServiceProvider =
     Provider.autoDispose<CachedMovieService>((ref) {
-      final movieService = ref.watch(movieServiceProvider);
-      final cacheRepository = ref.watch(movieCacheRepositoryProvider);
-      final cachingEnabled = ref.watch(cachingEnabledProvider);
-      final cacheOnlyMode = ref.watch(cacheOnlyModeProvider);
+  final movieService = ref.watch(movieServiceProvider);
+  final cacheRepository = ref.watch(movieCacheRepositoryProvider);
+  final cachingEnabled = ref.watch(cachingEnabledProvider);
+  final cacheOnlyMode = ref.watch(cacheOnlyModeProvider);
 
-      final cachedService = CachedMovieService(
-        movieService,
-        cacheRepository,
-        cachingEnabled: cachingEnabled,
-        cacheOnlyMode: cacheOnlyMode,
-      );
+  final cachedService = CachedMovieService(
+    movieService,
+    cacheRepository,
+    cachingEnabled: cachingEnabled,
+    cacheOnlyMode: cacheOnlyMode,
+  );
 
-      // Ensure proper disposal.
+  // Ensure proper disposal.
 
-      ref.onDispose(() {
-        cachedService.dispose();
-      });
+  ref.onDispose(() {
+    cachedService.dispose();
+  });
 
-      return cachedService;
-    });
+  return cachedService;
+});
 
 /// Provider for popular movies with caching.
 

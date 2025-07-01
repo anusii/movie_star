@@ -57,8 +57,8 @@ class CachedMovieService {
     this._cacheRepository, {
     bool cachingEnabled = true,
     bool cacheOnlyMode = false,
-  }) : _cachingEnabled = cachingEnabled,
-       _cacheOnlyMode = cacheOnlyMode;
+  })  : _cachingEnabled = cachingEnabled,
+        _cacheOnlyMode = cacheOnlyMode;
 
   /// Enables or disables caching.
 

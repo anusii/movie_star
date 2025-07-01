@@ -125,14 +125,13 @@ class _SearchScreenState extends State<SearchScreen> {
           onSubmitted: _searchMovies,
         ),
       ),
-      body:
-          _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : _error != null
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _error != null
               ? ErrorDisplayWidget(
-                message: 'Search failed: $_error',
-                onRetry: () => _searchMovies(_searchController.text),
-              )
+                  message: 'Search failed: $_error',
+                  onRetry: () => _searchMovies(_searchController.text),
+                )
               : _searchResults.isEmpty
                   ? const Center(
                       child: Text(

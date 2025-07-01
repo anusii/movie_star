@@ -100,71 +100,65 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         SizedBox(
           height: 200,
           child: moviesAsync.when(
-            data:
-                (movies) => Scrollbar(
-                  controller: _scrollControllers[key],
-                  thickness: 6,
-                  radius: const Radius.circular(3),
-                  thumbVisibility: true,
-                  child: ListView.builder(
-                    controller: _scrollControllers[key],
-                    scrollDirection: Axis.horizontal,
+            data: (movies) => Scrollbar(
+              controller: _scrollControllers[key],
+              thickness: 6,
+              radius: const Radius.circular(3),
+              thumbVisibility: true,
+              child: ListView.builder(
+                controller: _scrollControllers[key],
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                itemCount: movies.length,
+                itemBuilder: (context, index) {
+                  final movie = movies[index];
+                  return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
-                    itemCount: movies.length,
-                    itemBuilder: (context, index) {
-                      final movie = movies[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) => MovieDetailsScreen(
-                                      movie: movie,
-                                      favoritesService: widget.favoritesService,
-                                    ),
-                              ),
-                            );
-                          },
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            child: CachedNetworkImage(
-                              imageUrl: movie.posterUrl,
-                              width: 130,
-                              fit: BoxFit.cover,
-                              placeholder:
-                                  (context, url) => const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                              errorWidget:
-                                  (context, url, error) =>
-                                      const Icon(Icons.error),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MovieDetailsScreen(
+                              movie: movie,
+                              favoritesService: widget.favoritesService,
                             ),
                           ),
+                        );
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: CachedNetworkImage(
+                          imageUrl: movie.posterUrl,
+                          width: 130,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
                         ),
-                      );
-                    },
-                  ),
-                ),
-            loading:
-                () => const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(20),
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-            error:
-                (error, stack) => ErrorDisplayWidget.compact(
-                  message: 'Failed to load $title',
-                  onRetry: () {
-                    ref.invalidate(popularMoviesProvider);
-                    ref.invalidate(nowPlayingMoviesProvider);
-                    ref.invalidate(topRatedMoviesProvider);
-                    ref.invalidate(upcomingMoviesProvider);
-                  },
-                ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            loading: () => const Center(
+              child: Padding(
+                padding: EdgeInsets.all(20),
+                child: CircularProgressIndicator(),
+              ),
+            ),
+            error: (error, stack) => ErrorDisplayWidget.compact(
+              message: 'Failed to load $title',
+              onRetry: () {
+                ref.invalidate(popularMoviesProvider);
+                ref.invalidate(nowPlayingMoviesProvider);
+                ref.invalidate(topRatedMoviesProvider);
+                ref.invalidate(upcomingMoviesProvider);
+              },
+            ),
           ),
         ),
       ],
@@ -220,11 +214,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder:
-                      (context) => SearchScreen(
-                        favoritesService: widget.favoritesService,
-                        movieService: movieService,
-                      ),
+                  builder: (context) => SearchScreen(
+                    favoritesService: widget.favoritesService,
+                    movieService: movieService,
+                  ),
                 ),
               );
             },

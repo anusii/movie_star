@@ -197,22 +197,20 @@ This will remove all cached movie data. Fresh data will be downloaded from the n
       ],
       TextButton(
         onPressed: () => Navigator.of(context).pop(true),
-        style:
-            cachingEnabled && cacheOnlyMode
-                ? TextButton.styleFrom(foregroundColor: Colors.red)
-                : null,
+        style: cachingEnabled && cacheOnlyMode
+            ? TextButton.styleFrom(foregroundColor: Colors.red)
+            : null,
         child: Text(confirmButtonText),
       ),
     ];
 
     final confirmed = await showDialog<bool>(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text(dialogTitle),
-            content: Text(dialogContent),
-            actions: actions,
-          ),
+      builder: (context) => AlertDialog(
+        title: Text(dialogTitle),
+        content: Text(dialogContent),
+        actions: actions,
+      ),
     );
 
     if (confirmed == true) {
@@ -246,24 +244,23 @@ Cache cleared! You're now in Cache-Only Mode with no cached data. Consider disab
 
       final confirmed = await showDialog<bool>(
         context: context,
-        builder:
-            (context) => AlertDialog(
-              title: const Text('⚠️ Force Refresh in Cache-Only Mode'),
-              content: const Text('''
+        builder: (context) => AlertDialog(
+          title: const Text('⚠️ Force Refresh in Cache-Only Mode'),
+          content: const Text('''
 Force refresh requires downloading fresh data from the network, but you have Cache-Only Mode enabled.
 
 Do you want to temporarily disable Cache-Only Mode and refresh all data?'''),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('Disable Cache-Only & Refresh'),
-                ),
-              ],
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancel'),
             ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Disable Cache-Only & Refresh'),
+            ),
+          ],
+        ),
       );
 
       if (confirmed == true) {
@@ -802,97 +799,89 @@ Failed to enable POD storage. Please check your Solid POD login and try again.''
 
         // Cache Statistics.
         cacheStatsAsync.when(
-          data:
-              (stats) =>
-                  stats.isEmpty
-                      ? const SizedBox.shrink()
-                      : Card(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
+          data: (stats) => stats.isEmpty
+              ? const SizedBox.shrink()
+              : Card(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.storage, size: 16),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Cache Statistics',
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                          ],
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  const Icon(Icons.storage, size: 16),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    'Cache Statistics',
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 12),
-                              ...stats.entries.map((entry) {
-                                final category = entry.key;
-                                final stat = entry.value;
-                                final categoryName = _getCategoryDisplayName(
-                                  category,
-                                );
+                        const SizedBox(height: 12),
+                        ...stats.entries.map((entry) {
+                          final category = entry.key;
+                          final stat = entry.value;
+                          final categoryName = _getCategoryDisplayName(
+                            category,
+                          );
 
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 8),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            categoryName,
-                                            style:
-                                                Theme.of(
-                                                  context,
-                                                ).textTheme.bodyMedium,
-                                          ),
-                                          Text(
-                                            'Updated ${_getTimeAgo(stat.age)} ago',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall
-                                                ?.copyWith(color: Colors.grey),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            stat.isValid
-                                                ? Icons.check_circle
-                                                : Icons.schedule,
-                                            size: 16,
-                                            color:
-                                                stat.isValid
-                                                    ? Colors.green
-                                                    : Colors.orange,
-                                          ),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            stat.isValid
-                                                ? '${stat.movieCount} movies'
-                                                : 'Expired',
-                                            style:
-                                                Theme.of(
-                                                  context,
-                                                ).textTheme.bodySmall,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }),
-                            ],
-                          ),
-                        ),
-                      ),
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      categoryName,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyMedium,
+                                    ),
+                                    Text(
+                                      'Updated ${_getTimeAgo(stat.age)} ago',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      stat.isValid
+                                          ? Icons.check_circle
+                                          : Icons.schedule,
+                                      size: 16,
+                                      color: stat.isValid
+                                          ? Colors.green
+                                          : Colors.orange,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      stat.isValid
+                                          ? '${stat.movieCount} movies'
+                                          : 'Expired',
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodySmall,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
+                  ),
+                ),
           loading: () => const SizedBox.shrink(),
           error: (_, __) => const SizedBox.shrink(),
         ),
@@ -944,10 +933,9 @@ Failed to enable POD storage. Please check your Solid POD login and try again.''
     return SwitchListTile(
       title: Text(
         'Cache-Only Mode',
-        style:
-            cachingEnabled
-                ? Theme.of(context).textTheme.bodyLarge
-                : Theme.of(context).textTheme.bodyLarge?.copyWith(
+        style: cachingEnabled
+            ? Theme.of(context).textTheme.bodyLarge
+            : Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: Theme.of(context).disabledColor,
                 ),
       ),
@@ -957,22 +945,18 @@ Failed to enable POD storage. Please check your Solid POD login and try again.''
                 ? 'Using only cached data (no network calls)'
                 : 'Allow network calls when cache is empty')
             : 'Enable caching first to use cache-only mode',
-        style:
-            cachingEnabled
-                ? Theme.of(context).textTheme.bodyMedium
-                : Theme.of(context).textTheme.bodyMedium?.copyWith(
+        style: cachingEnabled
+            ? Theme.of(context).textTheme.bodyMedium
+            : Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).disabledColor,
                 ),
       ),
       value: cacheOnlyMode && cachingEnabled,
-      onChanged:
-          cachingEnabled
-              ? (value) {
-                ref
-                    .read(cacheOnlyModeProvider.notifier)
-                    .setCacheOnlyMode(value);
-              }
-              : null,
+      onChanged: cachingEnabled
+          ? (value) {
+              ref.read(cacheOnlyModeProvider.notifier).setCacheOnlyMode(value);
+            }
+          : null,
       activeColor: Theme.of(context).colorScheme.primary,
     );
   }
