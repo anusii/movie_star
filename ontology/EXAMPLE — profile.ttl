@@ -7,7 +7,7 @@
 @prefix moviestar-onto: <https://sii.anu.edu.au/onto/moviestar#> .
 
 <https://pods.solidcommunity.au/john_doe/profile/card#me> rdf:type owl:NamedIndividual ,
-                                                                moviestar-onto:Participant ;
+                                                                moviestar-onto:User ;
                                                        moviestar-onto:hasMovieList moviestar-data:MovieList-u67djeTn94d5, moviestar-data:MovieList-4Kliq48Jflm7 ;
                                                        moviestar-onto:DOB "1995-05-07"^^xsd:date ;
                                                        moviestar-onto:gender "Male" ;
