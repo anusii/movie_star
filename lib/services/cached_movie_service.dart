@@ -57,8 +57,8 @@ class CachedMovieService {
     this._cacheRepository, {
     bool cachingEnabled = true,
     bool cacheOnlyMode = false,
-  }) : _cachingEnabled = cachingEnabled,
-       _cacheOnlyMode = cacheOnlyMode;
+  })  : _cachingEnabled = cachingEnabled,
+        _cacheOnlyMode = cacheOnlyMode;
 
   /// Enables or disables caching.
 
@@ -86,14 +86,48 @@ class CachedMovieService {
     CacheCategory category,
     Future<List<Movie>> Function() networkCall,
   ) async {
+    developer.log(
+      'Getting movies for ${category.value} - cachingEnabled: $_cachingEnabled, cacheOnlyMode: $_cacheOnlyMode',
+      name: 'CachedMovieService',
+    );
+
     if (!_cachingEnabled) {
       // Caching disabled, go straight to network.
 
+      developer.log(
+        'Caching disabled for ${category.value}, going to network',
+        name: 'CachedMovieService',
+      );
+
       if (_cacheOnlyMode) {
-        throw Exception('Cache-only mode enabled but caching is disabled');
+        // This shouldn't happen with the new UI logic, but handle it gracefully.
+
+        developer.log(
+          'Invalid state: Cache-only mode enabled but caching is disabled for ${category.value}',
+          name: 'CachedMovieService',
+          level: 1000,
+        );
+        throw Exception(
+          'Cannot use cache-only mode when caching is disabled. Please enable caching first or disable cache-only mode.',
+        );
       }
-      final movies = await networkCall();
-      return CacheResult(data: movies, fromCache: false);
+
+      try {
+        final movies = await networkCall();
+        developer.log(
+          'Network call successful for ${category.value}: ${movies.length} movies',
+          name: 'CachedMovieService',
+        );
+        return CacheResult(data: movies, fromCache: false);
+      } catch (e) {
+        developer.log(
+          'Network call failed for ${category.value} with caching disabled: $e',
+          name: 'CachedMovieService',
+          level: 1000,
+        );
+
+        rethrow;
+      }
     }
 
     // Try cache first.
@@ -112,10 +146,31 @@ class CachedMovieService {
 
     if (_cacheOnlyMode) {
       developer.log(
-        'Cache miss for ${category.value} in cache-only mode',
+        'Cache miss for ${category.value} in cache-only mode, checking for stale cache',
         name: 'CachedMovieService',
       );
-      return const CacheResult(data: <Movie>[], fromCache: false);
+
+      // Try to return stale cache if available.
+
+      final staleMovies = await _cacheRepository.getStaleMovies(category);
+      if (staleMovies != null && staleMovies.isNotEmpty) {
+        developer.log(
+          'Returning stale cache for ${category.value} in cache-only mode (${staleMovies.length} movies)',
+          name: 'CachedMovieService',
+        );
+        return CacheResult(data: staleMovies, fromCache: true);
+      }
+
+      // No cache data available at all.
+
+      developer.log(
+        'No cache data available for ${category.value} in cache-only mode',
+        name: 'CachedMovieService',
+        level: 1000,
+      );
+      throw Exception(
+        'No cached ${_getCategoryDisplayName(category)} available. Try refreshing data or disable cache-only mode to fetch from network.',
+      );
     }
 
     // Fallback to network.
@@ -376,6 +431,21 @@ class CachedMovieService {
       'API key updated in underlying service',
       name: 'CachedMovieService',
     );
+  }
+
+  /// Gets human-readable display name for cache category.
+
+  String _getCategoryDisplayName(CacheCategory category) {
+    switch (category) {
+      case CacheCategory.popular:
+        return 'popular movies';
+      case CacheCategory.nowPlaying:
+        return 'now playing movies';
+      case CacheCategory.topRated:
+        return 'top rated movies';
+      case CacheCategory.upcoming:
+        return 'upcoming movies';
+    }
   }
 
   /// Disposes the service and its resources.

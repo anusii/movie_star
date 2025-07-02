@@ -33,6 +33,7 @@ import 'package:moviestar/models/movie.dart';
 import 'package:moviestar/screens/movie_details_screen.dart';
 import 'package:moviestar/services/favorites_service.dart';
 import 'package:moviestar/services/movie_service.dart';
+import 'package:moviestar/widgets/error_display_widget.dart';
 
 /// A screen that allows users to search for movies.
 
@@ -127,7 +128,10 @@ class _SearchScreenState extends State<SearchScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
-              ? Center(child: Text(_error!))
+              ? ErrorDisplayWidget(
+                  message: 'Search failed: $_error',
+                  onRetry: () => _searchMovies(_searchController.text),
+                )
               : _searchResults.isEmpty
                   ? const Center(
                       child: Text(
