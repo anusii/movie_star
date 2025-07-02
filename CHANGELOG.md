@@ -15,5 +15,6 @@ Run in browser: [**Web**](https://moviestar.solidcommunity.au).
 
 ## 0.1 First stable release
 
++ Add support for caching downloaded movie data [0.0.5 20250703 atangster]
 + ICON: Crop and lighten [0.0.4 20250626 gjw]
 + CHANGELOG: Initialise [0.0.3 20250626 gjw]
