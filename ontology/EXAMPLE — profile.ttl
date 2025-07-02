@@ -9,9 +9,9 @@
 <https://pods.solidcommunity.au/john_doe/profile/card#me> rdf:type owl:NamedIndividual ,
                                                                 moviestar-onto:User ;
                                                        moviestar-onto:hasMovieList moviestar-data:MovieList-u67djeTn94d5, moviestar-data:MovieList-4Kliq48Jflm7 ;
+                                                       moviestar-onto:hasApiKey moviestar-data:ApiKey-gU83Tqb7g1A4;
                                                        moviestar-onto:DOB "1995-05-07"^^xsd:date ;
                                                        moviestar-onto:gender "Male" ;
-                                                       moviestar-onto:apiKey "1235486" ;
                                                        moviestar-onto:webID "https://pods.solidcommunity.au/john_doe/profile/card#me"^^xsd:anyURI ;
                                                        rdfs:label "|webID=https://pods.solidcommunity.au/john_doe/profile/card#me|" .
 													   
