@@ -10,7 +10,7 @@ on:
     types: [opened, reopened, synchronize]
 
 env:
-  FLUTTER_VERSION: '3.32.0'
+  FLUTTER_VERSION: '3.32.5'
 
 jobs:
 
@@ -46,6 +46,17 @@ jobs:
           flutter-version: ${{env.FLUTTER_VERSION}}
       - run: flutter pub get
       - run: dart run custom_lint
+
+  markdown:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm install -g markdownlint-cli
+      - run: markdownlint assets/markdown
+        # -p .markdownlintignore -c .markdownlint.yaml
 
   copyright:
     runs-on: ubuntu-latest

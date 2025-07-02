@@ -116,60 +116,56 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         SizedBox(
           height: 200,
           child: moviesAsync.when(
-            data:
-                (cacheResult) => Scrollbar(
-                  controller: _scrollControllers[key],
-                  thickness: 6,
-                  radius: const Radius.circular(3),
-                  thumbVisibility: true,
-                  child: ListView.builder(
-                    controller: _scrollControllers[key],
-                    scrollDirection: Axis.horizontal,
+            data: (cacheResult) => Scrollbar(
+              controller: _scrollControllers[key],
+              thickness: 6,
+              radius: const Radius.circular(3),
+              thumbVisibility: true,
+              child: ListView.builder(
+                controller: _scrollControllers[key],
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                itemCount: cacheResult.data.length,
+                itemBuilder: (context, index) {
+                  final movie = cacheResult.data[index];
+                  return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
-                    itemCount: cacheResult.data.length,
-                    itemBuilder: (context, index) {
-                      final movie = cacheResult.data[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: MovieCard.poster(
-                          movie: movie,
-                          fromCache: cacheResult.fromCache,
-                          cacheAge: cacheResult.cacheAge,
-                          cacheOnlyMode: cacheOnlyMode,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) => MovieDetailsScreen(
-                                      movie: movie,
-                                      favoritesService: widget.favoritesService,
-                                    ),
-                              ),
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                ),
-            loading:
-                () => const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(20),
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-            error:
-                (error, stack) => ErrorDisplayWidget.compact(
-                  message: 'Failed to load $title',
-                  onRetry: () {
-                    ref.invalidate(popularMoviesWithCacheInfoProvider);
-                    ref.invalidate(nowPlayingMoviesWithCacheInfoProvider);
-                    ref.invalidate(topRatedMoviesWithCacheInfoProvider);
-                    ref.invalidate(upcomingMoviesWithCacheInfoProvider);
-                  },
-                ),
+                    child: MovieCard.poster(
+                      movie: movie,
+                      fromCache: cacheResult.fromCache,
+                      cacheAge: cacheResult.cacheAge,
+                      cacheOnlyMode: cacheOnlyMode,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MovieDetailsScreen(
+                              movie: movie,
+                              favoritesService: widget.favoritesService,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+            loading: () => const Center(
+              child: Padding(
+                padding: EdgeInsets.all(20),
+                child: CircularProgressIndicator(),
+              ),
+            ),
+            error: (error, stack) => ErrorDisplayWidget.compact(
+              message: 'Failed to load $title',
+              onRetry: () {
+                ref.invalidate(popularMoviesWithCacheInfoProvider);
+                ref.invalidate(nowPlayingMoviesWithCacheInfoProvider);
+                ref.invalidate(topRatedMoviesWithCacheInfoProvider);
+                ref.invalidate(upcomingMoviesWithCacheInfoProvider);
+              },
+            ),
           ),
         ),
       ],
@@ -451,11 +447,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder:
-                      (context) => SearchScreen(
-                        favoritesService: widget.favoritesService,
-                        movieService: movieService,
-                      ),
+                  builder: (context) => SearchScreen(
+                    favoritesService: widget.favoritesService,
+                    movieService: movieService,
+                  ),
                 ),
               );
             },

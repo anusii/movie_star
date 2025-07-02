@@ -106,16 +106,16 @@ class $MoviesTable extends Movies with TableInfo<$MoviesTable, Movy> {
   );
   @override
   List<GeneratedColumn> get $columns => [
-    id,
-    title,
-    overview,
-    posterPath,
-    backdropPath,
-    voteAverage,
-    releaseDate,
-    genreIds,
-    cachedAt,
-  ];
+        id,
+        title,
+        overview,
+        posterPath,
+        backdropPath,
+        voteAverage,
+        releaseDate,
+        genreIds,
+        cachedAt,
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -211,51 +211,42 @@ class $MoviesTable extends Movies with TableInfo<$MoviesTable, Movy> {
   Movy map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Movy(
-      id:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.int,
-            data['${effectivePrefix}id'],
-          )!,
-      title:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.string,
-            data['${effectivePrefix}title'],
-          )!,
-      overview:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.string,
-            data['${effectivePrefix}overview'],
-          )!,
-      posterPath:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.string,
-            data['${effectivePrefix}poster_path'],
-          )!,
-      backdropPath:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.string,
-            data['${effectivePrefix}backdrop_path'],
-          )!,
-      voteAverage:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.double,
-            data['${effectivePrefix}vote_average'],
-          )!,
-      releaseDate:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.dateTime,
-            data['${effectivePrefix}release_date'],
-          )!,
-      genreIds:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.string,
-            data['${effectivePrefix}genre_ids'],
-          )!,
-      cachedAt:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.dateTime,
-            data['${effectivePrefix}cached_at'],
-          )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      overview: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}overview'],
+      )!,
+      posterPath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}poster_path'],
+      )!,
+      backdropPath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}backdrop_path'],
+      )!,
+      voteAverage: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}vote_average'],
+      )!,
+      releaseDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}release_date'],
+      )!,
+      genreIds: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}genre_ids'],
+      )!,
+      cachedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}cached_at'],
+      )!,
     );
   }
 
@@ -375,17 +366,18 @@ class Movy extends DataClass implements Insertable<Movy> {
     DateTime? releaseDate,
     String? genreIds,
     DateTime? cachedAt,
-  }) => Movy(
-    id: id ?? this.id,
-    title: title ?? this.title,
-    overview: overview ?? this.overview,
-    posterPath: posterPath ?? this.posterPath,
-    backdropPath: backdropPath ?? this.backdropPath,
-    voteAverage: voteAverage ?? this.voteAverage,
-    releaseDate: releaseDate ?? this.releaseDate,
-    genreIds: genreIds ?? this.genreIds,
-    cachedAt: cachedAt ?? this.cachedAt,
-  );
+  }) =>
+      Movy(
+        id: id ?? this.id,
+        title: title ?? this.title,
+        overview: overview ?? this.overview,
+        posterPath: posterPath ?? this.posterPath,
+        backdropPath: backdropPath ?? this.backdropPath,
+        voteAverage: voteAverage ?? this.voteAverage,
+        releaseDate: releaseDate ?? this.releaseDate,
+        genreIds: genreIds ?? this.genreIds,
+        cachedAt: cachedAt ?? this.cachedAt,
+      );
   Movy copyWithCompanion(MoviesCompanion data) {
     return Movy(
       id: data.id.present ? data.id.value : this.id,
@@ -393,10 +385,9 @@ class Movy extends DataClass implements Insertable<Movy> {
       overview: data.overview.present ? data.overview.value : this.overview,
       posterPath:
           data.posterPath.present ? data.posterPath.value : this.posterPath,
-      backdropPath:
-          data.backdropPath.present
-              ? data.backdropPath.value
-              : this.backdropPath,
+      backdropPath: data.backdropPath.present
+          ? data.backdropPath.value
+          : this.backdropPath,
       voteAverage:
           data.voteAverage.present ? data.voteAverage.value : this.voteAverage,
       releaseDate:
@@ -424,16 +415,16 @@ class Movy extends DataClass implements Insertable<Movy> {
 
   @override
   int get hashCode => Object.hash(
-    id,
-    title,
-    overview,
-    posterPath,
-    backdropPath,
-    voteAverage,
-    releaseDate,
-    genreIds,
-    cachedAt,
-  );
+        id,
+        title,
+        overview,
+        posterPath,
+        backdropPath,
+        voteAverage,
+        releaseDate,
+        genreIds,
+        cachedAt,
+      );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -480,13 +471,13 @@ class MoviesCompanion extends UpdateCompanion<Movy> {
     required DateTime releaseDate,
     required String genreIds,
     this.cachedAt = const Value.absent(),
-  }) : title = Value(title),
-       overview = Value(overview),
-       posterPath = Value(posterPath),
-       backdropPath = Value(backdropPath),
-       voteAverage = Value(voteAverage),
-       releaseDate = Value(releaseDate),
-       genreIds = Value(genreIds);
+  })  : title = Value(title),
+        overview = Value(overview),
+        posterPath = Value(posterPath),
+        backdropPath = Value(backdropPath),
+        voteAverage = Value(voteAverage),
+        releaseDate = Value(releaseDate),
+        genreIds = Value(genreIds);
   static Insertable<Movy> custom({
     Expression<int>? id,
     Expression<String>? title,
@@ -654,12 +645,12 @@ class $MovieCategoriesTable extends MovieCategories
   );
   @override
   List<GeneratedColumn> get $columns => [
-    id,
-    movieId,
-    category,
-    position,
-    cachedAt,
-  ];
+        id,
+        movieId,
+        category,
+        position,
+        cachedAt,
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -714,31 +705,26 @@ class $MovieCategoriesTable extends MovieCategories
   MovieCategory map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return MovieCategory(
-      id:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.int,
-            data['${effectivePrefix}id'],
-          )!,
-      movieId:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.int,
-            data['${effectivePrefix}movie_id'],
-          )!,
-      category:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.string,
-            data['${effectivePrefix}category'],
-          )!,
-      position:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.int,
-            data['${effectivePrefix}position'],
-          )!,
-      cachedAt:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.dateTime,
-            data['${effectivePrefix}cached_at'],
-          )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      movieId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}movie_id'],
+      )!,
+      category: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category'],
+      )!,
+      position: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}position'],
+      )!,
+      cachedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}cached_at'],
+      )!,
     );
   }
 
@@ -822,13 +808,14 @@ class MovieCategory extends DataClass implements Insertable<MovieCategory> {
     String? category,
     int? position,
     DateTime? cachedAt,
-  }) => MovieCategory(
-    id: id ?? this.id,
-    movieId: movieId ?? this.movieId,
-    category: category ?? this.category,
-    position: position ?? this.position,
-    cachedAt: cachedAt ?? this.cachedAt,
-  );
+  }) =>
+      MovieCategory(
+        id: id ?? this.id,
+        movieId: movieId ?? this.movieId,
+        category: category ?? this.category,
+        position: position ?? this.position,
+        cachedAt: cachedAt ?? this.cachedAt,
+      );
   MovieCategory copyWithCompanion(MovieCategoriesCompanion data) {
     return MovieCategory(
       id: data.id.present ? data.id.value : this.id,
@@ -883,9 +870,9 @@ class MovieCategoriesCompanion extends UpdateCompanion<MovieCategory> {
     required String category,
     required int position,
     this.cachedAt = const Value.absent(),
-  }) : movieId = Value(movieId),
-       category = Value(category),
-       position = Value(position);
+  })  : movieId = Value(movieId),
+        category = Value(category),
+        position = Value(position);
   static Insertable<MovieCategory> custom({
     Expression<int>? id,
     Expression<int>? movieId,
@@ -1041,21 +1028,18 @@ class $CacheMetadataTable extends CacheMetadata
   CacheMetadataData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return CacheMetadataData(
-      category:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.string,
-            data['${effectivePrefix}category'],
-          )!,
-      lastUpdated:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.dateTime,
-            data['${effectivePrefix}last_updated'],
-          )!,
-      movieCount:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.int,
-            data['${effectivePrefix}movie_count'],
-          )!,
+      category: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category'],
+      )!,
+      lastUpdated: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_updated'],
+      )!,
+      movieCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}movie_count'],
+      )!,
     );
   }
 
@@ -1122,11 +1106,12 @@ class CacheMetadataData extends DataClass
     String? category,
     DateTime? lastUpdated,
     int? movieCount,
-  }) => CacheMetadataData(
-    category: category ?? this.category,
-    lastUpdated: lastUpdated ?? this.lastUpdated,
-    movieCount: movieCount ?? this.movieCount,
-  );
+  }) =>
+      CacheMetadataData(
+        category: category ?? this.category,
+        lastUpdated: lastUpdated ?? this.lastUpdated,
+        movieCount: movieCount ?? this.movieCount,
+      );
   CacheMetadataData copyWithCompanion(CacheMetadataCompanion data) {
     return CacheMetadataData(
       category: data.category.present ? data.category.value : this.category,
@@ -1174,9 +1159,9 @@ class CacheMetadataCompanion extends UpdateCompanion<CacheMetadataData> {
     required DateTime lastUpdated,
     required int movieCount,
     this.rowid = const Value.absent(),
-  }) : category = Value(category),
-       lastUpdated = Value(lastUpdated),
-       movieCount = Value(movieCount);
+  })  : category = Value(category),
+        lastUpdated = Value(lastUpdated),
+        movieCount = Value(movieCount);
   static Insertable<CacheMetadataData> custom({
     Expression<String>? category,
     Expression<DateTime>? lastUpdated,
@@ -1248,46 +1233,46 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
-    movies,
-    movieCategories,
-    cacheMetadata,
-  ];
+        movies,
+        movieCategories,
+        cacheMetadata,
+      ];
 }
 
-typedef $$MoviesTableCreateCompanionBuilder =
-    MoviesCompanion Function({
-      Value<int> id,
-      required String title,
-      required String overview,
-      required String posterPath,
-      required String backdropPath,
-      required double voteAverage,
-      required DateTime releaseDate,
-      required String genreIds,
-      Value<DateTime> cachedAt,
-    });
-typedef $$MoviesTableUpdateCompanionBuilder =
-    MoviesCompanion Function({
-      Value<int> id,
-      Value<String> title,
-      Value<String> overview,
-      Value<String> posterPath,
-      Value<String> backdropPath,
-      Value<double> voteAverage,
-      Value<DateTime> releaseDate,
-      Value<String> genreIds,
-      Value<DateTime> cachedAt,
-    });
+typedef $$MoviesTableCreateCompanionBuilder = MoviesCompanion Function({
+  Value<int> id,
+  required String title,
+  required String overview,
+  required String posterPath,
+  required String backdropPath,
+  required double voteAverage,
+  required DateTime releaseDate,
+  required String genreIds,
+  Value<DateTime> cachedAt,
+});
+typedef $$MoviesTableUpdateCompanionBuilder = MoviesCompanion Function({
+  Value<int> id,
+  Value<String> title,
+  Value<String> overview,
+  Value<String> posterPath,
+  Value<String> backdropPath,
+  Value<double> voteAverage,
+  Value<DateTime> releaseDate,
+  Value<String> genreIds,
+  Value<DateTime> cachedAt,
+});
 
 final class $$MoviesTableReferences
     extends BaseReferences<_$AppDatabase, $MoviesTable, Movy> {
   $$MoviesTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static MultiTypedResultKey<$MovieCategoriesTable, List<MovieCategory>>
-  _movieCategoriesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.movieCategories,
-    aliasName: $_aliasNameGenerator(db.movies.id, db.movieCategories.movieId),
-  );
+      _movieCategoriesRefsTable(_$AppDatabase db) =>
+          MultiTypedResultKey.fromTable(
+            db.movieCategories,
+            aliasName:
+                $_aliasNameGenerator(db.movies.id, db.movieCategories.movieId),
+          );
 
   $$MovieCategoriesTableProcessedTableManager get movieCategoriesRefs {
     final manager = $$MovieCategoriesTableTableManager(
@@ -1314,49 +1299,49 @@ class $$MoviesTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
+        column: $table.id,
+        builder: (column) => ColumnFilters(column),
+      );
 
   ColumnFilters<String> get title => $composableBuilder(
-    column: $table.title,
-    builder: (column) => ColumnFilters(column),
-  );
+        column: $table.title,
+        builder: (column) => ColumnFilters(column),
+      );
 
   ColumnFilters<String> get overview => $composableBuilder(
-    column: $table.overview,
-    builder: (column) => ColumnFilters(column),
-  );
+        column: $table.overview,
+        builder: (column) => ColumnFilters(column),
+      );
 
   ColumnFilters<String> get posterPath => $composableBuilder(
-    column: $table.posterPath,
-    builder: (column) => ColumnFilters(column),
-  );
+        column: $table.posterPath,
+        builder: (column) => ColumnFilters(column),
+      );
 
   ColumnFilters<String> get backdropPath => $composableBuilder(
-    column: $table.backdropPath,
-    builder: (column) => ColumnFilters(column),
-  );
+        column: $table.backdropPath,
+        builder: (column) => ColumnFilters(column),
+      );
 
   ColumnFilters<double> get voteAverage => $composableBuilder(
-    column: $table.voteAverage,
-    builder: (column) => ColumnFilters(column),
-  );
+        column: $table.voteAverage,
+        builder: (column) => ColumnFilters(column),
+      );
 
   ColumnFilters<DateTime> get releaseDate => $composableBuilder(
-    column: $table.releaseDate,
-    builder: (column) => ColumnFilters(column),
-  );
+        column: $table.releaseDate,
+        builder: (column) => ColumnFilters(column),
+      );
 
   ColumnFilters<String> get genreIds => $composableBuilder(
-    column: $table.genreIds,
-    builder: (column) => ColumnFilters(column),
-  );
+        column: $table.genreIds,
+        builder: (column) => ColumnFilters(column),
+      );
 
   ColumnFilters<DateTime> get cachedAt => $composableBuilder(
-    column: $table.cachedAt,
-    builder: (column) => ColumnFilters(column),
-  );
+        column: $table.cachedAt,
+        builder: (column) => ColumnFilters(column),
+      );
 
   Expression<bool> movieCategoriesRefs(
     Expression<bool> Function($$MovieCategoriesTableFilterComposer f) f,
@@ -1366,19 +1351,18 @@ class $$MoviesTableFilterComposer
       getCurrentColumn: (t) => t.id,
       referencedTable: $db.movieCategories,
       getReferencedColumn: (t) => t.movieId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$MovieCategoriesTableFilterComposer(
-            $db: $db,
-            $table: $db.movieCategories,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
+      builder: (
+        joinBuilder, {
+        $addJoinBuilderToRootComposer,
+        $removeJoinBuilderFromRootComposer,
+      }) =>
+          $$MovieCategoriesTableFilterComposer(
+        $db: $db,
+        $table: $db.movieCategories,
+        $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+        joinBuilder: joinBuilder,
+        $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+      ),
     );
     return f(composer);
   }
@@ -1394,49 +1378,49 @@ class $$MoviesTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
+        column: $table.id,
+        builder: (column) => ColumnOrderings(column),
+      );
 
   ColumnOrderings<String> get title => $composableBuilder(
-    column: $table.title,
-    builder: (column) => ColumnOrderings(column),
-  );
+        column: $table.title,
+        builder: (column) => ColumnOrderings(column),
+      );
 
   ColumnOrderings<String> get overview => $composableBuilder(
-    column: $table.overview,
-    builder: (column) => ColumnOrderings(column),
-  );
+        column: $table.overview,
+        builder: (column) => ColumnOrderings(column),
+      );
 
   ColumnOrderings<String> get posterPath => $composableBuilder(
-    column: $table.posterPath,
-    builder: (column) => ColumnOrderings(column),
-  );
+        column: $table.posterPath,
+        builder: (column) => ColumnOrderings(column),
+      );
 
   ColumnOrderings<String> get backdropPath => $composableBuilder(
-    column: $table.backdropPath,
-    builder: (column) => ColumnOrderings(column),
-  );
+        column: $table.backdropPath,
+        builder: (column) => ColumnOrderings(column),
+      );
 
   ColumnOrderings<double> get voteAverage => $composableBuilder(
-    column: $table.voteAverage,
-    builder: (column) => ColumnOrderings(column),
-  );
+        column: $table.voteAverage,
+        builder: (column) => ColumnOrderings(column),
+      );
 
   ColumnOrderings<DateTime> get releaseDate => $composableBuilder(
-    column: $table.releaseDate,
-    builder: (column) => ColumnOrderings(column),
-  );
+        column: $table.releaseDate,
+        builder: (column) => ColumnOrderings(column),
+      );
 
   ColumnOrderings<String> get genreIds => $composableBuilder(
-    column: $table.genreIds,
-    builder: (column) => ColumnOrderings(column),
-  );
+        column: $table.genreIds,
+        builder: (column) => ColumnOrderings(column),
+      );
 
   ColumnOrderings<DateTime> get cachedAt => $composableBuilder(
-    column: $table.cachedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
+        column: $table.cachedAt,
+        builder: (column) => ColumnOrderings(column),
+      );
 }
 
 class $$MoviesTableAnnotationComposer
@@ -1458,24 +1442,24 @@ class $$MoviesTableAnnotationComposer
       $composableBuilder(column: $table.overview, builder: (column) => column);
 
   GeneratedColumn<String> get posterPath => $composableBuilder(
-    column: $table.posterPath,
-    builder: (column) => column,
-  );
+        column: $table.posterPath,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<String> get backdropPath => $composableBuilder(
-    column: $table.backdropPath,
-    builder: (column) => column,
-  );
+        column: $table.backdropPath,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<double> get voteAverage => $composableBuilder(
-    column: $table.voteAverage,
-    builder: (column) => column,
-  );
+        column: $table.voteAverage,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<DateTime> get releaseDate => $composableBuilder(
-    column: $table.releaseDate,
-    builder: (column) => column,
-  );
+        column: $table.releaseDate,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<String> get genreIds =>
       $composableBuilder(column: $table.genreIds, builder: (column) => column);
@@ -1491,177 +1475,163 @@ class $$MoviesTableAnnotationComposer
       getCurrentColumn: (t) => t.id,
       referencedTable: $db.movieCategories,
       getReferencedColumn: (t) => t.movieId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$MovieCategoriesTableAnnotationComposer(
-            $db: $db,
-            $table: $db.movieCategories,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
+      builder: (
+        joinBuilder, {
+        $addJoinBuilderToRootComposer,
+        $removeJoinBuilderFromRootComposer,
+      }) =>
+          $$MovieCategoriesTableAnnotationComposer(
+        $db: $db,
+        $table: $db.movieCategories,
+        $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+        joinBuilder: joinBuilder,
+        $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+      ),
     );
     return f(composer);
   }
 }
 
-class $$MoviesTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $MoviesTable,
-          Movy,
-          $$MoviesTableFilterComposer,
-          $$MoviesTableOrderingComposer,
-          $$MoviesTableAnnotationComposer,
-          $$MoviesTableCreateCompanionBuilder,
-          $$MoviesTableUpdateCompanionBuilder,
-          (Movy, $$MoviesTableReferences),
-          Movy,
-          PrefetchHooks Function({bool movieCategoriesRefs})
-        > {
+class $$MoviesTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $MoviesTable,
+    Movy,
+    $$MoviesTableFilterComposer,
+    $$MoviesTableOrderingComposer,
+    $$MoviesTableAnnotationComposer,
+    $$MoviesTableCreateCompanionBuilder,
+    $$MoviesTableUpdateCompanionBuilder,
+    (Movy, $$MoviesTableReferences),
+    Movy,
+    PrefetchHooks Function({bool movieCategoriesRefs})> {
   $$MoviesTableTableManager(_$AppDatabase db, $MoviesTable table)
-    : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer:
-              () => $$MoviesTableFilterComposer($db: db, $table: table),
-          createOrderingComposer:
-              () => $$MoviesTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer:
-              () => $$MoviesTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<String> title = const Value.absent(),
-                Value<String> overview = const Value.absent(),
-                Value<String> posterPath = const Value.absent(),
-                Value<String> backdropPath = const Value.absent(),
-                Value<double> voteAverage = const Value.absent(),
-                Value<DateTime> releaseDate = const Value.absent(),
-                Value<String> genreIds = const Value.absent(),
-                Value<DateTime> cachedAt = const Value.absent(),
-              }) => MoviesCompanion(
-                id: id,
-                title: title,
-                overview: overview,
-                posterPath: posterPath,
-                backdropPath: backdropPath,
-                voteAverage: voteAverage,
-                releaseDate: releaseDate,
-                genreIds: genreIds,
-                cachedAt: cachedAt,
-              ),
-          createCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                required String title,
-                required String overview,
-                required String posterPath,
-                required String backdropPath,
-                required double voteAverage,
-                required DateTime releaseDate,
-                required String genreIds,
-                Value<DateTime> cachedAt = const Value.absent(),
-              }) => MoviesCompanion.insert(
-                id: id,
-                title: title,
-                overview: overview,
-                posterPath: posterPath,
-                backdropPath: backdropPath,
-                voteAverage: voteAverage,
-                releaseDate: releaseDate,
-                genreIds: genreIds,
-                cachedAt: cachedAt,
-              ),
-          withReferenceMapper:
-              (p0) =>
-                  p0
-                      .map(
-                        (e) => (
-                          e.readTable(table),
-                          $$MoviesTableReferences(db, table, e),
+      : super(
+          TableManagerState(
+            db: db,
+            table: table,
+            createFilteringComposer: () =>
+                $$MoviesTableFilterComposer($db: db, $table: table),
+            createOrderingComposer: () =>
+                $$MoviesTableOrderingComposer($db: db, $table: table),
+            createComputedFieldComposer: () =>
+                $$MoviesTableAnnotationComposer($db: db, $table: table),
+            updateCompanionCallback: ({
+              Value<int> id = const Value.absent(),
+              Value<String> title = const Value.absent(),
+              Value<String> overview = const Value.absent(),
+              Value<String> posterPath = const Value.absent(),
+              Value<String> backdropPath = const Value.absent(),
+              Value<double> voteAverage = const Value.absent(),
+              Value<DateTime> releaseDate = const Value.absent(),
+              Value<String> genreIds = const Value.absent(),
+              Value<DateTime> cachedAt = const Value.absent(),
+            }) =>
+                MoviesCompanion(
+              id: id,
+              title: title,
+              overview: overview,
+              posterPath: posterPath,
+              backdropPath: backdropPath,
+              voteAverage: voteAverage,
+              releaseDate: releaseDate,
+              genreIds: genreIds,
+              cachedAt: cachedAt,
+            ),
+            createCompanionCallback: ({
+              Value<int> id = const Value.absent(),
+              required String title,
+              required String overview,
+              required String posterPath,
+              required String backdropPath,
+              required double voteAverage,
+              required DateTime releaseDate,
+              required String genreIds,
+              Value<DateTime> cachedAt = const Value.absent(),
+            }) =>
+                MoviesCompanion.insert(
+              id: id,
+              title: title,
+              overview: overview,
+              posterPath: posterPath,
+              backdropPath: backdropPath,
+              voteAverage: voteAverage,
+              releaseDate: releaseDate,
+              genreIds: genreIds,
+              cachedAt: cachedAt,
+            ),
+            withReferenceMapper: (p0) => p0
+                .map(
+                  (e) => (
+                    e.readTable(table),
+                    $$MoviesTableReferences(db, table, e),
+                  ),
+                )
+                .toList(),
+            prefetchHooksCallback: ({movieCategoriesRefs = false}) {
+              return PrefetchHooks(
+                db: db,
+                explicitlyWatchedTables: [
+                  if (movieCategoriesRefs) db.movieCategories,
+                ],
+                addJoins: null,
+                getPrefetchedDataCallback: (items) async {
+                  return [
+                    if (movieCategoriesRefs)
+                      await $_getPrefetchedData<Movy, $MoviesTable,
+                          MovieCategory>(
+                        currentTable: table,
+                        referencedTable: $$MoviesTableReferences
+                            ._movieCategoriesRefsTable(db),
+                        managerFromTypedResult: (p0) => $$MoviesTableReferences(
+                          db,
+                          table,
+                          p0,
+                        ).movieCategoriesRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems.where(
+                          (e) => e.movieId == item.id,
                         ),
-                      )
-                      .toList(),
-          prefetchHooksCallback: ({movieCategoriesRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (movieCategoriesRefs) db.movieCategories,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (movieCategoriesRefs)
-                    await $_getPrefetchedData<
-                      Movy,
-                      $MoviesTable,
-                      MovieCategory
-                    >(
-                      currentTable: table,
-                      referencedTable: $$MoviesTableReferences
-                          ._movieCategoriesRefsTable(db),
-                      managerFromTypedResult:
-                          (p0) =>
-                              $$MoviesTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).movieCategoriesRefs,
-                      referencedItemsForCurrentItem:
-                          (item, referencedItems) => referencedItems.where(
-                            (e) => e.movieId == item.id,
-                          ),
-                      typedResults: items,
-                    ),
-                ];
-              },
-            );
-          },
-        ),
-      );
+                        typedResults: items,
+                      ),
+                  ];
+                },
+              );
+            },
+          ),
+        );
 }
 
-typedef $$MoviesTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $MoviesTable,
-      Movy,
-      $$MoviesTableFilterComposer,
-      $$MoviesTableOrderingComposer,
-      $$MoviesTableAnnotationComposer,
-      $$MoviesTableCreateCompanionBuilder,
-      $$MoviesTableUpdateCompanionBuilder,
-      (Movy, $$MoviesTableReferences),
-      Movy,
-      PrefetchHooks Function({bool movieCategoriesRefs})
-    >;
-typedef $$MovieCategoriesTableCreateCompanionBuilder =
-    MovieCategoriesCompanion Function({
-      Value<int> id,
-      required int movieId,
-      required String category,
-      required int position,
-      Value<DateTime> cachedAt,
-    });
-typedef $$MovieCategoriesTableUpdateCompanionBuilder =
-    MovieCategoriesCompanion Function({
-      Value<int> id,
-      Value<int> movieId,
-      Value<String> category,
-      Value<int> position,
-      Value<DateTime> cachedAt,
-    });
+typedef $$MoviesTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $MoviesTable,
+    Movy,
+    $$MoviesTableFilterComposer,
+    $$MoviesTableOrderingComposer,
+    $$MoviesTableAnnotationComposer,
+    $$MoviesTableCreateCompanionBuilder,
+    $$MoviesTableUpdateCompanionBuilder,
+    (Movy, $$MoviesTableReferences),
+    Movy,
+    PrefetchHooks Function({bool movieCategoriesRefs})>;
+typedef $$MovieCategoriesTableCreateCompanionBuilder = MovieCategoriesCompanion
+    Function({
+  Value<int> id,
+  required int movieId,
+  required String category,
+  required int position,
+  Value<DateTime> cachedAt,
+});
+typedef $$MovieCategoriesTableUpdateCompanionBuilder = MovieCategoriesCompanion
+    Function({
+  Value<int> id,
+  Value<int> movieId,
+  Value<String> category,
+  Value<int> position,
+  Value<DateTime> cachedAt,
+});
 
-final class $$MovieCategoriesTableReferences
-    extends
-        BaseReferences<_$AppDatabase, $MovieCategoriesTable, MovieCategory> {
+final class $$MovieCategoriesTableReferences extends BaseReferences<
+    _$AppDatabase, $MovieCategoriesTable, MovieCategory> {
   $$MovieCategoriesTableReferences(
     super.$_db,
     super.$_table,
@@ -1669,8 +1639,8 @@ final class $$MovieCategoriesTableReferences
   );
 
   static $MoviesTable _movieIdTable(_$AppDatabase db) => db.movies.createAlias(
-    $_aliasNameGenerator(db.movieCategories.movieId, db.movies.id),
-  );
+        $_aliasNameGenerator(db.movieCategories.movieId, db.movies.id),
+      );
 
   $$MoviesTableProcessedTableManager get movieId {
     final $_column = $_itemColumn<int>('movie_id')!;
@@ -1697,24 +1667,24 @@ class $$MovieCategoriesTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
+        column: $table.id,
+        builder: (column) => ColumnFilters(column),
+      );
 
   ColumnFilters<String> get category => $composableBuilder(
-    column: $table.category,
-    builder: (column) => ColumnFilters(column),
-  );
+        column: $table.category,
+        builder: (column) => ColumnFilters(column),
+      );
 
   ColumnFilters<int> get position => $composableBuilder(
-    column: $table.position,
-    builder: (column) => ColumnFilters(column),
-  );
+        column: $table.position,
+        builder: (column) => ColumnFilters(column),
+      );
 
   ColumnFilters<DateTime> get cachedAt => $composableBuilder(
-    column: $table.cachedAt,
-    builder: (column) => ColumnFilters(column),
-  );
+        column: $table.cachedAt,
+        builder: (column) => ColumnFilters(column),
+      );
 
   $$MoviesTableFilterComposer get movieId {
     final $$MoviesTableFilterComposer composer = $composerBuilder(
@@ -1722,19 +1692,18 @@ class $$MovieCategoriesTableFilterComposer
       getCurrentColumn: (t) => t.movieId,
       referencedTable: $db.movies,
       getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$MoviesTableFilterComposer(
-            $db: $db,
-            $table: $db.movies,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
+      builder: (
+        joinBuilder, {
+        $addJoinBuilderToRootComposer,
+        $removeJoinBuilderFromRootComposer,
+      }) =>
+          $$MoviesTableFilterComposer(
+        $db: $db,
+        $table: $db.movies,
+        $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+        joinBuilder: joinBuilder,
+        $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+      ),
     );
     return composer;
   }
@@ -1750,24 +1719,24 @@ class $$MovieCategoriesTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
+        column: $table.id,
+        builder: (column) => ColumnOrderings(column),
+      );
 
   ColumnOrderings<String> get category => $composableBuilder(
-    column: $table.category,
-    builder: (column) => ColumnOrderings(column),
-  );
+        column: $table.category,
+        builder: (column) => ColumnOrderings(column),
+      );
 
   ColumnOrderings<int> get position => $composableBuilder(
-    column: $table.position,
-    builder: (column) => ColumnOrderings(column),
-  );
+        column: $table.position,
+        builder: (column) => ColumnOrderings(column),
+      );
 
   ColumnOrderings<DateTime> get cachedAt => $composableBuilder(
-    column: $table.cachedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
+        column: $table.cachedAt,
+        builder: (column) => ColumnOrderings(column),
+      );
 
   $$MoviesTableOrderingComposer get movieId {
     final $$MoviesTableOrderingComposer composer = $composerBuilder(
@@ -1775,19 +1744,18 @@ class $$MovieCategoriesTableOrderingComposer
       getCurrentColumn: (t) => t.movieId,
       referencedTable: $db.movies,
       getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$MoviesTableOrderingComposer(
-            $db: $db,
-            $table: $db.movies,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
+      builder: (
+        joinBuilder, {
+        $addJoinBuilderToRootComposer,
+        $removeJoinBuilderFromRootComposer,
+      }) =>
+          $$MoviesTableOrderingComposer(
+        $db: $db,
+        $table: $db.movies,
+        $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+        joinBuilder: joinBuilder,
+        $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+      ),
     );
     return composer;
   }
@@ -1820,170 +1788,155 @@ class $$MovieCategoriesTableAnnotationComposer
       getCurrentColumn: (t) => t.movieId,
       referencedTable: $db.movies,
       getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$MoviesTableAnnotationComposer(
-            $db: $db,
-            $table: $db.movies,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
+      builder: (
+        joinBuilder, {
+        $addJoinBuilderToRootComposer,
+        $removeJoinBuilderFromRootComposer,
+      }) =>
+          $$MoviesTableAnnotationComposer(
+        $db: $db,
+        $table: $db.movies,
+        $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+        joinBuilder: joinBuilder,
+        $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+      ),
     );
     return composer;
   }
 }
 
-class $$MovieCategoriesTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $MovieCategoriesTable,
-          MovieCategory,
-          $$MovieCategoriesTableFilterComposer,
-          $$MovieCategoriesTableOrderingComposer,
-          $$MovieCategoriesTableAnnotationComposer,
-          $$MovieCategoriesTableCreateCompanionBuilder,
-          $$MovieCategoriesTableUpdateCompanionBuilder,
-          (MovieCategory, $$MovieCategoriesTableReferences),
-          MovieCategory,
-          PrefetchHooks Function({bool movieId})
-        > {
+class $$MovieCategoriesTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $MovieCategoriesTable,
+    MovieCategory,
+    $$MovieCategoriesTableFilterComposer,
+    $$MovieCategoriesTableOrderingComposer,
+    $$MovieCategoriesTableAnnotationComposer,
+    $$MovieCategoriesTableCreateCompanionBuilder,
+    $$MovieCategoriesTableUpdateCompanionBuilder,
+    (MovieCategory, $$MovieCategoriesTableReferences),
+    MovieCategory,
+    PrefetchHooks Function({bool movieId})> {
   $$MovieCategoriesTableTableManager(
     _$AppDatabase db,
     $MovieCategoriesTable table,
   ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer:
-              () =>
-                  $$MovieCategoriesTableFilterComposer($db: db, $table: table),
-          createOrderingComposer:
-              () => $$MovieCategoriesTableOrderingComposer(
-                $db: db,
-                $table: table,
-              ),
-          createComputedFieldComposer:
-              () => $$MovieCategoriesTableAnnotationComposer(
-                $db: db,
-                $table: table,
-              ),
-          updateCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<int> movieId = const Value.absent(),
-                Value<String> category = const Value.absent(),
-                Value<int> position = const Value.absent(),
-                Value<DateTime> cachedAt = const Value.absent(),
-              }) => MovieCategoriesCompanion(
-                id: id,
-                movieId: movieId,
-                category: category,
-                position: position,
-                cachedAt: cachedAt,
-              ),
-          createCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                required int movieId,
-                required String category,
-                required int position,
-                Value<DateTime> cachedAt = const Value.absent(),
-              }) => MovieCategoriesCompanion.insert(
-                id: id,
-                movieId: movieId,
-                category: category,
-                position: position,
-                cachedAt: cachedAt,
-              ),
-          withReferenceMapper:
-              (p0) =>
-                  p0
-                      .map(
-                        (e) => (
-                          e.readTable(table),
-                          $$MovieCategoriesTableReferences(db, table, e),
-                        ),
-                      )
-                      .toList(),
-          prefetchHooksCallback: ({movieId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins: <
-                T extends TableManagerState<
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic
-                >
-              >(state) {
-                if (movieId) {
-                  state =
-                      state.withJoin(
-                            currentTable: table,
-                            currentColumn: table.movieId,
-                            referencedTable: $$MovieCategoriesTableReferences
-                                ._movieIdTable(db),
-                            referencedColumn:
-                                $$MovieCategoriesTableReferences
-                                    ._movieIdTable(db)
-                                    .id,
-                          )
-                          as T;
-                }
+          TableManagerState(
+            db: db,
+            table: table,
+            createFilteringComposer: () =>
+                $$MovieCategoriesTableFilterComposer($db: db, $table: table),
+            createOrderingComposer: () =>
+                $$MovieCategoriesTableOrderingComposer(
+              $db: db,
+              $table: table,
+            ),
+            createComputedFieldComposer: () =>
+                $$MovieCategoriesTableAnnotationComposer(
+              $db: db,
+              $table: table,
+            ),
+            updateCompanionCallback: ({
+              Value<int> id = const Value.absent(),
+              Value<int> movieId = const Value.absent(),
+              Value<String> category = const Value.absent(),
+              Value<int> position = const Value.absent(),
+              Value<DateTime> cachedAt = const Value.absent(),
+            }) =>
+                MovieCategoriesCompanion(
+              id: id,
+              movieId: movieId,
+              category: category,
+              position: position,
+              cachedAt: cachedAt,
+            ),
+            createCompanionCallback: ({
+              Value<int> id = const Value.absent(),
+              required int movieId,
+              required String category,
+              required int position,
+              Value<DateTime> cachedAt = const Value.absent(),
+            }) =>
+                MovieCategoriesCompanion.insert(
+              id: id,
+              movieId: movieId,
+              category: category,
+              position: position,
+              cachedAt: cachedAt,
+            ),
+            withReferenceMapper: (p0) => p0
+                .map(
+                  (e) => (
+                    e.readTable(table),
+                    $$MovieCategoriesTableReferences(db, table, e),
+                  ),
+                )
+                .toList(),
+            prefetchHooksCallback: ({movieId = false}) {
+              return PrefetchHooks(
+                db: db,
+                explicitlyWatchedTables: [],
+                addJoins: <
+                    T extends TableManagerState<
+                        dynamic,
+                        dynamic,
+                        dynamic,
+                        dynamic,
+                        dynamic,
+                        dynamic,
+                        dynamic,
+                        dynamic,
+                        dynamic,
+                        dynamic,
+                        dynamic>>(state) {
+                  if (movieId) {
+                    state = state.withJoin(
+                      currentTable: table,
+                      currentColumn: table.movieId,
+                      referencedTable:
+                          $$MovieCategoriesTableReferences._movieIdTable(db),
+                      referencedColumn:
+                          $$MovieCategoriesTableReferences._movieIdTable(db).id,
+                    ) as T;
+                  }
 
-                return state;
-              },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
-        ),
-      );
+                  return state;
+                },
+                getPrefetchedDataCallback: (items) async {
+                  return [];
+                },
+              );
+            },
+          ),
+        );
 }
 
-typedef $$MovieCategoriesTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $MovieCategoriesTable,
-      MovieCategory,
-      $$MovieCategoriesTableFilterComposer,
-      $$MovieCategoriesTableOrderingComposer,
-      $$MovieCategoriesTableAnnotationComposer,
-      $$MovieCategoriesTableCreateCompanionBuilder,
-      $$MovieCategoriesTableUpdateCompanionBuilder,
-      (MovieCategory, $$MovieCategoriesTableReferences),
-      MovieCategory,
-      PrefetchHooks Function({bool movieId})
-    >;
-typedef $$CacheMetadataTableCreateCompanionBuilder =
-    CacheMetadataCompanion Function({
-      required String category,
-      required DateTime lastUpdated,
-      required int movieCount,
-      Value<int> rowid,
-    });
-typedef $$CacheMetadataTableUpdateCompanionBuilder =
-    CacheMetadataCompanion Function({
-      Value<String> category,
-      Value<DateTime> lastUpdated,
-      Value<int> movieCount,
-      Value<int> rowid,
-    });
+typedef $$MovieCategoriesTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $MovieCategoriesTable,
+    MovieCategory,
+    $$MovieCategoriesTableFilterComposer,
+    $$MovieCategoriesTableOrderingComposer,
+    $$MovieCategoriesTableAnnotationComposer,
+    $$MovieCategoriesTableCreateCompanionBuilder,
+    $$MovieCategoriesTableUpdateCompanionBuilder,
+    (MovieCategory, $$MovieCategoriesTableReferences),
+    MovieCategory,
+    PrefetchHooks Function({bool movieId})>;
+typedef $$CacheMetadataTableCreateCompanionBuilder = CacheMetadataCompanion
+    Function({
+  required String category,
+  required DateTime lastUpdated,
+  required int movieCount,
+  Value<int> rowid,
+});
+typedef $$CacheMetadataTableUpdateCompanionBuilder = CacheMetadataCompanion
+    Function({
+  Value<String> category,
+  Value<DateTime> lastUpdated,
+  Value<int> movieCount,
+  Value<int> rowid,
+});
 
 class $$CacheMetadataTableFilterComposer
     extends Composer<_$AppDatabase, $CacheMetadataTable> {
@@ -1995,19 +1948,19 @@ class $$CacheMetadataTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<String> get category => $composableBuilder(
-    column: $table.category,
-    builder: (column) => ColumnFilters(column),
-  );
+        column: $table.category,
+        builder: (column) => ColumnFilters(column),
+      );
 
   ColumnFilters<DateTime> get lastUpdated => $composableBuilder(
-    column: $table.lastUpdated,
-    builder: (column) => ColumnFilters(column),
-  );
+        column: $table.lastUpdated,
+        builder: (column) => ColumnFilters(column),
+      );
 
   ColumnFilters<int> get movieCount => $composableBuilder(
-    column: $table.movieCount,
-    builder: (column) => ColumnFilters(column),
-  );
+        column: $table.movieCount,
+        builder: (column) => ColumnFilters(column),
+      );
 }
 
 class $$CacheMetadataTableOrderingComposer
@@ -2020,19 +1973,19 @@ class $$CacheMetadataTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<String> get category => $composableBuilder(
-    column: $table.category,
-    builder: (column) => ColumnOrderings(column),
-  );
+        column: $table.category,
+        builder: (column) => ColumnOrderings(column),
+      );
 
   ColumnOrderings<DateTime> get lastUpdated => $composableBuilder(
-    column: $table.lastUpdated,
-    builder: (column) => ColumnOrderings(column),
-  );
+        column: $table.lastUpdated,
+        builder: (column) => ColumnOrderings(column),
+      );
 
   ColumnOrderings<int> get movieCount => $composableBuilder(
-    column: $table.movieCount,
-    builder: (column) => ColumnOrderings(column),
-  );
+        column: $table.movieCount,
+        builder: (column) => ColumnOrderings(column),
+      );
 }
 
 class $$CacheMetadataTableAnnotationComposer
@@ -2048,109 +2001,97 @@ class $$CacheMetadataTableAnnotationComposer
       $composableBuilder(column: $table.category, builder: (column) => column);
 
   GeneratedColumn<DateTime> get lastUpdated => $composableBuilder(
-    column: $table.lastUpdated,
-    builder: (column) => column,
-  );
+        column: $table.lastUpdated,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<int> get movieCount => $composableBuilder(
-    column: $table.movieCount,
-    builder: (column) => column,
-  );
-}
-
-class $$CacheMetadataTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $CacheMetadataTable,
-          CacheMetadataData,
-          $$CacheMetadataTableFilterComposer,
-          $$CacheMetadataTableOrderingComposer,
-          $$CacheMetadataTableAnnotationComposer,
-          $$CacheMetadataTableCreateCompanionBuilder,
-          $$CacheMetadataTableUpdateCompanionBuilder,
-          (
-            CacheMetadataData,
-            BaseReferences<
-              _$AppDatabase,
-              $CacheMetadataTable,
-              CacheMetadataData
-            >,
-          ),
-          CacheMetadataData,
-          PrefetchHooks Function()
-        > {
-  $$CacheMetadataTableTableManager(_$AppDatabase db, $CacheMetadataTable table)
-    : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer:
-              () => $$CacheMetadataTableFilterComposer($db: db, $table: table),
-          createOrderingComposer:
-              () =>
-                  $$CacheMetadataTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer:
-              () => $$CacheMetadataTableAnnotationComposer(
-                $db: db,
-                $table: table,
-              ),
-          updateCompanionCallback:
-              ({
-                Value<String> category = const Value.absent(),
-                Value<DateTime> lastUpdated = const Value.absent(),
-                Value<int> movieCount = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => CacheMetadataCompanion(
-                category: category,
-                lastUpdated: lastUpdated,
-                movieCount: movieCount,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String category,
-                required DateTime lastUpdated,
-                required int movieCount,
-                Value<int> rowid = const Value.absent(),
-              }) => CacheMetadataCompanion.insert(
-                category: category,
-                lastUpdated: lastUpdated,
-                movieCount: movieCount,
-                rowid: rowid,
-              ),
-          withReferenceMapper:
-              (p0) =>
-                  p0
-                      .map(
-                        (e) => (
-                          e.readTable(table),
-                          BaseReferences(db, table, e),
-                        ),
-                      )
-                      .toList(),
-          prefetchHooksCallback: null,
-        ),
+        column: $table.movieCount,
+        builder: (column) => column,
       );
 }
 
-typedef $$CacheMetadataTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $CacheMetadataTable,
+class $$CacheMetadataTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $CacheMetadataTable,
+    CacheMetadataData,
+    $$CacheMetadataTableFilterComposer,
+    $$CacheMetadataTableOrderingComposer,
+    $$CacheMetadataTableAnnotationComposer,
+    $$CacheMetadataTableCreateCompanionBuilder,
+    $$CacheMetadataTableUpdateCompanionBuilder,
+    (
       CacheMetadataData,
-      $$CacheMetadataTableFilterComposer,
-      $$CacheMetadataTableOrderingComposer,
-      $$CacheMetadataTableAnnotationComposer,
-      $$CacheMetadataTableCreateCompanionBuilder,
-      $$CacheMetadataTableUpdateCompanionBuilder,
-      (
-        CacheMetadataData,
-        BaseReferences<_$AppDatabase, $CacheMetadataTable, CacheMetadataData>,
-      ),
+      BaseReferences<_$AppDatabase, $CacheMetadataTable, CacheMetadataData>,
+    ),
+    CacheMetadataData,
+    PrefetchHooks Function()> {
+  $$CacheMetadataTableTableManager(_$AppDatabase db, $CacheMetadataTable table)
+      : super(
+          TableManagerState(
+            db: db,
+            table: table,
+            createFilteringComposer: () =>
+                $$CacheMetadataTableFilterComposer($db: db, $table: table),
+            createOrderingComposer: () =>
+                $$CacheMetadataTableOrderingComposer($db: db, $table: table),
+            createComputedFieldComposer: () =>
+                $$CacheMetadataTableAnnotationComposer(
+              $db: db,
+              $table: table,
+            ),
+            updateCompanionCallback: ({
+              Value<String> category = const Value.absent(),
+              Value<DateTime> lastUpdated = const Value.absent(),
+              Value<int> movieCount = const Value.absent(),
+              Value<int> rowid = const Value.absent(),
+            }) =>
+                CacheMetadataCompanion(
+              category: category,
+              lastUpdated: lastUpdated,
+              movieCount: movieCount,
+              rowid: rowid,
+            ),
+            createCompanionCallback: ({
+              required String category,
+              required DateTime lastUpdated,
+              required int movieCount,
+              Value<int> rowid = const Value.absent(),
+            }) =>
+                CacheMetadataCompanion.insert(
+              category: category,
+              lastUpdated: lastUpdated,
+              movieCount: movieCount,
+              rowid: rowid,
+            ),
+            withReferenceMapper: (p0) => p0
+                .map(
+                  (e) => (
+                    e.readTable(table),
+                    BaseReferences(db, table, e),
+                  ),
+                )
+                .toList(),
+            prefetchHooksCallback: null,
+          ),
+        );
+}
+
+typedef $$CacheMetadataTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $CacheMetadataTable,
+    CacheMetadataData,
+    $$CacheMetadataTableFilterComposer,
+    $$CacheMetadataTableOrderingComposer,
+    $$CacheMetadataTableAnnotationComposer,
+    $$CacheMetadataTableCreateCompanionBuilder,
+    $$CacheMetadataTableUpdateCompanionBuilder,
+    (
       CacheMetadataData,
-      PrefetchHooks Function()
-    >;
+      BaseReferences<_$AppDatabase, $CacheMetadataTable, CacheMetadataData>,
+    ),
+    CacheMetadataData,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;

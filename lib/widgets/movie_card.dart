@@ -111,9 +111,9 @@ class MovieCard extends StatelessWidget {
     this.onTap,
     this.width = 130,
     this.height,
-  }) : style = MovieCardStyle.poster,
-       trailing = null,
-       customSubtitle = null;
+  })  : style = MovieCardStyle.poster,
+        trailing = null,
+        customSubtitle = null;
 
   /// Creates a list item-style movie card.
 
@@ -126,9 +126,9 @@ class MovieCard extends StatelessWidget {
     this.onTap,
     this.trailing,
     this.customSubtitle,
-  }) : style = MovieCardStyle.listItem,
-       width = 50,
-       height = 75;
+  })  : style = MovieCardStyle.listItem,
+        width = 50,
+        height = 75;
 
   @override
   Widget build(BuildContext context) {
@@ -154,9 +154,8 @@ class MovieCard extends StatelessWidget {
               width: width,
               height: height,
               fit: BoxFit.cover,
-              placeholder:
-                  (context, url) =>
-                      const Center(child: CircularProgressIndicator()),
+              placeholder: (context, url) =>
+                  const Center(child: CircularProgressIndicator()),
               errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
           ),
@@ -180,9 +179,8 @@ class MovieCard extends StatelessWidget {
               width: width,
               height: height,
               fit: BoxFit.cover,
-              placeholder:
-                  (context, url) =>
-                      const Center(child: CircularProgressIndicator()),
+              placeholder: (context, url) =>
+                  const Center(child: CircularProgressIndicator()),
               errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
           ),
@@ -203,8 +201,7 @@ class MovieCard extends StatelessWidget {
       subtitle: Row(
         children: [
           Expanded(
-            child:
-                customSubtitle ??
+            child: customSubtitle ??
                 Text(
                   '⭐ ${movie.voteAverage.toStringAsFixed(1)}',
                   style: const TextStyle(color: Colors.grey),
@@ -230,10 +227,9 @@ class MovieCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(2),
         decoration: BoxDecoration(
-          color:
-              fromCache!
-                  ? Colors.green.withValues(alpha: 0.8)
-                  : Colors.blue.withValues(alpha: 0.8),
+          color: fromCache!
+              ? Colors.green.withValues(alpha: 0.8)
+              : Colors.blue.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(
