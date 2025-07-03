@@ -36,6 +36,8 @@ import 'package:moviestar/screens/coming_soon_screen.dart';
 import 'package:moviestar/screens/downloads_screen.dart';
 import 'package:moviestar/screens/home_screen.dart';
 import 'package:moviestar/screens/settings_screen.dart';
+import 'package:moviestar/screens/to_watch_screen.dart';
+import 'package:moviestar/screens/watched_screen.dart';
 import 'package:moviestar/services/api_key_service.dart';
 import 'package:moviestar/services/cache_settings_service.dart';
 import 'package:moviestar/services/favorites_service.dart';
@@ -161,6 +163,12 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   void _buildScreens() {
     _screens = [
       HomeScreen(favoritesService: _favoritesService),
+      ToWatchScreen(
+        favoritesService: _favoritesService,
+      ),
+      WatchedScreen(
+        favoritesService: _favoritesService,
+      ),
       ComingSoonScreen(favoritesService: _favoritesService),
       const DownloadsScreen(),
       const FileService(),
@@ -237,6 +245,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'To Watch'),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Watched'),
           BottomNavigationBarItem(
             icon: Icon(Icons.upcoming),
             label: 'Coming Soon',
