@@ -245,7 +245,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'To Watch'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.favorite), label: 'To Watch'),
           BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Watched'),
           BottomNavigationBarItem(
             icon: Icon(Icons.upcoming),
