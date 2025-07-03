@@ -195,9 +195,8 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
               background: CachedNetworkImage(
                 imageUrl: widget.movie.backdropUrl,
                 fit: BoxFit.cover,
-                placeholder:
-                    (context, url) =>
-                        const Center(child: CircularProgressIndicator()),
+                placeholder: (context, url) =>
+                    const Center(child: CircularProgressIndicator()),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),
@@ -231,10 +230,9 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                               color: _isInToWatch ? Colors.blue : Colors.white,
                             ),
                             onPressed: _toggleToWatch,
-                            tooltip:
-                                _isInToWatch
-                                    ? 'Remove from To Watch'
-                                    : 'Add to To Watch',
+                            tooltip: _isInToWatch
+                                ? 'Remove from To Watch'
+                                : 'Add to To Watch',
                           ),
                           IconButton(
                             icon: Icon(
@@ -244,10 +242,9 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                               color: _isInWatched ? Colors.green : Colors.white,
                             ),
                             onPressed: _toggleWatched,
-                            tooltip:
-                                _isInWatched
-                                    ? 'Remove from Watched'
-                                    : 'Add to Watched',
+                            tooltip: _isInWatched
+                                ? 'Remove from Watched'
+                                : 'Add to Watched',
                           ),
                         ],
                       ),
@@ -296,28 +293,28 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                   _isLoadingRating
                       ? const Center(child: CircularProgressIndicator())
                       : Row(
-                        children: [
-                          Expanded(
-                            child: Slider(
-                              value: _personalRating ?? 0,
-                              min: 0,
-                              max: 10,
-                              divisions: 100,
-                              label:
-                                  _personalRating?.toStringAsFixed(1) ?? '0.0',
-                              onChanged: (value) => _updateRating(value),
+                          children: [
+                            Expanded(
+                              child: Slider(
+                                value: _personalRating ?? 0,
+                                min: 0,
+                                max: 10,
+                                divisions: 100,
+                                label: _personalRating?.toStringAsFixed(1) ??
+                                    '0.0',
+                                onChanged: (value) => _updateRating(value),
+                              ),
                             ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.clear, color: Colors.white),
-                            onPressed:
-                                _personalRating == null
-                                    ? null
-                                    : () => _updateRating(null),
-                            tooltip: 'Clear rating',
-                          ),
-                        ],
-                      ),
+                            IconButton(
+                              icon:
+                                  const Icon(Icons.clear, color: Colors.white),
+                              onPressed: _personalRating == null
+                                  ? null
+                                  : () => _updateRating(null),
+                              tooltip: 'Clear rating',
+                            ),
+                          ],
+                        ),
                   Text(
                     _personalRating == null
                         ? 'No rating yet'
@@ -339,48 +336,49 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                   _isLoadingComments
                       ? const Center(child: CircularProgressIndicator())
                       : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextField(
-                            controller: _commentsController,
-                            style: const TextStyle(color: Colors.white),
-                            maxLines: 4,
-                            decoration: InputDecoration(
-                              hintText: 'Add your thoughts about this movie...',
-                              hintStyle: const TextStyle(color: Colors.grey),
-                              filled: true,
-                              fillColor: Colors.grey[900],
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                            onChanged: (value) => _updateComments(value),
-                          ),
-                          const SizedBox(height: 8),
-                          if (_personalComments != null &&
-                              _personalComments!.isNotEmpty)
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                TextButton.icon(
-                                  icon: const Icon(
-                                    Icons.clear,
-                                    color: Colors.white,
-                                  ),
-                                  label: const Text(
-                                    'Clear Comments',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  onPressed: () {
-                                    _commentsController.clear();
-                                    _updateComments(null);
-                                  },
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextField(
+                              controller: _commentsController,
+                              style: const TextStyle(color: Colors.white),
+                              maxLines: 4,
+                              decoration: InputDecoration(
+                                hintText:
+                                    'Add your thoughts about this movie...',
+                                hintStyle: const TextStyle(color: Colors.grey),
+                                filled: true,
+                                fillColor: Colors.grey[900],
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide.none,
                                 ),
-                              ],
+                              ),
+                              onChanged: (value) => _updateComments(value),
                             ),
-                        ],
-                      ),
+                            const SizedBox(height: 8),
+                            if (_personalComments != null &&
+                                _personalComments!.isNotEmpty)
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  TextButton.icon(
+                                    icon: const Icon(
+                                      Icons.clear,
+                                      color: Colors.white,
+                                    ),
+                                    label: const Text(
+                                      'Clear Comments',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () {
+                                      _commentsController.clear();
+                                      _updateComments(null);
+                                    },
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
                   const SizedBox(height: 16),
                   const Text(
                     'Overview',

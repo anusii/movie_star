@@ -91,56 +91,52 @@ class _ComingSoonScreenState extends ConsumerState<ComingSoonScreen> {
       body: RefreshIndicator(
         onRefresh: _forceRefresh,
         child: upcomingMoviesAsync.when(
-          data:
-              (movies) => ListView.builder(
-                itemCount: movies.length,
-                itemBuilder: (context, index) {
-                  final movie = movies[index];
-                  return ListTile(
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: CachedNetworkImage(
-                        imageUrl: movie.posterUrl,
-                        width: 50,
-                        height: 75,
-                        fit: BoxFit.cover,
-                        placeholder:
-                            (context, url) => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                        errorWidget:
-                            (context, url, error) => const Icon(Icons.error),
+          data: (movies) => ListView.builder(
+            itemCount: movies.length,
+            itemBuilder: (context, index) {
+              final movie = movies[index];
+              return ListTile(
+                leading: ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: CachedNetworkImage(
+                    imageUrl: movie.posterUrl,
+                    width: 50,
+                    height: 75,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  ),
+                ),
+                title: Text(
+                  movie.title,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                subtitle: Text(
+                  'Release Date: ${DateFormatUtil.formatNumeric(movie.releaseDate)}',
+                  style: const TextStyle(color: Colors.grey),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MovieDetailsScreen(
+                        movie: movie,
+                        favoritesService: widget.favoritesService,
                       ),
                     ),
-                    title: Text(
-                      movie.title,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    subtitle: Text(
-                      'Release Date: ${DateFormatUtil.formatNumeric(movie.releaseDate)}',
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => MovieDetailsScreen(
-                                movie: movie,
-                                favoritesService: widget.favoritesService,
-                              ),
-                        ),
-                      );
-                    },
                   );
                 },
-              ),
+              );
+            },
+          ),
           loading: () => const Center(child: CircularProgressIndicator()),
-          error:
-              (error, stack) => ErrorDisplayWidget(
-                message: 'Failed to load upcoming movies',
-                onRetry: _forceRefresh,
-              ),
+          error: (error, stack) => ErrorDisplayWidget(
+            message: 'Failed to load upcoming movies',
+            onRetry: _forceRefresh,
+          ),
         ),
       ),
     );
