@@ -47,7 +47,6 @@ class PodFavoritesService extends ChangeNotifier {
   static const String _toWatchFileName = 'user_lists/to_watch.ttl';
   static const String _watchedFileName = 'user_lists/watched.ttl';
   static const String _ratingsFileName = 'ratings/ratings.ttl';
-  static const String _commentsFileName = 'user_lists/comments.ttl';
 
   // Full paths for reading operations (where files are actually stored).
 
