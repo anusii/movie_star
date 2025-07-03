@@ -21,66 +21,40 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Kevin Wang
+/// Authors: Kevin Wang, Ashley Tang
 
 library;
 
 import 'package:flutter/material.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:moviestar/models/movie.dart';
+import 'package:moviestar/providers/cached_movie_service_provider.dart';
 import 'package:moviestar/screens/movie_details_screen.dart';
 import 'package:moviestar/screens/search_screen.dart';
 import 'package:moviestar/services/favorites_service.dart';
-import 'package:moviestar/services/movie_service.dart';
+import 'package:moviestar/widgets/error_display_widget.dart';
 
-/// A screen that displays various movie categories and trending content.
-class HomeScreen extends StatefulWidget {
+/// A screen that displays various movie categories and trending content with caching.
+
+class HomeScreen extends ConsumerStatefulWidget {
   /// Service for managing favorite movies.
 
   final FavoritesService favoritesService;
-  final MovieService movieService;
 
   /// Creates a new [HomeScreen] widget.
 
-  const HomeScreen({
-    super.key,
-    required this.favoritesService,
-    required this.movieService,
-  });
+  const HomeScreen({super.key, required this.favoritesService});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
 /// State class for the home screen.
 
-class _HomeScreenState extends State<HomeScreen> {
-  /// Loading state indicator.
-
-  bool _isLoading = true;
-
-  /// Error message if any.
-
-  String? _error;
-
-  /// List of popular movies.
-
-  List<Movie> _popularMovies = [];
-
-  /// List of now playing movies.
-
-  List<Movie> _nowPlayingMovies = [];
-
-  /// List of top rated movies.
-
-  List<Movie> _topRatedMovies = [];
-
-  /// List of upcoming movies.
-
-  List<Movie> _upcomingMovies = [];
-
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   /// Map of scroll controllers for different movie categories.
 
   final Map<String, ScrollController> _scrollControllers = {};
@@ -92,17 +66,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _scrollControllers['nowPlaying'] = ScrollController();
     _scrollControllers['topRated'] = ScrollController();
     _scrollControllers['upcoming'] = ScrollController();
-    _loadAllMovies();
-  }
-
-  @override
-  void didUpdateWidget(HomeScreen oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Check if the movie service instance has changed or been updated.
-
-    if (oldWidget.movieService != widget.movieService) {
-      _loadAllMovies();
-    }
   }
 
   @override
@@ -113,38 +76,13 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  /// Loads all movie categories.
-
-  Future<void> _loadAllMovies() async {
-    setState(() {
-      _isLoading = true;
-      _error = null;
-    });
-
-    try {
-      final popular = await widget.movieService.getPopularMovies();
-      final nowPlaying = await widget.movieService.getNowPlayingMovies();
-      final topRated = await widget.movieService.getTopRatedMovies();
-      final upcoming = await widget.movieService.getUpcomingMovies();
-
-      setState(() {
-        _popularMovies = popular;
-        _nowPlayingMovies = nowPlaying;
-        _topRatedMovies = topRated;
-        _upcomingMovies = upcoming;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _error = e.toString();
-        _isLoading = false;
-      });
-    }
-  }
-
   /// Builds a horizontal scrollable row of movies.
 
-  Widget _buildMovieRow(String title, List<Movie> movies, String key) {
+  Widget _buildMovieRow(
+    String title,
+    AsyncValue<List<Movie>> moviesAsync,
+    String key,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -161,49 +99,64 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         SizedBox(
           height: 200,
-          child: Scrollbar(
-            controller: _scrollControllers[key],
-            thickness: 6,
-            radius: const Radius.circular(3),
-            thumbVisibility: true,
-            child: ListView.builder(
+          child: moviesAsync.when(
+            data: (movies) => Scrollbar(
               controller: _scrollControllers[key],
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              itemCount: movies.length,
-              itemBuilder: (context, index) {
-                final movie = movies[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => MovieDetailsScreen(
-                                movie: movie,
-                                favoritesService: widget.favoritesService,
-                              ),
-                        ),
-                      );
-                    },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: CachedNetworkImage(
-                        imageUrl: movie.posterUrl,
-                        width: 130,
-                        fit: BoxFit.cover,
-                        placeholder:
-                            (context, url) => const Center(
-                              child: CircularProgressIndicator(),
+              thickness: 6,
+              radius: const Radius.circular(3),
+              thumbVisibility: true,
+              child: ListView.builder(
+                controller: _scrollControllers[key],
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                itemCount: movies.length,
+                itemBuilder: (context, index) {
+                  final movie = movies[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MovieDetailsScreen(
+                              movie: movie,
+                              favoritesService: widget.favoritesService,
                             ),
-                        errorWidget:
-                            (context, url, error) => const Icon(Icons.error),
+                          ),
+                        );
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: CachedNetworkImage(
+                          imageUrl: movie.posterUrl,
+                          width: 130,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
                       ),
                     ),
-                  ),
-                );
+                  );
+                },
+              ),
+            ),
+            loading: () => const Center(
+              child: Padding(
+                padding: EdgeInsets.all(20),
+                child: CircularProgressIndicator(),
+              ),
+            ),
+            error: (error, stack) => ErrorDisplayWidget.compact(
+              message: 'Failed to load $title',
+              onRetry: () {
+                ref.invalidate(popularMoviesProvider);
+                ref.invalidate(nowPlayingMoviesProvider);
+                ref.invalidate(topRatedMoviesProvider);
+                ref.invalidate(upcomingMoviesProvider);
               },
             ),
           ),
@@ -212,13 +165,35 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  /// Forces refresh of all movie data.
+
+  Future<void> _forceRefresh() async {
+    // Invalidate all providers to force refresh.
+
+    ref.invalidate(popularMoviesProvider);
+    ref.invalidate(nowPlayingMoviesProvider);
+    ref.invalidate(topRatedMoviesProvider);
+    ref.invalidate(upcomingMoviesProvider);
+    ref.invalidate(cacheStatsProvider);
+
+    // Force refresh through the cached service.
+
+    final cachedService = ref.read(configuredCachedMovieServiceProvider);
+    await cachedService.forceRefreshAll();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final popularMovies = ref.watch(popularMoviesProvider);
+    final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
+    final topRatedMovies = ref.watch(topRatedMoviesProvider);
+    final upcomingMovies = ref.watch(upcomingMoviesProvider);
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-        title: Text(
+        title: const Text(
           'MOVIE STAR',
           style: TextStyle(
             color: Colors.red,
@@ -228,69 +203,42 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _forceRefresh,
+            tooltip: 'Refresh data',
+          ),
+          IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
+              final movieService = ref.read(movieServiceProvider);
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder:
-                      (context) => SearchScreen(
-                        favoritesService: widget.favoritesService,
-                        movieService: widget.movieService,
-                      ),
+                  builder: (context) => SearchScreen(
+                    favoritesService: widget.favoritesService,
+                    movieService: movieService,
+                  ),
                 ),
               );
             },
           ),
         ],
       ),
-      body:
-          _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : _error != null
-              ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.error_outline,
-                      size: 48,
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      _error!,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: _loadAllMovies,
-                      child: const Text('Retry'),
-                    ),
-                  ],
-                ),
-              )
-              : SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildMovieRow(
-                      'Popular on Movie Star',
-                      _popularMovies,
-                      'popular',
-                    ),
-                    _buildMovieRow(
-                      'Now Playing',
-                      _nowPlayingMovies,
-                      'nowPlaying',
-                    ),
-                    _buildMovieRow('Top Rated', _topRatedMovies, 'topRated'),
-                    _buildMovieRow('Upcoming', _upcomingMovies, 'upcoming'),
-                  ],
-                ),
-              ),
+      body: RefreshIndicator(
+        onRefresh: _forceRefresh,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildMovieRow('Popular on Movie Star', popularMovies, 'popular'),
+              _buildMovieRow('Now Playing', nowPlayingMovies, 'nowPlaying'),
+              _buildMovieRow('Top Rated', topRatedMovies, 'topRated'),
+              _buildMovieRow('Upcoming', upcomingMovies, 'upcoming'),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

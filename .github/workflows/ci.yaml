@@ -10,7 +10,7 @@ on:
     types: [opened, reopened, synchronize]
 
 env:
-  FLUTTER_VERSION: '3.32.0'
+  FLUTTER_VERSION: '3.32.5'
 
 jobs:
 
@@ -47,6 +47,17 @@ jobs:
       - run: flutter pub get
       - run: dart run custom_lint
 
+  markdown:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm install -g markdownlint-cli
+      - run: markdownlint assets/markdown
+        # -p .markdownlintignore -c .markdownlint.yaml
+
   copyright:
     runs-on: ubuntu-latest
     steps:
@@ -58,14 +69,23 @@ jobs:
       - run: flutter pub get
       - name: Check copyright headers
         run: |
-          # Find Dart files without proper copyright headers
-          missing_copyright=$(find lib -type f -name '*.dart' -exec grep -L "Copyright" {} \;)
+          # Find Dart files without proper copyright headers, excluding generated files
+          missing_copyright=$(find lib -type f -name '*.dart' \
+            ! -name '*.g.dart' \
+            ! -name '*.gr.dart' \
+            ! -name '*.freezed.dart' \
+            ! -name '*.chopper.dart' \
+            ! -name '*.part.dart' \
+            ! -name '*.config.dart' \
+            -exec grep -L "Copyright" {} \;)
           if [ -n "$missing_copyright" ]; then
-            echo "Files missing copyright headers:"
+            echo "❌ Files missing copyright headers:"
             echo "$missing_copyright"
+            echo ""
+            echo "💡 Note: Generated files (*.g.dart, *.freezed.dart, etc.) are automatically excluded"
             exit 1
           else
-            echo "All Dart files have copyright headers"
+            echo "✅ All non-generated Dart files have copyright headers"
           fi
 
   build:

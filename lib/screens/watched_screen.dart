@@ -114,12 +114,11 @@ class _WatchedScreenState extends State<WatchedScreen> {
                           width: 50,
                           height: 75,
                           fit: BoxFit.cover,
-                          placeholder:
-                              (context, url) => const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                          errorWidget:
-                              (context, url, error) => const Icon(Icons.error),
+                          placeholder: (context, url) => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
                         ),
                       ),
                       title: Text(
@@ -143,11 +142,10 @@ class _WatchedScreenState extends State<WatchedScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder:
-                                (context) => MovieDetailsScreen(
-                                  movie: movie,
-                                  favoritesService: widget.favoritesService,
-                                ),
+                            builder: (context) => MovieDetailsScreen(
+                              movie: movie,
+                              favoritesService: widget.favoritesService,
+                            ),
                           ),
                         );
                       },

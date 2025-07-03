@@ -30,10 +30,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:moviestar/database/movie_cache_repository.dart';
+import 'package:moviestar/providers/cached_movie_service_provider.dart';
 import 'package:moviestar/screens/to_watch_screen.dart';
 import 'package:moviestar/screens/watched_screen.dart';
 import 'package:moviestar/services/api_key_service.dart';
 import 'package:moviestar/services/favorites_service.dart';
+import 'package:moviestar/services/favorites_service_manager.dart';
 import 'package:moviestar/widgets/theme_toggle_button.dart';
 
 /// A screen that displays and manages user settings.
@@ -42,6 +45,7 @@ class SettingsScreen extends ConsumerStatefulWidget {
   /// Service for managing favorite movies.
 
   final FavoritesService favoritesService;
+  final FavoritesServiceManager? favoritesServiceManager;
   final ApiKeyService apiKeyService;
 
   /// Whether this screen was opened from the API key prompt.
@@ -54,6 +58,7 @@ class SettingsScreen extends ConsumerStatefulWidget {
     super.key,
     required this.favoritesService,
     required this.apiKeyService,
+    this.favoritesServiceManager,
     this.fromApiKeyPrompt = false,
   });
 
@@ -71,6 +76,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   /// Whether auto-play is enabled.
 
   bool _autoPlayEnabled = true;
+
+  /// Whether POD storage is enabled.
+
+  bool _podStorageEnabled = false;
 
   /// Selected language for the app.
 
@@ -96,11 +105,373 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
   }
 
+  /// Clears all cached movie data.
+
+  Future<void> _clearAllCache() async {
+    try {
+      final cachedService = ref.read(configuredCachedMovieServiceProvider);
+      await cachedService.clearAllCache();
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('All cached movie data cleared successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to clear cache: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  /// Shows smart confirmation dialog for clearing cache based on current settings.
+
+  Future<void> _showClearCacheDialog(
+    bool cachingEnabled,
+    bool cacheOnlyMode,
+  ) async {
+    String dialogTitle;
+    String dialogContent;
+    String confirmButtonText;
+    List<Widget> actions;
+
+    if (!cachingEnabled) {
+      // Caching is disabled - clearing cache is harmless.
+
+      dialogTitle = 'Clear All Cache';
+      dialogContent = '''
+This will remove any cached movie data. Since caching is disabled, this won't affect your ability to load movies from the network.''';
+      confirmButtonText = 'Clear';
+    } else if (cacheOnlyMode) {
+      // Cache-only mode is enabled - this will break the app!
+
+      dialogTitle = '⚠️ Clear Cache in Cache-Only Mode';
+      dialogContent = '''
+WARNING: You have Cache-Only Mode enabled, which means no network calls are allowed.
+
+Clearing the cache now will leave you with no movie data and no way to fetch new data!
+
+Recommended: Disable Cache-Only Mode first, then clear cache.''';
+      confirmButtonText = 'Clear Anyway';
+    } else {
+      // Normal case - caching enabled but can fallback to network.
+
+      dialogTitle = 'Clear All Cache';
+      dialogContent = '''
+This will remove all cached movie data. Fresh data will be downloaded from the network when needed.''';
+      confirmButtonText = 'Clear';
+    }
+
+    actions = [
+      TextButton(
+        onPressed: () => Navigator.of(context).pop(false),
+        child: const Text('Cancel'),
+      ),
+      if (cachingEnabled && cacheOnlyMode) ...[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(false);
+            // Automatically disable cache-only mode.
+            ref.read(cacheOnlyModeProvider.notifier).setCacheOnlyMode(false);
+            // Show feedback.
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Cache-Only Mode disabled. You can now clear cache safely.',
+                ),
+                backgroundColor: Colors.blue,
+              ),
+            );
+          },
+          child: const Text('Disable Cache-Only Mode'),
+        ),
+      ],
+      TextButton(
+        onPressed: () => Navigator.of(context).pop(true),
+        style: cachingEnabled && cacheOnlyMode
+            ? TextButton.styleFrom(foregroundColor: Colors.red)
+            : null,
+        child: Text(confirmButtonText),
+      ),
+    ];
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(dialogTitle),
+        content: Text(dialogContent),
+        actions: actions,
+      ),
+    );
+
+    if (confirmed == true) {
+      await _clearAllCache();
+
+      // Show additional warning if they cleared cache in cache-only mode.
+
+      if (cachingEnabled && cacheOnlyMode && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              '''
+Cache cleared! You're now in Cache-Only Mode with no cached data. Consider disabling Cache-Only Mode to load fresh data.''',
+            ),
+            backgroundColor: Colors.orange,
+            duration: Duration(seconds: 5),
+          ),
+        );
+      }
+    }
+  }
+
+  /// Shows smart confirmation dialog for force refresh based on current settings.
+
+  Future<void> _showForceRefreshDialog(
+    bool cachingEnabled,
+    bool cacheOnlyMode,
+  ) async {
+    if (cacheOnlyMode) {
+      // In cache-only mode, force refresh would require network calls.
+
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('⚠️ Force Refresh in Cache-Only Mode'),
+          content: const Text('''
+Force refresh requires downloading fresh data from the network, but you have Cache-Only Mode enabled.
+
+Do you want to temporarily disable Cache-Only Mode and refresh all data?'''),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Disable Cache-Only & Refresh'),
+            ),
+          ],
+        ),
+      );
+
+      if (confirmed == true) {
+        // Disable cache-only mode temporarily
+        ref.read(cacheOnlyModeProvider.notifier).setCacheOnlyMode(false);
+
+        // Show feedback
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Cache-Only Mode disabled. Refreshing all data...'),
+              backgroundColor: Colors.blue,
+            ),
+          );
+        }
+
+        // Now do the refresh.
+
+        await _forceRefreshAll();
+      }
+    } else {
+      // Normal case - just refresh.
+
+      await _forceRefreshAll();
+    }
+  }
+
+  /// Forces refresh of all movie categories.
+
+  Future<void> _forceRefreshAll() async {
+    try {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Row(
+              children: [
+                SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                ),
+                SizedBox(width: 16),
+                Text('Refreshing all movie data...'),
+              ],
+            ),
+            duration: Duration(seconds: 10),
+          ),
+        );
+      }
+
+      final cachedService = ref.read(configuredCachedMovieServiceProvider);
+      await cachedService.forceRefreshAll();
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('All movie data refreshed successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to refresh data: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  /// Enable POD storage and migrate data.
+
+  Future<void> _enablePodStorage() async {
+    if (widget.favoritesServiceManager == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('POD storage manager not available.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      return;
+    }
+
+    // Show loading indicator.
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Row(
+            children: [
+              SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ),
+              SizedBox(width: 16),
+              Text('Enabling POD storage...'),
+            ],
+          ),
+          duration: Duration(seconds: 10),
+        ),
+      );
+    }
+
+    try {
+      final success = await widget.favoritesServiceManager!.enablePodStorage();
+
+      if (success) {
+        setState(() => _podStorageEnabled = true);
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                '''
+POD storage enabled successfully! Your movie lists are now stored in your Solid POD.''',
+              ),
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 5),
+            ),
+          );
+        }
+      } else {
+        setState(() => _podStorageEnabled = false);
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                '''
+Failed to enable POD storage. Please check your Solid POD login and try again.''',
+              ),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 5),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      setState(() => _podStorageEnabled = false);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error enabling POD storage: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 5),
+          ),
+        );
+      }
+    }
+  }
+
+  /// Disable POD storage and revert to local storage.
+
+  Future<void> _disablePodStorage() async {
+    if (widget.favoritesServiceManager == null) return;
+
+    try {
+      await widget.favoritesServiceManager!.disablePodStorage();
+      setState(() => _podStorageEnabled = false);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('POD storage disabled. Using local storage.'),
+            backgroundColor: Colors.orange,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error disabling POD storage: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _apiKeyController = TextEditingController();
     _loadApiKey();
+
+    // Initialise POD storage state from service manager.
+
+    if (widget.favoritesServiceManager != null) {
+      _podStorageEnabled = widget.favoritesServiceManager!.isPodStorageEnabled;
+    }
 
     // If navigated from API key prompt, scroll to the API key section and focus the field.
 
@@ -284,6 +655,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
             ),
           ]),
+          _buildSection('Data Storage', [
+            _buildSwitchTile(
+              'Use Solid POD Storage',
+              'Store movie lists in your Solid POD instead of locally',
+              _podStorageEnabled,
+              (value) async {
+                if (value) {
+                  await _enablePodStorage();
+                } else {
+                  await _disablePodStorage();
+                }
+              },
+            ),
+          ]),
           _buildSection('Appearance', [
             Padding(
               padding: const EdgeInsets.all(16),
@@ -328,6 +713,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               (value) => setState(() => _autoPlayEnabled = value),
             ),
           ]),
+          _buildCacheSection(),
           _buildSection('Playback', [
             _buildDropdownTile(
               'Language',
@@ -347,10 +733,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder:
-                      (context) => ToWatchScreen(
-                        favoritesService: widget.favoritesService,
-                      ),
+                  builder: (context) => ToWatchScreen(
+                    favoritesService: widget.favoritesService,
+                  ),
                 ),
               );
             }),
@@ -358,10 +743,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder:
-                      (context) => WatchedScreen(
-                        favoritesService: widget.favoritesService,
-                      ),
+                  builder: (context) => WatchedScreen(
+                    favoritesService: widget.favoritesService,
+                  ),
                 ),
               );
             }),
@@ -374,6 +758,206 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ]),
         ],
       ),
+    );
+  }
+
+  /// Builds the cache management section.
+
+  Widget _buildCacheSection() {
+    final cacheStatsAsync = ref.watch(cacheStatsProvider);
+    final cachingEnabled = ref.watch(cachingEnabledProvider);
+    final cacheOnlyMode = ref.watch(cacheOnlyModeProvider);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Text(
+            'Cache Management',
+            style: TextStyle(
+              color: Theme.of(context).textTheme.bodyMedium?.color,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        _buildSwitchTile(
+          'Enable Caching',
+          'Cache movie data to improve performance',
+          cachingEnabled,
+          (value) {
+            ref.read(cachingEnabledProvider.notifier).setCachingEnabled(value);
+            // If disabling caching, also disable cache-only mode.
+
+            if (!value && cacheOnlyMode) {
+              ref.read(cacheOnlyModeProvider.notifier).setCacheOnlyMode(false);
+            }
+          },
+        ),
+        _buildCacheOnlyModeTile(cachingEnabled, cacheOnlyMode),
+
+        // Cache Statistics.
+        cacheStatsAsync.when(
+          data: (stats) => stats.isEmpty
+              ? const SizedBox.shrink()
+              : Card(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.storage, size: 16),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Cache Statistics',
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        ...stats.entries.map((entry) {
+                          final category = entry.key;
+                          final stat = entry.value;
+                          final categoryName = _getCategoryDisplayName(
+                            category,
+                          );
+
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      categoryName,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyMedium,
+                                    ),
+                                    Text(
+                                      'Updated ${_getTimeAgo(stat.age)} ago',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      stat.isValid
+                                          ? Icons.check_circle
+                                          : Icons.schedule,
+                                      size: 16,
+                                      color: stat.isValid
+                                          ? Colors.green
+                                          : Colors.orange,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      stat.isValid
+                                          ? '${stat.movieCount} movies'
+                                          : 'Expired',
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodySmall,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
+                  ),
+                ),
+          loading: () => const SizedBox.shrink(),
+          error: (_, __) => const SizedBox.shrink(),
+        ),
+
+        // Cache Actions.
+        _buildListTile('Force Refresh All', Icons.refresh, () async {
+          await _showForceRefreshDialog(cachingEnabled, cacheOnlyMode);
+        }),
+        _buildListTile('Clear All Cache', Icons.delete_sweep, () async {
+          await _showClearCacheDialog(cachingEnabled, cacheOnlyMode);
+        }, isDestructive: true),
+        Divider(color: Theme.of(context).dividerColor),
+      ],
+    );
+  }
+
+  /// Gets display name for cache category.
+
+  String _getCategoryDisplayName(CacheCategory category) {
+    switch (category) {
+      case CacheCategory.popular:
+        return 'Popular Movies';
+      case CacheCategory.nowPlaying:
+        return 'Now Playing';
+      case CacheCategory.topRated:
+        return 'Top Rated';
+      case CacheCategory.upcoming:
+        return 'Upcoming Movies';
+    }
+  }
+
+  /// Gets human-readable time ago string.
+
+  String _getTimeAgo(Duration duration) {
+    if (duration.inDays > 0) {
+      return '${duration.inDays}d';
+    } else if (duration.inHours > 0) {
+      return '${duration.inHours}h';
+    } else if (duration.inMinutes > 0) {
+      return '${duration.inMinutes}m';
+    } else {
+      return 'just now';
+    }
+  }
+
+  /// Builds the cache-only mode tile with proper enabled/disabled state.
+
+  Widget _buildCacheOnlyModeTile(bool cachingEnabled, bool cacheOnlyMode) {
+    return SwitchListTile(
+      title: Text(
+        'Cache-Only Mode',
+        style: cachingEnabled
+            ? Theme.of(context).textTheme.bodyLarge
+            : Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: Theme.of(context).disabledColor,
+                ),
+      ),
+      subtitle: Text(
+        cachingEnabled
+            ? (cacheOnlyMode
+                ? 'Using only cached data (no network calls)'
+                : 'Allow network calls when cache is empty')
+            : 'Enable caching first to use cache-only mode',
+        style: cachingEnabled
+            ? Theme.of(context).textTheme.bodyMedium
+            : Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).disabledColor,
+                ),
+      ),
+      value: cacheOnlyMode && cachingEnabled,
+      onChanged: cachingEnabled
+          ? (value) {
+              ref.read(cacheOnlyModeProvider.notifier).setCacheOnlyMode(value);
+            }
+          : null,
+      activeColor: Theme.of(context).colorScheme.primary,
     );
   }
 
@@ -429,16 +1013,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       title: Text(title, style: Theme.of(context).textTheme.bodyLarge),
       trailing: DropdownButton<String>(
         value: value,
-        items:
-            items.map((String item) {
-              return DropdownMenuItem<String>(
-                value: item,
-                child: Text(
-                  item,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              );
-            }).toList(),
+        items: items.map((String item) {
+          return DropdownMenuItem<String>(
+            value: item,
+            child: Text(
+              item,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          );
+        }).toList(),
         onChanged: onChanged,
         dropdownColor: Theme.of(context).cardColor,
         underline: const SizedBox(),
@@ -457,18 +1040,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     return ListTile(
       leading: Icon(
         icon,
-        color:
-            isDestructive
-                ? Theme.of(context).colorScheme.error
-                : Theme.of(context).iconTheme.color,
+        color: isDestructive
+            ? Theme.of(context).colorScheme.error
+            : Theme.of(context).iconTheme.color,
       ),
       title: Text(
         title,
         style: TextStyle(
-          color:
-              isDestructive
-                  ? Theme.of(context).colorScheme.error
-                  : Theme.of(context).textTheme.bodyLarge?.color,
+          color: isDestructive
+              ? Theme.of(context).colorScheme.error
+              : Theme.of(context).textTheme.bodyLarge?.color,
         ),
       ),
       onTap: onTap,
