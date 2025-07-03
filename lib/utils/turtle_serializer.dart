@@ -181,12 +181,13 @@ class TurtleSerializer {
 
   /// Converts a single movie with user's personal rating and comment to TTL format.
   /// This creates a unified file containing both movie metadata and user's personal data.
-  
-  static String movieWithUserDataToTurtle(Movie movie, double? rating, String? comment) {
+
+  static String movieWithUserDataToTurtle(
+      Movie movie, double? rating, String? comment) {
     final triples = <URIRef, Map<URIRef, dynamic>>{};
 
     // Create the movie resource with all movie metadata.
-    
+
     final movieResource = localNS.withAttr('movie${movie.id}');
     triples[movieResource] = {
       rdfType: movieType,
@@ -196,12 +197,13 @@ class TurtleSerializer {
       image: Literal(_escapeString(movie.posterUrl)),
       thumbnailUrl: Literal(_escapeString(movie.backdropUrl)),
       aggregateRating: Literal('${movie.voteAverage}', datatype: XSD.double),
-      datePublished: Literal(movie.releaseDate.toIso8601String(), datatype: XSD.dateTime),
+      datePublished:
+          Literal(movie.releaseDate.toIso8601String(), datatype: XSD.dateTime),
       genre: Literal(movie.genreIds.join(',')),
     };
 
     // Add user's personal rating if it exists.
-    
+
     if (rating != null) {
       final userRatingResource = localNS.withAttr('userRating${movie.id}');
       triples[userRatingResource] = {
@@ -209,14 +211,15 @@ class TurtleSerializer {
         movieId: Literal('${movie.id}', datatype: XSD.int),
         value: Literal('$rating', datatype: XSD.double),
       };
-      
+
       // Link the movie to the user rating.
-      
-      triples[movieResource]![localNS.withAttr('hasUserRating')] = userRatingResource;
+
+      triples[movieResource]![localNS.withAttr('hasUserRating')] =
+          userRatingResource;
     }
 
     // Add user's personal comment if it exists.
-    
+
     if (comment != null && comment.isNotEmpty) {
       final userCommentResource = localNS.withAttr('userComment${movie.id}');
       triples[userCommentResource] = {
@@ -224,10 +227,11 @@ class TurtleSerializer {
         movieId: Literal('${movie.id}', datatype: XSD.int),
         text: Literal(_escapeString(comment)),
       };
-      
+
       // Link the movie to the user comment.
-      
-      triples[movieResource]![localNS.withAttr('hasUserComment')] = userCommentResource;
+
+      triples[movieResource]![localNS.withAttr('hasUserComment')] =
+          userCommentResource;
     }
 
     // Define namespace bindings.
@@ -241,10 +245,12 @@ class TurtleSerializer {
       'rating': rating,
       'comment': comment,
     });
-    
-    final ttlContent = tripleMapToTurtle(triples, bindNamespaces: bindNamespaces);
-    final withJsonBackup = '$ttlContent\n\n# JSON_MOVIE_DATA: $movieJson\n# JSON_USER_DATA: $userDataJson';
-    
+
+    final ttlContent =
+        tripleMapToTurtle(triples, bindNamespaces: bindNamespaces);
+    final withJsonBackup =
+        '$ttlContent\n\n# JSON_MOVIE_DATA: $movieJson\n# JSON_USER_DATA: $userDataJson';
+
     return withJsonBackup;
   }
 
@@ -549,21 +555,23 @@ class TurtleSerializer {
 
   /// Parses a single movie with user data from TTL content.
   /// Returns a map containing the movie, rating, and comment.
-  
+
   static Map<String, dynamic>? movieWithUserDataFromTurtle(String ttlContent) {
     try {
       // First try to parse from JSON backup for compatibility.
 
-      final movieJsonMatch = RegExp(r'# JSON_MOVIE_DATA: (.+)').firstMatch(ttlContent);
-      final userDataJsonMatch = RegExp(r'# JSON_USER_DATA: (.+)').firstMatch(ttlContent);
-      
+      final movieJsonMatch =
+          RegExp(r'# JSON_MOVIE_DATA: (.+)').firstMatch(ttlContent);
+      final userDataJsonMatch =
+          RegExp(r'# JSON_USER_DATA: (.+)').firstMatch(ttlContent);
+
       if (movieJsonMatch != null && userDataJsonMatch != null) {
         final movieJsonData = movieJsonMatch.group(1)!;
         final userDataJsonData = userDataJsonMatch.group(1)!;
-        
+
         final movieData = jsonDecode(movieJsonData) as Map<String, dynamic>;
         final userData = jsonDecode(userDataJsonData) as Map<String, dynamic>;
-        
+
         return {
           'movie': Movie.fromJson(movieData),
           'rating': userData['rating'],
@@ -572,24 +580,26 @@ class TurtleSerializer {
       }
 
       // Parse using proper RDF if no JSON backup.
-      
+
       final triples = turtleToTripleMap(ttlContent);
       Movie? movie;
       double? rating;
       String? comment;
 
       // Find movie, rating, and comment resources.
-      
+
       for (final subject in triples.keys) {
         final predicates = triples[subject]!;
-        final typeValues = predicates['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] ?? [];
+        final typeValues =
+            predicates['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] ?? [];
 
         // Check for movie.
 
         final isMovie = typeValues.any(
-          (type) => type.toString().contains('Movie') || 
-                   type == 'http://schema.org/Movie' || 
-                   type == '#Movie',
+          (type) =>
+              type.toString().contains('Movie') ||
+              type == 'http://schema.org/Movie' ||
+              type == '#Movie',
         );
 
         if (isMovie && movie == null) {
@@ -597,7 +607,7 @@ class TurtleSerializer {
         }
 
         // Check for rating.
-        
+
         final isRating = typeValues.any(
           (type) => type.toString().contains('Rating') || type == '#Rating',
         );
@@ -614,7 +624,7 @@ class TurtleSerializer {
         }
 
         // Check for comment.
-        
+
         final isComment = typeValues.any(
           (type) => type.toString().contains('Comment') || type == '#Comment',
         );
@@ -629,7 +639,7 @@ class TurtleSerializer {
           }
         }
       }
-      
+
       if (movie != null) {
         return {
           'movie': movie,
@@ -637,12 +647,12 @@ class TurtleSerializer {
           'comment': comment,
         };
       }
-      
+
       return null;
     } catch (e) {
       // Don't log parsing errors - they're often due to expected empty/missing files
       // debugPrint('Error parsing movie with user data from TTL: $e');
-      
+
       return null;
     }
   }

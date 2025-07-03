@@ -181,7 +181,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
       _personalRating = rating;
       _ratingSaved = true;
     });
-    
+
     // Hide the saved banner after 2 seconds.
 
     _ratingSavedTimer?.cancel();
@@ -215,21 +215,22 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
       _personalComments = comments;
       // Reset modified flag after saving.
 
-      _commentsModified = false; 
+      _commentsModified = false;
     });
   }
 
   /// Saves the current comments without automatic triggers.
-  
+
   Future<void> _saveComments() async {
     final currentText = _commentsController.text.trim();
     await _updateComments(currentText.isEmpty ? null : currentText);
-    
+
     setState(() {
       _commentsSaved = true;
     });
-    
-    // Hide the saved banner after 2 seconds
+
+    // Hide the saved banner after 2 seconds.
+
     _commentsSavedTimer?.cancel();
     _commentsSavedTimer = Timer(const Duration(seconds: 2), () {
       if (mounted) {
@@ -240,18 +241,18 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
     });
   }
 
-  /// Clears the current comments and shows success banner. 
-  
+  /// Clears the current comments and shows success banner.
+
   Future<void> _clearComments() async {
     _commentsController.clear();
     await _updateComments(null);
-    
+
     setState(() {
       _commentsSaved = true;
     });
-    
+
     // Hide the saved banner after 2 seconds.
-    
+
     _commentsSavedTimer?.cancel();
     _commentsSavedTimer = Timer(const Duration(seconds: 2), () {
       if (mounted) {
@@ -504,18 +505,18 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                               ),
                               onChanged: (value) {
                                 // Mark as modified when user types.
-                                
+
                                 setState(() {
                                   _commentsModified = true;
-                                  _commentsSaved = false; 
+                                  _commentsSaved = false;
                                 });
                                 // Cancel the saved timer since user is editing again.
-                                
+
                                 _commentsSavedTimer?.cancel();
                               },
                               onSubmitted: (value) {
                                 // Save when user presses Enter (if modified).
-                                
+
                                 if (_commentsModified) {
                                   _saveComments();
                                 }
