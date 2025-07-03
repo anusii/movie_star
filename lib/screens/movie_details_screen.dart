@@ -26,8 +26,8 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'dart:async';
 
+import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:moviestar/models/movie.dart';

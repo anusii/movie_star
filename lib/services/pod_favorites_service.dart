@@ -27,7 +27,6 @@ library;
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
@@ -58,8 +57,6 @@ class PodFavoritesService extends ChangeNotifier {
       'moviestar/data/user_lists/watched.ttl';
   static const String _ratingsFileNameRead =
       'moviestar/data/ratings/ratings.ttl';
-  static const String _commentsFileNameRead =
-      'moviestar/data/user_lists/comments.ttl';
 
   /// Widget context for POD operations.
 
@@ -327,22 +324,6 @@ class PodFavoritesService extends ChangeNotifier {
     } catch (e) {
       // Don't log - this is background save for compatibility
       // debugPrint('Failed to save ratings to POD: $e');
-    }
-  }
-
-  /// Saves comments to POD.
-
-  Future<void> _saveCommentsToPod(Map<String, String> comments) async {
-    if (_isSyncing) return;
-
-    try {
-      final ttlContent = TurtleSerializer.commentsToTurtleWithJson(comments);
-      await writePod(_commentsFileName, ttlContent, _context, _child,
-          encrypted: false);
-      _cachedComments = Map.from(comments);
-    } catch (e) {
-      // Don't log - this is background save for compatibility
-      // debugPrint('Failed to save comments to POD: $e');
     }
   }
 
