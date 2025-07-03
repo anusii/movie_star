@@ -9,9 +9,7 @@
 library;
 
 import 'dart:convert';
-import 'dart:math' as math;
 
-import 'package:flutter/foundation.dart';
 import 'package:rdflib/rdflib.dart';
 // ignore: implementation_imports
 import 'package:solidpod/src/solid/utils/rdf.dart'
@@ -183,10 +181,12 @@ class TurtleSerializer {
 
   /// Converts a single movie with user's personal rating and comment to TTL format.
   /// This creates a unified file containing both movie metadata and user's personal data.
+  
   static String movieWithUserDataToTurtle(Movie movie, double? rating, String? comment) {
     final triples = <URIRef, Map<URIRef, dynamic>>{};
 
-    // Create the movie resource with all movie metadata
+    // Create the movie resource with all movie metadata.
+    
     final movieResource = localNS.withAttr('movie${movie.id}');
     triples[movieResource] = {
       rdfType: movieType,
@@ -200,7 +200,8 @@ class TurtleSerializer {
       genre: Literal(movie.genreIds.join(',')),
     };
 
-    // Add user's personal rating if it exists
+    // Add user's personal rating if it exists.
+    
     if (rating != null) {
       final userRatingResource = localNS.withAttr('userRating${movie.id}');
       triples[userRatingResource] = {
@@ -209,11 +210,13 @@ class TurtleSerializer {
         value: Literal('$rating', datatype: XSD.double),
       };
       
-      // Link the movie to the user rating
+      // Link the movie to the user rating.
+      
       triples[movieResource]![localNS.withAttr('hasUserRating')] = userRatingResource;
     }
 
-    // Add user's personal comment if it exists
+    // Add user's personal comment if it exists.
+    
     if (comment != null && comment.isNotEmpty) {
       final userCommentResource = localNS.withAttr('userComment${movie.id}');
       triples[userCommentResource] = {
@@ -222,14 +225,17 @@ class TurtleSerializer {
         text: Literal(_escapeString(comment)),
       };
       
-      // Link the movie to the user comment
+      // Link the movie to the user comment.
+      
       triples[movieResource]![localNS.withAttr('hasUserComment')] = userCommentResource;
     }
 
-    // Define namespace bindings
+    // Define namespace bindings.
+
     final bindNamespaces = {'': localNS, 'schema': movieNS};
 
-    // Add JSON backup for compatibility
+    // Add JSON backup for compatibility.
+
     final movieJson = jsonEncode(movie.toJson());
     final userDataJson = jsonEncode({
       'rating': rating,
@@ -543,9 +549,11 @@ class TurtleSerializer {
 
   /// Parses a single movie with user data from TTL content.
   /// Returns a map containing the movie, rating, and comment.
+  
   static Map<String, dynamic>? movieWithUserDataFromTurtle(String ttlContent) {
     try {
-      // First try to parse from JSON backup for compatibility
+      // First try to parse from JSON backup for compatibility.
+
       final movieJsonMatch = RegExp(r'# JSON_MOVIE_DATA: (.+)').firstMatch(ttlContent);
       final userDataJsonMatch = RegExp(r'# JSON_USER_DATA: (.+)').firstMatch(ttlContent);
       
@@ -563,18 +571,21 @@ class TurtleSerializer {
         };
       }
 
-      // Parse using proper RDF if no JSON backup
+      // Parse using proper RDF if no JSON backup.
+      
       final triples = turtleToTripleMap(ttlContent);
       Movie? movie;
       double? rating;
       String? comment;
 
-      // Find movie, rating, and comment resources
+      // Find movie, rating, and comment resources.
+      
       for (final subject in triples.keys) {
         final predicates = triples[subject]!;
         final typeValues = predicates['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] ?? [];
 
-        // Check for movie
+        // Check for movie.
+
         final isMovie = typeValues.any(
           (type) => type.toString().contains('Movie') || 
                    type == 'http://schema.org/Movie' || 
@@ -585,7 +596,8 @@ class TurtleSerializer {
           movie = _extractMovieFromTriples(predicates);
         }
 
-        // Check for rating
+        // Check for rating.
+        
         final isRating = typeValues.any(
           (type) => type.toString().contains('Rating') || type == '#Rating',
         );
@@ -601,7 +613,8 @@ class TurtleSerializer {
           }
         }
 
-        // Check for comment
+        // Check for comment.
+        
         final isComment = typeValues.any(
           (type) => type.toString().contains('Comment') || type == '#Comment',
         );
@@ -629,6 +642,7 @@ class TurtleSerializer {
     } catch (e) {
       // Don't log parsing errors - they're often due to expected empty/missing files
       // debugPrint('Error parsing movie with user data from TTL: $e');
+      
       return null;
     }
   }

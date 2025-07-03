@@ -59,34 +59,42 @@ Future<void> initialiseAppFolders({
       'profile',
     ];
 
-    // Check current resources, handling encryption key errors gracefully
+    // Check current resources, handling encryption key errors gracefully.
+    
     final dirUrl = await getDirUrl(basePath);
     List<String> existingFolders = [];
     
-    // Try multiple times with increasing delays to handle transient encryption issues
+    // Try multiple times with increasing delays to handle transient encryption issues.
+    
     for (int attempt = 1; attempt <= 3; attempt++) {
       try {
         final resources = await getResourcesInContainer(dirUrl);
         existingFolders = resources.subDirs;
-        break; // Success - exit retry loop
+         // Success - exit retry loop.
+
+        break;
       } catch (e) {
-        // Handle encryption key conflicts gracefully
+        // Handle encryption key conflicts gracefully.
+        
         if (e.toString().contains('Duplicated encryption key')) {
           debugPrint('Encryption key conflict detected (attempt $attempt/3) - this is caused by orphaned encryption keys from deleted files');
           
           if (attempt < 3) {
-            // Wait with exponential backoff before retrying
+            // Wait with exponential backoff before retrying.
+            
             await Future.delayed(Duration(milliseconds: 500 * attempt));
             debugPrint('Retrying resource scan...');
             continue;
           } else {
             debugPrint('Max retries reached - continuing with empty folder list');
-            // Continue with empty list - we'll try to create all folders
+            // Continue with empty list - we'll try to create all folders.
+            
             existingFolders = [];
             break;
           }
         } else {
-          // Re-throw other errors
+          // Re-throw other errors.
+          
           rethrow;
         }
       }
@@ -114,6 +122,7 @@ Future<void> initialiseAppFolders({
         if (result != SolidFunctionCallStatus.success) {
           debugPrint('Failed to create $folder folder');
           // Continue with other folders even if one fails.
+          
         }
       }
     }
