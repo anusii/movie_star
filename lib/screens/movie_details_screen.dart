@@ -153,9 +153,9 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
       await widget.favoritesService.removePersonalRating(widget.movie);
     } else {
       await widget.favoritesService.setPersonalRating(widget.movie, rating);
-      
+
       // Automatically mark as watched when rating is given.
-      
+
       if (!_isInWatched) {
         await widget.favoritesService.addToWatched(widget.movie);
       }
