@@ -68,6 +68,10 @@ SPEC REPOS:
   trunk:
     - sqlite3
 
+SPEC REPOS:
+  trunk:
+    - sqlite3
+
 EXTERNAL SOURCES:
   fast_rsa:
     :path: Flutter/ephemeral/.symlinks/plugins/fast_rsa/macos
