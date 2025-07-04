@@ -1,6 +1,6 @@
-/// DESCRIPTION
+/// Moviestar - Manage and share ratings through private PODs
 ///
-// Time-stamp: <Friday 2025-02-14 08:06:50 +1100 Graham Williams>
+// Time-stamp: <Friday 2025-07-04 14:53:04 +1000 Graham Williams>
 ///
 /// Copyright (C) 2025, Software Innovation Institute, ANU
 ///
