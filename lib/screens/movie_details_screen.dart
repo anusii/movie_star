@@ -1,6 +1,6 @@
 /// Screen displaying detailed information about a selected movie.
 ///
-// Time-stamp: <Thursday 2025-04-10 11:47:48 +1000 Graham Williams>
+// Time-stamp: <Friday 2025-07-04 15:06:40 +1000 Graham Williams>
 ///
 /// Copyright (C) 2025, Software Innovation Institute, ANU.
 ///
@@ -154,7 +154,10 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
     } else {
       await widget.favoritesService.setPersonalRating(widget.movie, rating);
 
-      // Automatically mark as watched when rating is given.
+      // We might want to automatically mark a movie as watched when a rating is
+      // given. We would not expect a rating if the user has not watched a
+      // movie, so this seems like a good (though opinionated)
+      // behaviour. (20250704 gjw)
 
       if (!_isInWatched) {
         await widget.favoritesService.addToWatched(widget.movie);
