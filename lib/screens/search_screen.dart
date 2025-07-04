@@ -1,6 +1,6 @@
-/// Screen for searching and discovering movies in the Movie Star application.
+/// Moviestar - Manage and share ratings through private PODs
 ///
-// Time-stamp: <Thursday 2025-04-10 11:47:48 +1000 Graham Williams>
+// Time-stamp: <Friday 2025-07-04 14:54:11 +1000 Graham Williams>
 ///
 /// Copyright (C) 2025, Software Innovation Institute, ANU.
 ///
@@ -21,7 +21,7 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Kevin Wang
+/// Authors: Kevin Wang, Ashley Tang
 
 library;
 
@@ -37,12 +37,15 @@ import 'package:moviestar/services/favorites_service.dart';
 import 'package:moviestar/services/movie_service.dart';
 import 'package:moviestar/widgets/error_display_widget.dart';
 
-/// A screen that allows users to search for movies.
+/// A screen for searching and discovering movies.
 
 class SearchScreen extends StatefulWidget {
   /// Service for managing favorite movies.
 
   final FavoritesService favoritesService;
+
+  /// Service for managing favorite movies.
+
   final MovieService movieService;
 
   /// Creates a new [SearchScreen] widget.

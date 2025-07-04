@@ -1,6 +1,6 @@
-/// A floating search button that can be positioned anywhere on screen.
+/// Moviestar - Manage and share ratings through private PODs
 ///
-// Time-stamp: <Thursday 2025-04-10 11:47:48 +1000 Graham Williams>
+// Time-stamp: <Friday 2025-07-04 14:53:36 +1000 Graham Williams>
 ///
 /// Copyright (C) 2025, Software Innovation Institute, ANU.
 ///
@@ -32,6 +32,8 @@ import 'package:markdown_tooltip/markdown_tooltip.dart';
 import 'package:moviestar/screens/search_screen.dart';
 import 'package:moviestar/services/favorites_service.dart';
 import 'package:moviestar/services/movie_service.dart';
+
+/// A floating search button that can be positioned anywhere on screen.
 
 class FloatingSearchButton extends StatelessWidget {
   /// Position from the right edge of the screen.

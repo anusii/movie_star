@@ -1,6 +1,6 @@
 /// Data model representing a movie in the Movie Star application.
 ///
-// Time-stamp: <Thursday 2025-04-10 11:47:48 +1000 Graham Williams>
+// Time-stamp: <Friday 2025-07-04 14:39:11 +1000 Graham Williams>
 ///
 /// Copyright (C) 2025, Software Innovation Institute, ANU.
 ///
@@ -21,7 +21,7 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Kevin Wang
+/// Authors: Kevin Wang, Ashely Tang
 
 library;
 
@@ -78,6 +78,7 @@ class Movie {
 
   factory Movie.fromJson(Map<String, dynamic> json) {
     // Helper function to safely parse release date.
+
     DateTime parseReleaseDate(dynamic dateValue) {
       if (dateValue == null || dateValue.toString().isEmpty) {
         // Default to current date if no release date.
