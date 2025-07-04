@@ -32,8 +32,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:moviestar/database/movie_cache_repository.dart';
 import 'package:moviestar/providers/cached_movie_service_provider.dart';
-import 'package:moviestar/screens/to_watch_screen.dart';
-import 'package:moviestar/screens/watched_screen.dart';
 import 'package:moviestar/services/api_key_service.dart';
 import 'package:moviestar/services/favorites_service.dart';
 import 'package:moviestar/services/favorites_service_manager.dart';
@@ -729,26 +727,6 @@ Failed to enable POD storage. Please check your Solid POD login and try again.''
             ),
           ]),
           _buildSection('Account', [
-            _buildListTile('To Watch', Icons.favorite, () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ToWatchScreen(
-                    favoritesService: widget.favoritesService,
-                  ),
-                ),
-              );
-            }),
-            _buildListTile('Watched', Icons.history, () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => WatchedScreen(
-                    favoritesService: widget.favoritesService,
-                  ),
-                ),
-              );
-            }),
             _buildListTile('Help & Support', Icons.help_outline, () {
               // TODO: Navigate to Help & Support.
             }),
