@@ -80,9 +80,12 @@ class NetworkClient {
 
   Future<Map<String, dynamic>> getJson(String endpoint) async {
     try {
-      final response = await _client
-          .get(Uri.parse('$baseUrl/$endpoint?api_key=$apiKey'))
-          .timeout(_timeout);
+      // Check if endpoint already has query parameters.
+
+      final separator = endpoint.contains('?') ? '&' : '?';
+      final url = '$baseUrl/$endpoint${separator}api_key=$apiKey';
+
+      final response = await _client.get(Uri.parse(url)).timeout(_timeout);
 
       if (response.statusCode == 200) {
         return json.decode(response.body) as Map<String, dynamic>;
